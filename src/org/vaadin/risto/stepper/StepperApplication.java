@@ -1,8 +1,10 @@
 package org.vaadin.risto.stepper;
 
 import java.text.DateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import org.vaadin.risto.stepper.widgetset.client.ui.VDateStepper;
@@ -34,6 +36,7 @@ public class StepperApplication extends Application {
     private IntStepper intStepper;
     private FloatStepper floatStepper;
     private DateStepper dateStepper;
+    private List<AbstractStepper> steppers;
 
     @Override
     public void init() {
@@ -126,6 +129,8 @@ public class StepperApplication extends Application {
         dateStepper.setStepAmount(1);
         dateStepper.setCaption("DateStepper, step 1 day");
 
+        steppers = Arrays.asList(intStepper, floatStepper, dateStepper);
+
         Layout intStepperLayout = getStepperLayout(intStepper);
         Layout floatStepperLayout = getStepperLayout(floatStepper);
         Layout dateStepperLayout = getStepperLayout(dateStepper);
@@ -142,13 +147,13 @@ public class StepperApplication extends Application {
 
             public void buttonClick(ClickEvent event) {
                 if (event.getButton().booleanValue()) {
-                    setMinValue(intStepper);
-                    setMinValue(floatStepper);
-                    setMinValue(dateStepper);
+                    for (AbstractStepper stepper : steppers) {
+                        setMinValue(stepper);
+                    }
                 } else {
-                    intStepper.setMinValue(null);
-                    floatStepper.setMinValue(null);
-                    dateStepper.setMinValue(null);
+                    for (AbstractStepper stepper : steppers) {
+                        stepper.setMinValue(null);
+                    }
                 }
             }
         });
@@ -161,22 +166,39 @@ public class StepperApplication extends Application {
 
             public void buttonClick(ClickEvent event) {
                 if (event.getButton().booleanValue()) {
-                    setMaxValue(intStepper);
-                    setMaxValue(floatStepper);
-                    setMaxValue(dateStepper);
+                    for (AbstractStepper stepper : steppers) {
+                        setMaxValue(stepper);
+                    }
                 } else {
-                    intStepper.setMaxValue(null);
-                    floatStepper.setMaxValue(null);
-                    dateStepper.setMaxValue(null);
+                    for (AbstractStepper stepper : steppers) {
+                        stepper.setMaxValue(null);
+                    }
                 }
             }
 
         });
 
+        CheckBox manualInput = new CheckBox("Enable manual input");
+        manualInput.setValue(true);
+        manualInput.setImmediate(true);
+        manualInput.addListener(new ClickListener() {
+
+            private static final long serialVersionUID = 1556003158228491207L;
+
+            public void buttonClick(ClickEvent event) {
+                for (AbstractStepper stepper : steppers) {
+                    stepper.setManualInputAllowed(event.getButton()
+                            .booleanValue());
+                }
+            }
+        });
+
         panel.addComponent(infoLabel);
         panel.addComponent(minValue);
         panel.addComponent(maxValue);
+        panel.addComponent(manualInput);
         panel.addComponent(stepperLayout);
+
         return panel;
     }
 

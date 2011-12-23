@@ -105,11 +105,12 @@ public class UpDownTextBox extends TextBox implements KeyDownHandler,
     public void onMouseWheel(MouseWheelEvent event) {
 
         int mouseWheelDelta = event.getDeltaY();
-
-        if (mouseWheelDelta < 0) {
-            stepper.increaseValue();
-        } else {
-            stepper.decreaseValue();
+        if (stepper.canChangeFromTextBox()) {
+            if (mouseWheelDelta < 0) {
+                stepper.increaseValue();
+            } else {
+                stepper.decreaseValue();
+            }
         }
     }
 

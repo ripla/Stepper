@@ -30,6 +30,8 @@ public abstract class VAbstractStepper extends FlowPanel implements Paintable,
 
     public static final int valueRepeatDelay = 150;
 
+    public static final String ATTR_MANUALINPUT = "manualinput";
+
     /** Component identifier in UIDL communications. */
     protected String uidlId;
 
@@ -46,11 +48,13 @@ public abstract class VAbstractStepper extends FlowPanel implements Paintable,
 
     protected boolean immediate;
 
-    private boolean timerHasChangedValue;
+    protected boolean timerHasChangedValue;
 
-    private boolean disabled;
+    protected boolean isDisabled;
 
-    private boolean readOnly;
+    protected boolean isReadonly;
+
+    protected boolean isManualInputAllowed;
 
     /**
      * The constructor should first call super() to initialize the component and
@@ -94,13 +98,15 @@ public abstract class VAbstractStepper extends FlowPanel implements Paintable,
 
         immediate = uidl.getBooleanAttribute("immediate");
 
-        disabled = uidl.getBooleanAttribute("disabled");
-        readOnly = uidl.getBooleanAttribute("readonly");
+        isDisabled = uidl.getBooleanAttribute("disabled");
+        isReadonly = uidl.getBooleanAttribute("readonly");
 
-        if (disabled || readOnly) {
+        isManualInputAllowed = uidl.getBooleanAttribute(ATTR_MANUALINPUT);
+
+        if (isDisabled || isReadonly) {
             valueUpdateTimer.cancel();
         }
-        textBox.setReadOnly(disabled || readOnly);
+        textBox.setReadOnly(isDisabled || isReadonly || !isManualInputAllowed);
 
         if (uidl.getAttributeNames().contains(ATTR_VALUERANGE)) {
             String[] valueRange = uidl.getStringArrayAttribute(ATTR_VALUERANGE);
@@ -122,10 +128,6 @@ public abstract class VAbstractStepper extends FlowPanel implements Paintable,
     public void setHeight(String height) {
         super.setHeight(height);
         textBox.setHeight(height);
-    }
-
-    protected boolean isChangeable() {
-        return !disabled && !readOnly;
     }
 
     /**
@@ -285,5 +287,14 @@ public abstract class VAbstractStepper extends FlowPanel implements Paintable,
 
     public boolean isTimerHasChangedValue() {
         return timerHasChangedValue;
+    }
+
+    public boolean canChangeFromTextBox() {
+        return !isDisabled && !isReadonly && isManualInputAllowed;
+
+    }
+
+    public boolean isChangeable() {
+        return !isDisabled && !isReadonly;
     }
 }

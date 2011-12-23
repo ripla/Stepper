@@ -20,6 +20,26 @@ import com.vaadin.ui.AbstractField;
 public abstract class AbstractStepper extends AbstractField {
 
     private static final long serialVersionUID = 4680365780881009306L;
+    private boolean isManualInputAllowed = true;
+
+    /**
+     * @see #isManualInputAllowed
+     * @param isManualInputAllowed
+     */
+    public void setManualInputAllowed(boolean isManualInputAllowed) {
+        this.isManualInputAllowed = isManualInputAllowed;
+        requestRepaint();
+    }
+
+    /**
+     * If manual input is allowed, the user can change the values with both the
+     * controls and the textfield.
+     * 
+     * @return
+     */
+    public boolean isManualInputAllowed() {
+        return isManualInputAllowed;
+    }
 
     /*
      * (non-Javadoc)
@@ -37,6 +57,9 @@ public abstract class AbstractStepper extends AbstractField {
 
         target.addAttribute(VAbstractStepper.ATTR_VALUERANGE,
                 getValueRangeAsArray());
+
+        target.addAttribute(VAbstractStepper.ATTR_MANUALINPUT,
+                isManualInputAllowed());
         paintDetails(target);
     }
 
