@@ -21,6 +21,7 @@ public abstract class AbstractStepper extends AbstractField {
 
     private static final long serialVersionUID = 4680365780881009306L;
     private boolean isManualInputAllowed = true;
+    private boolean mouseWheelEnabled = true;
 
     /**
      * @see #isManualInputAllowed
@@ -33,7 +34,8 @@ public abstract class AbstractStepper extends AbstractField {
 
     /**
      * If manual input is allowed, the user can change the values with both the
-     * controls and the textfield.
+     * controls and the textfield. If not allowed, only the controls change the
+     * value.
      * 
      * @return
      */
@@ -41,34 +43,42 @@ public abstract class AbstractStepper extends AbstractField {
         return isManualInputAllowed;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * If you want (or don't want) the control to handle mouse wheel scroll
+     * events, set this accordingly. Default is true, that is, mouse wheel
+     * events will be handled.
      * 
-     * @see
-     * com.vaadin.ui.AbstractField#paintContent(com.vaadin.terminal.PaintTarget)
+     * @param mouseWheelEnabled
+     *            true to handle the events (the default), false otherwise.
+     * @author colinf
      */
+    public void setMouseWheelEnabled(boolean mouseWheelEnabled) {
+        this.mouseWheelEnabled = mouseWheelEnabled;
+        requestRepaint();
+    }
+
+    public boolean isMouseWheelEnabled() {
+        return mouseWheelEnabled;
+    }
+
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
 
-        String value = getPaintValue();
-
-        target.addVariable(this, VAbstractStepper.ATTR_VALUE, value);
+        target.addVariable(this, VAbstractStepper.ATTR_VALUE, getPaintValue());
 
         target.addAttribute(VAbstractStepper.ATTR_VALUERANGE,
                 getValueRangeAsArray());
 
         target.addAttribute(VAbstractStepper.ATTR_MANUALINPUT,
                 isManualInputAllowed());
+
+        target.addAttribute(VAbstractStepper.ATTR_MOUSE_WHEEL_ENABLED,
+                isMouseWheelEnabled());
+
         paintDetails(target);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.ui.AbstractField#changeVariables(java.lang.Object,
-     * java.util.Map)
-     */
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
         super.changeVariables(source, variables);

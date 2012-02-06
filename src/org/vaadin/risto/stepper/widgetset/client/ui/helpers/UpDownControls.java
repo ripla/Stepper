@@ -12,6 +12,8 @@ import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
+import com.google.gwt.event.dom.client.MouseWheelEvent;
+import com.google.gwt.event.dom.client.MouseWheelHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlowPanel;
 
@@ -22,7 +24,8 @@ import com.google.gwt.user.client.ui.FlowPanel;
  * 
  */
 public class UpDownControls extends FlowPanel implements ClickHandler,
-        MouseDownHandler, MouseUpHandler, MouseOverHandler, MouseOutHandler {
+        MouseDownHandler, MouseUpHandler, MouseOverHandler, MouseOutHandler,
+        MouseWheelHandler {
 
     protected final Anchor buttonUp;
     protected final Anchor buttonDown;
@@ -44,11 +47,13 @@ public class UpDownControls extends FlowPanel implements ClickHandler,
         buttonUp.addMouseDownHandler(this);
         buttonUp.addMouseUpHandler(this);
         buttonUp.addMouseOverHandler(this);
+        buttonUp.addMouseWheelHandler(this);
 
         buttonDown.addClickHandler(this);
         buttonDown.addMouseDownHandler(this);
         buttonDown.addMouseUpHandler(this);
         buttonDown.addMouseOverHandler(this);
+        buttonDown.addMouseWheelHandler(this);
 
         addDomHandler(this, MouseOutEvent.getType());
 
@@ -130,5 +135,17 @@ public class UpDownControls extends FlowPanel implements ClickHandler,
      */
     public void onMouseOut(MouseOutEvent event) {
         cancelTimers();
+    }
+
+    public void onMouseWheel(MouseWheelEvent event) {
+        if (stepper.isMouseWheelEnabled()) {
+            int mouseWheelDelta = event.getDeltaY();
+
+            if (mouseWheelDelta < 0) {
+                stepper.increaseValue();
+            } else {
+                stepper.decreaseValue();
+            }
+        }
     }
 }

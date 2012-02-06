@@ -21,16 +21,18 @@ import com.vaadin.terminal.gwt.client.UIDL;
 public abstract class VAbstractStepper extends FlowPanel implements Paintable,
         ValueChangeHandler<String> {
 
-    public static final String ATTR_VALUE = "value";
-
     /** Set the CSS class name to allow styling. */
     public static final String CLASSNAME = "v-stepper";
 
+    public static final String ATTR_VALUE = "value";
+
     public static final String ATTR_VALUERANGE = "valuerange";
 
-    public static final int valueRepeatDelay = 150;
-
     public static final String ATTR_MANUALINPUT = "manualinput";
+
+    public static final String ATTR_MOUSE_WHEEL_ENABLED = "mouseWheelEnabled";
+
+    public static final int valueRepeatDelay = 150;
 
     /** Component identifier in UIDL communications. */
     protected String uidlId;
@@ -55,6 +57,8 @@ public abstract class VAbstractStepper extends FlowPanel implements Paintable,
     protected boolean isReadonly;
 
     protected boolean isManualInputAllowed;
+
+    protected boolean mouseWheelEnabled;
 
     /**
      * The constructor should first call super() to initialize the component and
@@ -102,6 +106,8 @@ public abstract class VAbstractStepper extends FlowPanel implements Paintable,
         isReadonly = uidl.getBooleanAttribute("readonly");
 
         isManualInputAllowed = uidl.getBooleanAttribute(ATTR_MANUALINPUT);
+
+        mouseWheelEnabled = uidl.getBooleanAttribute(ATTR_MOUSE_WHEEL_ENABLED);
 
         if (isDisabled || isReadonly) {
             valueUpdateTimer.cancel();
@@ -296,5 +302,9 @@ public abstract class VAbstractStepper extends FlowPanel implements Paintable,
 
     public boolean isChangeable() {
         return !isDisabled && !isReadonly;
+    }
+
+    public boolean isMouseWheelEnabled() {
+        return mouseWheelEnabled;
     }
 }
