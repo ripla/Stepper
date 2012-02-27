@@ -34,6 +34,8 @@ public abstract class VAbstractStepper extends FlowPanel implements Paintable,
 
     public static final int valueRepeatDelay = 150;
 
+	public static final String ATTR_INVALID_VALUES_ALLOWED = "invalidValuesAllowed";
+
     /** Component identifier in UIDL communications. */
     protected String uidlId;
 
@@ -59,6 +61,8 @@ public abstract class VAbstractStepper extends FlowPanel implements Paintable,
     protected boolean isManualInputAllowed;
 
     protected boolean mouseWheelEnabled;
+
+	private boolean invalidValuesAllowed;
 
     /**
      * The constructor should first call super() to initialize the component and
@@ -108,6 +112,8 @@ public abstract class VAbstractStepper extends FlowPanel implements Paintable,
         isManualInputAllowed = uidl.getBooleanAttribute(ATTR_MANUALINPUT);
 
         mouseWheelEnabled = uidl.getBooleanAttribute(ATTR_MOUSE_WHEEL_ENABLED);
+        
+        invalidValuesAllowed = uidl.getBooleanAttribute(ATTR_INVALID_VALUES_ALLOWED);
 
         if (isDisabled || isReadonly) {
             valueUpdateTimer.cancel();
@@ -281,13 +287,17 @@ public abstract class VAbstractStepper extends FlowPanel implements Paintable,
 
     public void onValueChange(ValueChangeEvent<String> event) {
         String value = event.getValue();
-        if (value != null && isValidForType(value)) {
+        if (isInvalidValueAllowed() || (value != null && isValidForType(value))) {
             valueUpdateTimer.cancel();
             updateValueToServer(value);
         }
     }
 
-    public void setTimerHasChangedValue(boolean timerHasChangedValue) {
+    private boolean isInvalidValueAllowed() {
+		return invalidValuesAllowed;
+	}
+
+	public void setTimerHasChangedValue(boolean timerHasChangedValue) {
         this.timerHasChangedValue = timerHasChangedValue;
     }
 

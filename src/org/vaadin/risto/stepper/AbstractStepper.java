@@ -19,146 +19,164 @@ import com.vaadin.ui.AbstractField;
  */
 public abstract class AbstractStepper extends AbstractField {
 
-    private static final long serialVersionUID = 4680365780881009306L;
-    private boolean isManualInputAllowed = true;
-    private boolean mouseWheelEnabled = true;
+	private static final long serialVersionUID = 4680365780881009306L;
+	
+	private boolean isManualInputAllowed = true;
+	private boolean mouseWheelEnabled = true;
+	private boolean invalidValuesAllowed = false ;
 
-    /**
-     * @see #isManualInputAllowed
-     * @param isManualInputAllowed
-     */
-    public void setManualInputAllowed(boolean isManualInputAllowed) {
-        this.isManualInputAllowed = isManualInputAllowed;
-        requestRepaint();
-    }
+	public void setManualInputAllowed(boolean isManualInputAllowed) {
+		this.isManualInputAllowed = isManualInputAllowed;
+		requestRepaint();
+	}
 
-    /**
-     * If manual input is allowed, the user can change the values with both the
-     * controls and the textfield. If not allowed, only the controls change the
-     * value.
-     * 
-     * @return
-     */
-    public boolean isManualInputAllowed() {
-        return isManualInputAllowed;
-    }
+	/**
+	 * If manual input is allowed, the user can change the values with both the
+	 * controls and the textfield. If not allowed, only the controls change the
+	 * value.
+	 * 
+	 * @return
+	 */
+	public boolean isManualInputAllowed() {
+		return isManualInputAllowed;
+	}
 
-    /**
-     * If you want (or don't want) the control to handle mouse wheel scroll
-     * events, set this accordingly. Default is true, that is, mouse wheel
-     * events will be handled.
-     * 
-     * @param mouseWheelEnabled
-     *            true to handle the events (the default), false otherwise.
-     * @author colinf
-     */
-    public void setMouseWheelEnabled(boolean mouseWheelEnabled) {
-        this.mouseWheelEnabled = mouseWheelEnabled;
-        requestRepaint();
-    }
+	public void setMouseWheelEnabled(boolean mouseWheelEnabled) {
+		this.mouseWheelEnabled = mouseWheelEnabled;
+		requestRepaint();
+	}
 
-    public boolean isMouseWheelEnabled() {
-        return mouseWheelEnabled;
-    }
+	/**
+	 * If you want (or don't want) the control to handle mouse wheel scroll
+	 * events, set this accordingly. Default is true, that is, mouse wheel
+	 * events will be handled.
+	 * 
+	 * @param mouseWheelEnabled
+	 *            true to handle the events (the default), false otherwise.
+	 * @author colinf
+	 */
+	public boolean isMouseWheelEnabled() {
+		return mouseWheelEnabled;
+	}
 
-    @Override
-    public void paintContent(PaintTarget target) throws PaintException {
-        super.paintContent(target);
+	/**
+	 * If invalid values are allowed, the client sends all manually typed values
+	 * to the server, regardless of whether they are valid or not. The use-case
+	 * is to allow the server to perform validation and show validation
+	 * messages. Note that the Stepper controls still enforces the limits even
+	 * if invalid values are otherwise allowed.
+	 * 
+	 * @return
+	 */
+	public boolean areInvalidValuesAllowed() {
+		return invalidValuesAllowed;
+	}
 
-        target.addVariable(this, VAbstractStepper.ATTR_VALUE, getPaintValue());
+	public void setInvalidValuesAllowed(boolean invalidValuesAllowed) {
+		this.invalidValuesAllowed = invalidValuesAllowed;
+		requestRepaint();
+	}
 
-        target.addAttribute(VAbstractStepper.ATTR_VALUERANGE,
-                getValueRangeAsArray());
+	@Override
+	public void paintContent(PaintTarget target) throws PaintException {
+		super.paintContent(target);
 
-        target.addAttribute(VAbstractStepper.ATTR_MANUALINPUT,
-                isManualInputAllowed());
+		target.addVariable(this, VAbstractStepper.ATTR_VALUE, getPaintValue());
 
-        target.addAttribute(VAbstractStepper.ATTR_MOUSE_WHEEL_ENABLED,
-                isMouseWheelEnabled());
+		target.addAttribute(VAbstractStepper.ATTR_VALUERANGE,
+				getValueRangeAsArray());
 
-        paintDetails(target);
-    }
+		target.addAttribute(VAbstractStepper.ATTR_MANUALINPUT,
+				isManualInputAllowed());
 
-    @Override
-    public void changeVariables(Object source, Map<String, Object> variables) {
-        super.changeVariables(source, variables);
+		target.addAttribute(VAbstractStepper.ATTR_MOUSE_WHEEL_ENABLED,
+				isMouseWheelEnabled());
 
-        if (isEnabled() && !isReadOnly() && variables.containsKey("value")) {
-            try {
-                Object parsedValue = parseStringValue((String) variables
-                        .get("value"));
-                if (isValidForRange(parsedValue)) {
-                    setValue(parsedValue, true);
-                }
-            } catch (ParseException e) {
-                // NOOP for now
-            }
-        }
-    }
+		target.addAttribute(VAbstractStepper.ATTR_INVALID_VALUES_ALLOWED,
+				areInvalidValuesAllowed());
+		paintDetails(target);
+	}
 
-    /**
-     * @return the current value as a non-null string
-     */
-    protected String getPaintValue() {
-        return (getValue() != null) ? getValue().toString() : "";
-    }
+	@Override
+	public void changeVariables(Object source, Map<String, Object> variables) {
+		super.changeVariables(source, variables);
 
-    /**
-     * For painting additional details. Called after painting values and min/max
-     * boundaries.
-     * 
-     * @param target
-     * @throws PaintException
-     */
-    protected abstract void paintDetails(PaintTarget target)
-            throws PaintException;
+		if (isEnabled() && !isReadOnly() && variables.containsKey("value")) {
+			try {
+				Object parsedValue = parseStringValue((String) variables
+						.get("value"));
+				if (areInvalidValuesAllowed() || isValidForRange(parsedValue) ) {
+					setValue(parsedValue, true);
+				}
+			} catch (ParseException e) {
+				// NOOP for now
+			}
+		}
+	}
 
-    /**
-     * @return the min/max values as a String array
-     */
-    protected abstract String[] getValueRangeAsArray();
+	/**
+	 * @return the current value as a non-null string
+	 */
+	protected String getPaintValue() {
+		return (getValue() != null) ? getValue().toString() : "";
+	}
 
-    /**
-     * Set the amount for a single step when the the value is increased /
-     * decreased
-     * 
-     * @param amount
-     */
-    public abstract void setStepAmount(Object amount);
+	/**
+	 * For painting additional details. Called after painting values and min/max
+	 * boundaries.
+	 * 
+	 * @param target
+	 * @throws PaintException
+	 */
+	protected abstract void paintDetails(PaintTarget target)
+			throws PaintException;
 
-    /**
-     * Set the maximum value for this field.
-     * 
-     * @param maxValue
-     */
-    public abstract void setMaxValue(Object maxValue);
+	/**
+	 * @return the min/max values as a String array
+	 */
+	protected abstract String[] getValueRangeAsArray();
 
-    /**
-     * Set the minumum value for this field.
-     * 
-     * @param maxValue
-     */
-    public abstract void setMinValue(Object minValue);
+	/**
+	 * Set the amount for a single step when the the value is increased /
+	 * decreased
+	 * 
+	 * @param amount
+	 */
+	public abstract void setStepAmount(Object amount);
 
-    public abstract Object getMaxValue();
+	/**
+	 * Set the maximum value for this field.
+	 * 
+	 * @param maxValue
+	 */
+	public abstract void setMaxValue(Object maxValue);
 
-    public abstract Object getMinValue();
+	/**
+	 * Set the minumum value for this field.
+	 * 
+	 * @param maxValue
+	 */
+	public abstract void setMinValue(Object minValue);
 
-    /**
-     * @param value
-     * @return
-     */
-    protected abstract boolean isValidForRange(Object value);
+	public abstract Object getMaxValue();
 
-    /**
-     * Parse a String value from the client to a type corresponding to
-     * {@link #getType()}
-     * 
-     * @param value
-     *            the value from client
-     * @return value in the correct type
-     * @throws ParseException
-     */
-    protected abstract Object parseStringValue(String value)
-            throws ParseException;
+	public abstract Object getMinValue();
+
+	/**
+	 * @param value
+	 * @return
+	 */
+	protected abstract boolean isValidForRange(Object value);
+
+	/**
+	 * Parse a String value from the client to a type corresponding to
+	 * {@link #getType()}
+	 * 
+	 * @param value
+	 *            the value from client
+	 * @return value in the correct type
+	 * @throws ParseException
+	 */
+	protected abstract Object parseStringValue(String value)
+			throws ParseException;
 }

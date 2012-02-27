@@ -16,6 +16,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
@@ -31,235 +32,271 @@ import com.vaadin.ui.Window;
  */
 public class StepperApplication extends Application {
 
-    private static final long serialVersionUID = 3840548109739501675L;
-    private Window mainWindow;
-    private IntStepper intStepper;
-    private FloatStepper floatStepper;
-    private DateStepper dateStepper;
-    private List<AbstractStepper> steppers;
+	private static final long serialVersionUID = 3840548109739501675L;
+	private Window mainWindow;
+	private IntStepper intStepper;
+	private FloatStepper floatStepper;
+	private DateStepper dateStepper;
+	private List<AbstractStepper> steppers;
 
-    @Override
-    public void init() {
-        mainWindow = new Window("Stepper Application");
-        setLocale(new Locale("fi", "FI"));
-        setMainWindow(mainWindow);
-        setTheme("reindeer");
-        initUI();
-    }
+	@Override
+	public void init() {
+		mainWindow = new Window("Stepper Application");
+		setLocale(new Locale("fi", "FI"));
+		setMainWindow(mainWindow);
+		setTheme("reindeer");
+		initUI();
+	}
 
-    protected void initUI() {
-        VerticalLayout mainLayout = new VerticalLayout();
-        mainLayout.setMargin(true);
-        mainLayout.setSpacing(true);
+	protected void initUI() {
+		VerticalLayout mainLayout = new VerticalLayout();
+		mainLayout.setMargin(true);
+		mainLayout.setSpacing(true);
 
-        Panel upper = getUpperPanel();
+		Panel upper = getUpperPanel();
 
-        mainLayout.addComponent(upper);
-        mainLayout.setComponentAlignment(upper, Alignment.MIDDLE_CENTER);
+		mainLayout.addComponent(upper);
+		mainLayout.setComponentAlignment(upper, Alignment.MIDDLE_CENTER);
 
-        Panel lower = getLowerPanel();
-        mainLayout.addComponent(lower);
-        mainLayout.setComponentAlignment(lower, Alignment.MIDDLE_CENTER);
+		Panel lower = getLowerPanel();
+		mainLayout.addComponent(lower);
+		mainLayout.setComponentAlignment(lower, Alignment.MIDDLE_CENTER);
 
-        mainWindow.setContent(mainLayout);
-    }
+		mainWindow.setContent(mainLayout);
+	}
 
-    private Panel getLowerPanel() {
-        Panel panel = new Panel("Stepper properties");
-        panel.setWidth("700px");
+	private Panel getLowerPanel() {
+		Panel panel = new Panel("Stepper properties");
+		panel.setWidth("700px");
 
-        VerticalLayout layout = new VerticalLayout();
-        layout.setSpacing(true);
-        panel.setContent(layout);
-        layout.setMargin(true);
+		VerticalLayout layout = new VerticalLayout();
+		layout.setSpacing(true);
+		panel.setContent(layout);
+		layout.setMargin(true);
 
-        IntStepper undefined = new IntStepper("Undefined width");
-        undefined.setSizeUndefined();
+		IntStepper undefined = new IntStepper("Undefined width");
+		undefined.setSizeUndefined();
 
-        IntStepper wide = new IntStepper("100% wide");
-        wide.setWidth("100%");
+		IntStepper wide = new IntStepper("100% wide");
+		wide.setWidth("100%");
 
-        IntStepper fiftyPixels = new IntStepper("50px wide");
-        fiftyPixels.setWidth("50px");
+		IntStepper fiftyPixels = new IntStepper("50px wide");
+		fiftyPixels.setWidth("50px");
 
-        IntStepper disabled = new IntStepper("Disabled");
-        disabled.setEnabled(false);
+		IntStepper disabled = new IntStepper("Disabled");
+		disabled.setEnabled(false);
 
-        IntStepper readOnly = new IntStepper("Read-only");
-        readOnly.setReadOnly(true);
+		IntStepper readOnly = new IntStepper("Read-only");
+		readOnly.setReadOnly(true);
 
-        panel.addComponent(undefined);
-        panel.addComponent(wide);
-        panel.addComponent(fiftyPixels);
-        panel.addComponent(disabled);
-        panel.addComponent(readOnly);
+		panel.addComponent(undefined);
+		panel.addComponent(wide);
+		panel.addComponent(fiftyPixels);
+		panel.addComponent(disabled);
+		panel.addComponent(readOnly);
 
-        return panel;
-    }
+		return panel;
+	}
 
-    private Panel getUpperPanel() {
-        Panel panel = new Panel("Different Steppers");
-        panel.setWidth("700px");
+	private Panel getUpperPanel() {
+		Panel panel = new Panel("Different Steppers");
+		panel.setWidth("700px");
 
-        String infoString = "<p>There are three different Stepper classes. Their step amount can be set from the server-side. The accuracy of the FloatStepper can be changed and the DateStepper can be set to increase days, months or years. The server-side values are added below the components as they are received from the client.</p>";
-        infoString += "<p>Minimum and maximum values are: -25 to 25 for IntStepper, -25 to 25 for FloatStepper and 10 days to the past to 10 days to the future for DateStepper.</p>";
-        infoString += "<p>You can change the values by using the controls, the arrow keys or the mouse wheel</p>";
-        Label infoLabel = new Label(infoString);
-        infoLabel.setContentMode(Label.CONTENT_XHTML);
+		GridLayout options = new GridLayout(2, 3);
+		options.setSpacing(true);
+		
+		String infoString = "<p>There are three different Stepper classes. Their step amount can be set from the server-side. The accuracy of the FloatStepper can be changed and the DateStepper can be set to increase days, months or years. The server-side values are added below the components as they are received from the client.</p>";
+		infoString += "<p>Minimum and maximum values are: -25 to 25 for IntStepper, -25 to 25 for FloatStepper and 10 days to the past to 10 days to the future for DateStepper.</p>";
+		infoString += "<p>You can change the values by using the controls, the arrow keys or the mouse wheel</p>";
+		Label infoLabel = new Label(infoString);
+		infoLabel.setContentMode(Label.CONTENT_XHTML);
 
-        HorizontalLayout stepperLayout = new HorizontalLayout();
+		HorizontalLayout stepperLayout = new HorizontalLayout();
 
-        stepperLayout.setSpacing(true);
-        stepperLayout.setMargin(true);
+		stepperLayout.setSpacing(true);
+		stepperLayout.setMargin(true);
 
-        intStepper = new IntStepper();
-        intStepper.setValue(1);
-        intStepper.setStepAmount(1);
-        intStepper.setCaption("IntStepper, step 1");
+		intStepper = new IntStepper();
+		intStepper.setValue(1);
+		intStepper.setStepAmount(1);
+		intStepper.setCaption("IntStepper, step 1");
 
-        floatStepper = new FloatStepper();
-        floatStepper.setValue(1.0f);
-        floatStepper.setStepAmount(1.222f);
-        floatStepper.setNumberOfDecimals(3);
-        floatStepper.setCaption("FloatStepper, step 1.222");
+		floatStepper = new FloatStepper();
+		floatStepper.setValue(1.0f);
+		floatStepper.setStepAmount(1.222f);
+		floatStepper.setNumberOfDecimals(3);
+		floatStepper.setCaption("FloatStepper, step 1.222");
 
-        dateStepper = new DateStepper();
-        dateStepper.setValue(new Date());
-        dateStepper.setStepField(VDateStepper.DateStepField.DAY);
-        dateStepper.setStepAmount(1);
-        dateStepper.setCaption("DateStepper, step 1 day");
+		dateStepper = new DateStepper();
+		dateStepper.setValue(new Date());
+		dateStepper.setStepField(VDateStepper.DateStepField.DAY);
+		dateStepper.setStepAmount(1);
+		dateStepper.setCaption("DateStepper, step 1 day");
 
-        steppers = Arrays.asList(intStepper, floatStepper, dateStepper);
+		steppers = Arrays.asList(intStepper, floatStepper, dateStepper);
 
-        Layout intStepperLayout = getStepperLayout(intStepper);
-        Layout floatStepperLayout = getStepperLayout(floatStepper);
-        Layout dateStepperLayout = getStepperLayout(dateStepper);
+		Layout intStepperLayout = getStepperLayout(intStepper);
+		Layout floatStepperLayout = getStepperLayout(floatStepper);
+		Layout dateStepperLayout = getStepperLayout(dateStepper);
 
-        stepperLayout.addComponent(intStepperLayout);
-        stepperLayout.addComponent(floatStepperLayout);
-        stepperLayout.addComponent(dateStepperLayout);
+		stepperLayout.addComponent(intStepperLayout);
+		stepperLayout.addComponent(floatStepperLayout);
+		stepperLayout.addComponent(dateStepperLayout);
 
-        CheckBox minValue = new CheckBox("Enable minimum value limits");
-        minValue.setImmediate(true);
-        minValue.addListener(new ClickListener() {
+		CheckBox minValue = new CheckBox("Enable minimum value limits");
+		minValue.setImmediate(true);
+		minValue.addListener(new ClickListener() {
 
-            private static final long serialVersionUID = 3201240348626812120L;
+			private static final long serialVersionUID = 3201240348626812120L;
 
-            public void buttonClick(ClickEvent event) {
-                if (event.getButton().booleanValue()) {
-                    for (AbstractStepper stepper : steppers) {
-                        setMinValue(stepper);
-                    }
-                } else {
-                    for (AbstractStepper stepper : steppers) {
-                        stepper.setMinValue(null);
-                    }
-                }
-            }
-        });
+			public void buttonClick(ClickEvent event) {
+				if (event.getButton().booleanValue()) {
+					for (AbstractStepper stepper : steppers) {
+						setMinValue(stepper);
+					}
+				} else {
+					for (AbstractStepper stepper : steppers) {
+						stepper.setMinValue(null);
+					}
+				}
+			}
+		});
 
-        CheckBox maxValue = new CheckBox("Enable maximum value limits");
-        maxValue.setImmediate(true);
-        maxValue.addListener(new ClickListener() {
+		CheckBox maxValue = new CheckBox("Enable maximum value limits");
+		maxValue.setImmediate(true);
+		maxValue.addListener(new ClickListener() {
 
-            private static final long serialVersionUID = 3201240348626812120L;
+			private static final long serialVersionUID = 3201240348626812120L;
 
-            public void buttonClick(ClickEvent event) {
-                if (event.getButton().booleanValue()) {
-                    for (AbstractStepper stepper : steppers) {
-                        setMaxValue(stepper);
-                    }
-                } else {
-                    for (AbstractStepper stepper : steppers) {
-                        stepper.setMaxValue(null);
-                    }
-                }
-            }
+			public void buttonClick(ClickEvent event) {
+				if (event.getButton().booleanValue()) {
+					for (AbstractStepper stepper : steppers) {
+						setMaxValue(stepper);
+					}
+				} else {
+					for (AbstractStepper stepper : steppers) {
+						stepper.setMaxValue(null);
+					}
+				}
+			}
 
-        });
+		});
 
-        CheckBox manualInput = new CheckBox("Enable manual input");
-        manualInput.setValue(true);
-        manualInput.setImmediate(true);
-        manualInput.addListener(new ClickListener() {
+		CheckBox manualInput = new CheckBox("Enable manual input");
+		manualInput.setValue(true);
+		manualInput.setImmediate(true);
+		manualInput.addListener(new ClickListener() {
 
-            private static final long serialVersionUID = 1556003158228491207L;
+			private static final long serialVersionUID = 1556003158228491207L;
 
-            public void buttonClick(ClickEvent event) {
-                for (AbstractStepper stepper : steppers) {
-                    stepper.setManualInputAllowed(event.getButton()
-                            .booleanValue());
-                }
-            }
-        });
+			public void buttonClick(ClickEvent event) {
+				for (AbstractStepper stepper : steppers) {
+					stepper.setManualInputAllowed(event.getButton()
+							.booleanValue());
+				}
+			}
+		});
 
-        panel.addComponent(infoLabel);
-        panel.addComponent(minValue);
-        panel.addComponent(maxValue);
-        panel.addComponent(manualInput);
-        panel.addComponent(stepperLayout);
+		CheckBox mousewheelEnabled = new CheckBox("Enable mousewheel support");
+		mousewheelEnabled.setValue(true);
+		mousewheelEnabled.setImmediate(true);
+		mousewheelEnabled.addListener(new ClickListener() {
 
-        return panel;
-    }
+			private static final long serialVersionUID = 1556003158228491207L;
 
-    protected void setMaxValue(AbstractStepper stepper) {
-        if (stepper instanceof DateStepper) {
-            Calendar calendar = Calendar.getInstance(getLocale());
-            calendar.add(Calendar.DATE, 10);
-            stepper.setMaxValue(calendar.getTime());
+			public void buttonClick(ClickEvent event) {
+				for (AbstractStepper stepper : steppers) {
+					stepper.setMouseWheelEnabled(event.getButton()
+							.booleanValue());
+				}
+			}
+		});
+		CheckBox invalidValuesAllowed = new CheckBox("Allow invalid values");
+		invalidValuesAllowed.setValue(false);
+		invalidValuesAllowed.setImmediate(true);
+		invalidValuesAllowed.addListener(new ClickListener() {
+			
+			private static final long serialVersionUID = 1556003158228491207L;
+			
+			public void buttonClick(ClickEvent event) {
+				for (AbstractStepper stepper : steppers) {
+					stepper.setInvalidValuesAllowed(event.getButton()
+							.booleanValue());
+				}
+			}
+		});
+		
+		options.addComponent(minValue);
+		options.addComponent(manualInput);
+		options.addComponent(maxValue);
+		options.addComponent(mousewheelEnabled);
+		options.addComponent(invalidValuesAllowed);
 
-        } else if (stepper instanceof FloatStepper) {
-            stepper.setMaxValue(25f);
+		panel.addComponent(infoLabel);
+		panel.addComponent(options);
+		panel.addComponent(stepperLayout);
 
-        } else if (stepper instanceof IntStepper) {
-            stepper.setMaxValue(25);
-        }
-    }
+		return panel;
+	}
 
-    protected void setMinValue(AbstractStepper stepper) {
-        if (stepper instanceof DateStepper) {
-            Calendar calendar = Calendar.getInstance(getLocale());
-            calendar.add(Calendar.DATE, -10);
-            stepper.setMinValue(calendar.getTime());
+	protected void setMaxValue(AbstractStepper stepper) {
+		if (stepper instanceof DateStepper) {
+			Calendar calendar = Calendar.getInstance(getLocale());
+			calendar.add(Calendar.DATE, 10);
+			stepper.setMaxValue(calendar.getTime());
 
-        } else if (stepper instanceof FloatStepper) {
-            stepper.setMinValue(-25f);
+		} else if (stepper instanceof FloatStepper) {
+			stepper.setMaxValue(25f);
 
-        } else if (stepper instanceof IntStepper) {
-            stepper.setMinValue(-25);
-        }
-    }
+		} else if (stepper instanceof IntStepper) {
+			stepper.setMaxValue(25);
+		}
+	}
 
-    protected Layout getStepperLayout(final AbstractStepper stepper) {
-        VerticalLayout layout = new VerticalLayout();
+	protected void setMinValue(AbstractStepper stepper) {
+		if (stepper instanceof DateStepper) {
+			Calendar calendar = Calendar.getInstance(getLocale());
+			calendar.add(Calendar.DATE, -10);
+			stepper.setMinValue(calendar.getTime());
 
-        final Label valueLabel = new Label("");
-        valueLabel.setContentMode(Label.CONTENT_XHTML);
+		} else if (stepper instanceof FloatStepper) {
+			stepper.setMinValue(-25f);
 
-        stepper.setImmediate(true);
+		} else if (stepper instanceof IntStepper) {
+			stepper.setMinValue(-25);
+		}
+	}
 
-        stepper.addListener(new Property.ValueChangeListener() {
+	protected Layout getStepperLayout(final AbstractStepper stepper) {
+		VerticalLayout layout = new VerticalLayout();
 
-            private static final long serialVersionUID = 2041886044345910145L;
+		final Label valueLabel = new Label("");
+		valueLabel.setContentMode(Label.CONTENT_XHTML);
 
-            public void valueChange(ValueChangeEvent event) {
-                String valueLine = DateFormat.getTimeInstance(DateFormat.SHORT,
-                        getLocale()).format(new Date())
-                        + " " + event.getProperty().getValue();
-                String oldValue = valueLabel.getValue() != null ? valueLabel
-                        .getValue().toString() : "";
+		stepper.setImmediate(true);
 
-                StringBuffer sb = new StringBuffer();
-                sb.append(valueLine);
-                sb.append("<br/>");
-                sb.append(oldValue);
-                valueLabel.setValue(sb.toString());
-            }
-        });
+		stepper.addListener(new Property.ValueChangeListener() {
 
-        layout.addComponent(stepper);
-        layout.addComponent(valueLabel);
+			private static final long serialVersionUID = 2041886044345910145L;
 
-        return layout;
-    }
+			public void valueChange(ValueChangeEvent event) {
+				String valueLine = DateFormat.getTimeInstance(DateFormat.SHORT,
+						getLocale()).format(new Date())
+						+ " " + event.getProperty().getValue();
+				String oldValue = valueLabel.getValue() != null ? valueLabel
+						.getValue().toString() : "";
+
+				StringBuffer sb = new StringBuffer();
+				sb.append(valueLine);
+				sb.append("<br/>");
+				sb.append(oldValue);
+				valueLabel.setValue(sb.toString());
+			}
+		});
+
+		layout.addComponent(stepper);
+		layout.addComponent(valueLabel);
+
+		return layout;
+	}
 }
