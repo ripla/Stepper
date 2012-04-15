@@ -45,7 +45,6 @@ public class DateStepper extends AbstractStepper<Date, Integer> {
 
     @Override
     public void setLocale(Locale locale) {
-        getState().setLocale(locale.toString());
         super.setLocale(locale);
     }
 
@@ -70,6 +69,12 @@ public class DateStepper extends AbstractStepper<Date, Integer> {
     @Override
     public void setMinValue(Date minValue) {
         super.setMinValue(normalizeBoundaryDate(minValue));
+    }
+
+    @Override
+    public void updateState() {
+        super.updateState();
+        getState().setLocale(getLocale().toString());
     }
 
     @Override

@@ -43,8 +43,12 @@ public class DateStepperConnector extends
                     .getLocale());
             getWidget().setDateFormat(DateTimeFormat.getFormat(formatString));
         } catch (LocaleNotLoadedException e) {
-            VConsole.error("Locale not loaded error while fetching date format string");
+            String defaultLocale = LocaleService.getDefaultLocale();
+            VConsole.error("Locale " + getState().getLocale()
+                    + "not loaded. Using default locale " + defaultLocale
+                    + " for DateStepper.");
             VConsole.error(e);
+            getWidget().setDateFormat(DateTimeFormat.getFormat(defaultLocale));
         }
 
         super.onStateChanged(stateChangeEvent);

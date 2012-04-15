@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.vaadin.risto.stepper.widgetset.client.ui;
 
 /**

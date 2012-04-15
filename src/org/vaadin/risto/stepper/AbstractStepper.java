@@ -128,6 +128,7 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T> {
      */
     public void setStepAmount(S amount) {
         this.stepAmount = amount;
+        requestRepaint();
     }
 
     public S getStepAmount() {
@@ -141,6 +142,7 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T> {
      */
     public void setMaxValue(T maxValue) {
         this.maxValue = maxValue;
+        requestRepaint();
     }
 
     /**
@@ -150,6 +152,7 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T> {
      */
     public void setMinValue(T minValue) {
         this.minValue = minValue;
+        requestRepaint();
     }
 
     public T getMaxValue() {

@@ -81,17 +81,4 @@ public class FloatStepper extends AbstractStepper<Float, Float> {
 
         return Float.parseFloat(value);
     }
-
-    @Override
-    protected String parseValueToString(Float value) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    protected String parseStepAmountToString(Float stepAmount) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
 }

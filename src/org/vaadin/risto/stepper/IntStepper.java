@@ -58,14 +58,4 @@ public class IntStepper extends AbstractStepper<Integer, Integer> {
 
         return Integer.parseInt(value);
     }
-
-    @Override
-    protected String parseValueToString(Integer value) {
-        return value != null ? value.toString() : "";
-    }
-
-    @Override
-    protected String parseStepAmountToString(Integer stepAmount) {
-        return stepAmount != null ? stepAmount.toString() : "";
-    }
 }

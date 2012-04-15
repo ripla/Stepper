@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import org.vaadin.risto.stepper.widgetset.client.ui.DateStepField;
 
@@ -43,7 +42,8 @@ public class StepperDemoRoot extends Root {
     @Override
     protected void init(WrappedRequest request) {
         setCaption("Stepper demo");
-        setLocale(new Locale("fi", "FI"));
+        // TODO disabled until client-side locales are fixed
+        // setLocale(new Locale("fi", "FI"));
         initUI();
     }
 
@@ -112,7 +112,7 @@ public class StepperDemoRoot extends Root {
         infoLabel.setContentMode(Label.ContentMode.XHTML);
 
         HorizontalLayout stepperLayout = new HorizontalLayout();
-
+        stepperLayout.setWidth("100%");
         stepperLayout.setSpacing(true);
         stepperLayout.setMargin(true);
 

@@ -9,7 +9,6 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.TextBox;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
 
 /**
  * 
@@ -22,23 +21,7 @@ public abstract class VAbstractStepper<T, S> extends FlowPanel implements
     /** Set the CSS class name to allow styling. */
     public static final String CLASSNAME = "v-stepper";
 
-    public static final String ATTR_VALUE = "value";
-
-    public static final String ATTR_VALUERANGE = "valuerange";
-
-    public static final String ATTR_MANUALINPUT = "manualinput";
-
-    public static final String ATTR_MOUSE_WHEEL_ENABLED = "mouseWheelEnabled";
-
     public static final int valueRepeatDelay = 150;
-
-    public static final String ATTR_INVALID_VALUES_ALLOWED = "invalidValuesAllowed";
-
-    /** Component identifier in UIDL communications. */
-    protected String uidlId;
-
-    /** Reference to the server connection object. */
-    protected ApplicationConnection client;
 
     protected final TextBox textBox;
 
@@ -47,8 +30,6 @@ public abstract class VAbstractStepper<T, S> extends FlowPanel implements
     protected final int updateDelay = 300;
 
     protected final ValueUpdateTimer valueUpdateTimer;
-
-    private boolean immediate;
 
     protected boolean timerHasChangedValue;
 
@@ -210,7 +191,7 @@ public abstract class VAbstractStepper<T, S> extends FlowPanel implements
     }
 
     public void updateValueToServer(String value) {
-        client.updateVariable(uidlId, ATTR_VALUE, value, isImmediate());
+        // client.updateVariable(uidlId, ATTR_VALUE, value, isImmediate());
     }
 
     @Override
@@ -285,14 +266,6 @@ public abstract class VAbstractStepper<T, S> extends FlowPanel implements
     public void setInvalidValuesAllowed(boolean invalidValuesAllowed) {
         this.invalidValuesAllowed = invalidValuesAllowed;
         enabledStateChanged();
-    }
-
-    public boolean isImmediate() {
-        return immediate;
-    }
-
-    public void setImmediate(boolean immediate) {
-        this.immediate = immediate;
     }
 
     @Override
