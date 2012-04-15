@@ -10,15 +10,13 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.Paintable;
-import com.vaadin.terminal.gwt.client.UIDL;
 
 /**
  * 
  * @author Risto Yrjänä / Vaadin Ltd.
  * 
  */
-public abstract class VAbstractStepper extends FlowPanel implements Paintable,
+public abstract class VAbstractStepper<T, S> extends FlowPanel implements
         ValueChangeHandler<String> {
 
     /** Set the CSS class name to allow styling. */
@@ -34,7 +32,7 @@ public abstract class VAbstractStepper extends FlowPanel implements Paintable,
 
     public static final int valueRepeatDelay = 150;
 
-	public static final String ATTR_INVALID_VALUES_ALLOWED = "invalidValuesAllowed";
+    public static final String ATTR_INVALID_VALUES_ALLOWED = "invalidValuesAllowed";
 
     /** Component identifier in UIDL communications. */
     protected String uidlId;
@@ -50,19 +48,23 @@ public abstract class VAbstractStepper extends FlowPanel implements Paintable,
 
     protected final ValueUpdateTimer valueUpdateTimer;
 
-    protected boolean immediate;
+    private boolean immediate;
 
     protected boolean timerHasChangedValue;
 
-    protected boolean isDisabled;
+    private boolean isDisabled;
 
-    protected boolean isReadonly;
+    private boolean isReadonly;
 
-    protected boolean isManualInputAllowed;
+    private boolean isManualInputAllowed;
 
-    protected boolean mouseWheelEnabled;
+    private boolean mouseWheelEnabled;
 
-	private boolean invalidValuesAllowed;
+    private boolean invalidValuesAllowed;
+
+    private S stepAmount;
+    private T maxValue;
+    private T minValue;
 
     /**
      * The constructor should first call super() to initialize the component and
@@ -83,63 +85,6 @@ public abstract class VAbstractStepper extends FlowPanel implements Paintable,
         valueUpdateTimer = new ValueUpdateTimer(this);
 
         textBox.addValueChangeHandler(this);
-
-    }
-
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        if (!uidl.getBooleanAttribute("cached")) {
-            valueUpdateTimer.cancel();
-        }
-
-        // This call should be made first. Ensure correct implementation,
-        // and let the containing layout manage caption, etc.
-        if (client.updateComponent(this, uidl, true)) {
-            return;
-        }
-
-        // Save reference to server connection object to be able to send
-        // user interaction later
-        this.client = client;
-
-        // Save the UIDL identifier for the component
-        uidlId = uidl.getId();
-
-        immediate = uidl.getBooleanAttribute("immediate");
-
-        isDisabled = uidl.getBooleanAttribute("disabled");
-        isReadonly = uidl.getBooleanAttribute("readonly");
-
-        isManualInputAllowed = uidl.getBooleanAttribute(ATTR_MANUALINPUT);
-
-        mouseWheelEnabled = uidl.getBooleanAttribute(ATTR_MOUSE_WHEEL_ENABLED);
-        
-        invalidValuesAllowed = uidl.getBooleanAttribute(ATTR_INVALID_VALUES_ALLOWED);
-
-        if (isDisabled || isReadonly) {
-            valueUpdateTimer.cancel();
-        }
-        textBox.setReadOnly(isDisabled || isReadonly || !isManualInputAllowed);
-
-        if (uidl.getAttributeNames().contains(ATTR_VALUERANGE)) {
-            String[] valueRange = uidl.getStringArrayAttribute(ATTR_VALUERANGE);
-            setMinValue(parseStringValue(valueRange[0]));
-            setMaxValue(parseStringValue(valueRange[1]));
-        }
-
-        String value = uidl.getStringVariable(ATTR_VALUE);
-        textBox.setValue(value);
-    }
-
-    @Override
-    public void setWidth(String width) {
-        super.setWidth(width);
-        textBox.setWidth(width);
-    }
-
-    @Override
-    public void setHeight(String height) {
-        super.setHeight(height);
-        textBox.setHeight(height);
     }
 
     /**
@@ -194,29 +139,19 @@ public abstract class VAbstractStepper extends FlowPanel implements Paintable,
     protected abstract boolean isLargerThanMin(String value);
 
     /**
-     * Set the maximum possible value for this stepper. For
-     * {@link #isValidForRange(String)}
-     * 
-     * @param value
-     */
-    protected abstract void setMaxValue(Object value);
-
-    /**
-     * Set the minimum possible value for this stepper. For
-     * {@link #isValidForRange(String)}
-     * 
-     * @param value
-     */
-    protected abstract void setMinValue(Object value);
-
-    /**
      * Parse the given String value. Used for setting the maximum and minimum .
      * values. Should return null on an empty string.
      * 
      * @param value
      * @return
      */
-    protected abstract Object parseStringValue(String value);
+    public abstract T parseStringValue(String value);
+
+    public abstract S parseStepAmount(String value);
+
+    public boolean canChangeFromTextBox() {
+        return !isDisabled() && !isReadonly() && isManualInputAllowed();
+    }
 
     /**
      * Increase the value of the field. Value is always checked for validity
@@ -270,34 +205,34 @@ public abstract class VAbstractStepper extends FlowPanel implements Paintable,
      * 
      * @param newValue
      */
-    protected void setValue(String newValue) {
+    public void setValue(String newValue) {
         textBox.setValue(newValue);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.google.gwt.event.logical.shared.ValueChangeHandler#onValueChange(
-     * com.google.gwt.event.logical.shared.ValueChangeEvent)
-     */
     public void updateValueToServer(String value) {
-        client.updateVariable(uidlId, ATTR_VALUE, value, immediate);
+        client.updateVariable(uidlId, ATTR_VALUE, value, isImmediate());
     }
 
+    @Override
     public void onValueChange(ValueChangeEvent<String> event) {
         String value = event.getValue();
-        if (isInvalidValueAllowed() || (value != null && isValidForType(value))) {
+        if (isInvalidValuesAllowed()
+                || (value != null && isValidForType(value))) {
             valueUpdateTimer.cancel();
             updateValueToServer(value);
         }
     }
 
-    private boolean isInvalidValueAllowed() {
-		return invalidValuesAllowed;
-	}
+    protected void enabledStateChanged() {
+        if (isDisabled() || isReadonly()) {
+            valueUpdateTimer.cancel();
+        }
 
-	public void setTimerHasChangedValue(boolean timerHasChangedValue) {
+        textBox.setReadOnly(isDisabled() || isReadonly()
+                || !isManualInputAllowed());
+    }
+
+    public void setTimerHasChangedValue(boolean timerHasChangedValue) {
         this.timerHasChangedValue = timerHasChangedValue;
     }
 
@@ -305,16 +240,106 @@ public abstract class VAbstractStepper extends FlowPanel implements Paintable,
         return timerHasChangedValue;
     }
 
-    public boolean canChangeFromTextBox() {
-        return !isDisabled && !isReadonly && isManualInputAllowed;
-
-    }
-
     public boolean isChangeable() {
-        return !isDisabled && !isReadonly;
+        return !isDisabled() && !isReadonly();
     }
 
     public boolean isMouseWheelEnabled() {
         return mouseWheelEnabled;
+    }
+
+    public boolean isDisabled() {
+        return isDisabled;
+    }
+
+    public void setDisabled(boolean isDisabled) {
+        this.isDisabled = isDisabled;
+        enabledStateChanged();
+    }
+
+    public boolean isReadonly() {
+        return isReadonly;
+    }
+
+    public void setReadonly(boolean isReadonly) {
+        this.isReadonly = isReadonly;
+        enabledStateChanged();
+    }
+
+    public boolean isManualInputAllowed() {
+        return isManualInputAllowed;
+    }
+
+    public void setManualInputAllowed(boolean isManualInputAllowed) {
+        this.isManualInputAllowed = isManualInputAllowed;
+    }
+
+    public void setMouseWheelEnabled(boolean mouseWheelEnabled) {
+        this.mouseWheelEnabled = mouseWheelEnabled;
+    }
+
+    public boolean isInvalidValuesAllowed() {
+        return invalidValuesAllowed;
+    }
+
+    public void setInvalidValuesAllowed(boolean invalidValuesAllowed) {
+        this.invalidValuesAllowed = invalidValuesAllowed;
+        enabledStateChanged();
+    }
+
+    public boolean isImmediate() {
+        return immediate;
+    }
+
+    public void setImmediate(boolean immediate) {
+        this.immediate = immediate;
+    }
+
+    @Override
+    public void setWidth(String width) {
+        super.setWidth(width);
+        textBox.setWidth(width);
+    }
+
+    @Override
+    public void setHeight(String height) {
+        super.setHeight(height);
+        textBox.setHeight(height);
+    }
+
+    /**
+     * Set the maximum possible value for this stepper. For
+     * {@link #isValidForRange(String)}
+     * 
+     * @param value
+     */
+    public void setMaxValue(T value) {
+        this.maxValue = value;
+    }
+
+    public T getMaxValue() {
+        return maxValue;
+    }
+
+    /**
+     * Set the minimum possible value for this stepper. For
+     * {@link #isValidForRange(String)}
+     * 
+     * @param value
+     */
+    public void setMinValue(T value) {
+        this.minValue = value;
+    }
+
+    public T getMinValue() {
+        return minValue;
+    }
+
+    public void setStepAmount(S stepAmount) {
+        this.stepAmount = stepAmount;
+    }
+
+    public S getStepAmount() {
+        return this.stepAmount;
     }
 }

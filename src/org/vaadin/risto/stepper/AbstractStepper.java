@@ -1,12 +1,9 @@
 package org.vaadin.risto.stepper;
 
 import java.text.ParseException;
-import java.util.Map;
 
-import org.vaadin.risto.stepper.widgetset.client.ui.VAbstractStepper;
+import org.vaadin.risto.stepper.widgetset.client.AbstractStepperState;
 
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
 import com.vaadin.ui.AbstractField;
 
 /**
@@ -17,166 +14,167 @@ import com.vaadin.ui.AbstractField;
  * @author Risto Yrjänä / Vaadin Ltd.
  * 
  */
-public abstract class AbstractStepper extends AbstractField {
+public abstract class AbstractStepper<T, S> extends AbstractField<T> {
 
-	private static final long serialVersionUID = 4680365780881009306L;
-	
-	private boolean isManualInputAllowed = true;
-	private boolean mouseWheelEnabled = true;
-	private boolean invalidValuesAllowed = false ;
+    private static final long serialVersionUID = 4680365780881009306L;
 
-	public void setManualInputAllowed(boolean isManualInputAllowed) {
-		this.isManualInputAllowed = isManualInputAllowed;
-		requestRepaint();
-	}
+    private T minValue;
+    private T maxValue;
+    private S stepAmount;
 
-	/**
-	 * If manual input is allowed, the user can change the values with both the
-	 * controls and the textfield. If not allowed, only the controls change the
-	 * value.
-	 * 
-	 * @return
-	 */
-	public boolean isManualInputAllowed() {
-		return isManualInputAllowed;
-	}
+    @Override
+    public AbstractStepperState getState() {
+        return (AbstractStepperState) super.getState();
+    }
 
-	public void setMouseWheelEnabled(boolean mouseWheelEnabled) {
-		this.mouseWheelEnabled = mouseWheelEnabled;
-		requestRepaint();
-	}
+    public void setManualInputAllowed(boolean isManualInputAllowed) {
+        getState().setManualInputAllowed(isManualInputAllowed);
+        requestRepaint();
+    }
 
-	/**
-	 * If you want (or don't want) the control to handle mouse wheel scroll
-	 * events, set this accordingly. Default is true, that is, mouse wheel
-	 * events will be handled.
-	 * 
-	 * @param mouseWheelEnabled
-	 *            true to handle the events (the default), false otherwise.
-	 * @author colinf
-	 */
-	public boolean isMouseWheelEnabled() {
-		return mouseWheelEnabled;
-	}
+    /**
+     * If manual input is allowed, the user can change the values with both the
+     * controls and the textfield. If not allowed, only the controls change the
+     * value.
+     * 
+     * @return
+     */
+    public boolean isManualInputAllowed() {
+        return getState().isManualInputAllowed();
+    }
 
-	/**
-	 * If invalid values are allowed, the client sends all manually typed values
-	 * to the server, regardless of whether they are valid or not. The use-case
-	 * is to allow the server to perform validation and show validation
-	 * messages. Note that the Stepper controls still enforces the limits even
-	 * if invalid values are otherwise allowed.
-	 * 
-	 * @return
-	 */
-	public boolean areInvalidValuesAllowed() {
-		return invalidValuesAllowed;
-	}
+    public void setMouseWheelEnabled(boolean mouseWheelEnabled) {
+        getState().setMouseWheelEnabled(mouseWheelEnabled);
+        requestRepaint();
+    }
 
-	public void setInvalidValuesAllowed(boolean invalidValuesAllowed) {
-		this.invalidValuesAllowed = invalidValuesAllowed;
-		requestRepaint();
-	}
+    /**
+     * If you want (or don't want) the control to handle mouse wheel scroll
+     * events, set this accordingly. Default is true, that is, mouse wheel
+     * events will be handled.
+     * 
+     * @param mouseWheelEnabled
+     *            true to handle the events (the default), false otherwise.
+     * @author colinf
+     */
+    public boolean isMouseWheelEnabled() {
+        return getState().isMouseWheelEnabled();
+    }
 
-	@Override
-	public void paintContent(PaintTarget target) throws PaintException {
-		super.paintContent(target);
+    /**
+     * If invalid values are allowed, the client sends all manually typed values
+     * to the server, regardless of whether they are valid or not. The use-case
+     * is to allow the server to perform validation and show validation
+     * messages. Note that the Stepper controls still enforces the limits even
+     * if invalid values are otherwise allowed.
+     * 
+     * @return
+     */
+    public boolean isInvalidValuesAllowed() {
+        return getState().isInvalidValuesAllowed();
+    }
 
-		target.addVariable(this, VAbstractStepper.ATTR_VALUE, getPaintValue());
+    public void setInvalidValuesAllowed(boolean invalidValuesAllowed) {
+        getState().setInvalidValuesAllowed(invalidValuesAllowed);
+        requestRepaint();
+    }
 
-		target.addAttribute(VAbstractStepper.ATTR_VALUERANGE,
-				getValueRangeAsArray());
+    @Override
+    public void updateState() {
+        super.updateState();
+        getState().setFieldValue(parseValueToString(getValue()));
+        getState().setMinValue(parseValueToString(getMinValue()));
+        getState().setMaxValue(parseValueToString(getMaxValue()));
+        getState().setStepAmount(parseStepAmountToString(getStepAmount()));
+    }
 
-		target.addAttribute(VAbstractStepper.ATTR_MANUALINPUT,
-				isManualInputAllowed());
+    // TODO
+    // @Override
+    // public void changeVariables(Object source, Map<String, Object> variables)
+    // {
+    // super.changeVariables(source, variables);
+    //
+    // if (isEnabled() && !isReadOnly() && variables.containsKey("value")) {
+    // try {
+    // Object parsedValue = parseStringValue((String) variables
+    // .get("value"));
+    // if (areInvalidValuesAllowed() || isValidForRange(parsedValue)) {
+    // setValue(parsedValue, true);
+    // }
+    // } catch (ParseException e) {
+    // handleParseException(e);
+    // }
+    // }
+    // }
 
-		target.addAttribute(VAbstractStepper.ATTR_MOUSE_WHEEL_ENABLED,
-				isMouseWheelEnabled());
+    protected void handleParseException(ParseException e) {
+        // NOOP
+        // children can override if necessary
+    }
 
-		target.addAttribute(VAbstractStepper.ATTR_INVALID_VALUES_ALLOWED,
-				areInvalidValuesAllowed());
-		paintDetails(target);
-	}
+    protected String parseValueToString(T value) {
+        return value != null ? value.toString() : "";
+    }
 
-	@Override
-	public void changeVariables(Object source, Map<String, Object> variables) {
-		super.changeVariables(source, variables);
+    protected String parseStepAmountToString(S stepAmount) {
+        return stepAmount != null ? stepAmount.toString() : "";
+    }
 
-		if (isEnabled() && !isReadOnly() && variables.containsKey("value")) {
-			try {
-				Object parsedValue = parseStringValue((String) variables
-						.get("value"));
-				if (areInvalidValuesAllowed() || isValidForRange(parsedValue) ) {
-					setValue(parsedValue, true);
-				}
-			} catch (ParseException e) {
-				// NOOP for now
-			}
-		}
-	}
+    /**
+     * Set the amount for a single step when the the value is increased /
+     * decreased
+     * 
+     * @param amount
+     */
+    public void setStepAmount(S amount) {
+        this.stepAmount = amount;
+    }
 
-	/**
-	 * @return the current value as a non-null string
-	 */
-	protected String getPaintValue() {
-		return (getValue() != null) ? getValue().toString() : "";
-	}
+    public S getStepAmount() {
+        return stepAmount;
+    }
 
-	/**
-	 * For painting additional details. Called after painting values and min/max
-	 * boundaries.
-	 * 
-	 * @param target
-	 * @throws PaintException
-	 */
-	protected abstract void paintDetails(PaintTarget target)
-			throws PaintException;
+    /**
+     * Set the maximum value for this field.
+     * 
+     * @param maxValue
+     */
+    public void setMaxValue(T maxValue) {
+        this.maxValue = maxValue;
+    }
 
-	/**
-	 * @return the min/max values as a String array
-	 */
-	protected abstract String[] getValueRangeAsArray();
+    /**
+     * Set the minumum value for this field.
+     * 
+     * @param maxValue
+     */
+    public void setMinValue(T minValue) {
+        this.minValue = minValue;
+    }
 
-	/**
-	 * Set the amount for a single step when the the value is increased /
-	 * decreased
-	 * 
-	 * @param amount
-	 */
-	public abstract void setStepAmount(Object amount);
+    public T getMaxValue() {
+        return maxValue;
+    }
 
-	/**
-	 * Set the maximum value for this field.
-	 * 
-	 * @param maxValue
-	 */
-	public abstract void setMaxValue(Object maxValue);
+    public T getMinValue() {
+        return minValue;
+    }
 
-	/**
-	 * Set the minumum value for this field.
-	 * 
-	 * @param maxValue
-	 */
-	public abstract void setMinValue(Object minValue);
+    /**
+     * @param value
+     * @return
+     */
+    protected abstract boolean isValidForRange(T value);
 
-	public abstract Object getMaxValue();
+    /**
+     * Parse a String value from the client to a type corresponding to
+     * {@link #getType()}
+     * 
+     * @param value
+     *            the value from client
+     * @return value in the correct type
+     * @throws ParseException
+     */
+    protected abstract T parseStringValue(String value) throws ParseException;
 
-	public abstract Object getMinValue();
-
-	/**
-	 * @param value
-	 * @return
-	 */
-	protected abstract boolean isValidForRange(Object value);
-
-	/**
-	 * Parse a String value from the client to a type corresponding to
-	 * {@link #getType()}
-	 * 
-	 * @param value
-	 *            the value from client
-	 * @return value in the correct type
-	 * @throws ParseException
-	 */
-	protected abstract Object parseStringValue(String value)
-			throws ParseException;
 }

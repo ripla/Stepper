@@ -4,12 +4,10 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
-import org.vaadin.risto.stepper.widgetset.client.ui.VDateStepper;
-
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
-import com.vaadin.ui.ClientWidget;
+import org.vaadin.risto.stepper.widgetset.client.DateStepperState;
+import org.vaadin.risto.stepper.widgetset.client.ui.DateStepField;
 
 /**
  * <p>
@@ -20,23 +18,13 @@ import com.vaadin.ui.ClientWidget;
  * @author Risto Yrjänä / Vaadin Ltd.
  * 
  */
-@ClientWidget(org.vaadin.risto.stepper.widgetset.client.ui.VDateStepper.class)
-public class DateStepper extends AbstractStepper {
+public class DateStepper extends AbstractStepper<Date, Integer> {
 
     private static final long serialVersionUID = 5238300195216371890L;
 
-    private final Integer[] stepAmount;
-
-    private Date minValue;
-
-    private Date maxValue;
-
     public DateStepper() {
-        stepAmount = new Integer[2];
-        stepAmount[VDateStepper.DATEFIELDINDEX] = VDateStepper.DateStepField.DAY
-                .ordinal();
-        stepAmount[VDateStepper.DATESTEPINDEX] = 1;
-
+        setStepAmount(1);
+        setStepField(DateStepField.DAY);
         setValue(new Date());
     }
 
@@ -45,134 +33,52 @@ public class DateStepper extends AbstractStepper {
         setCaption(caption);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.ui.AbstractField#getType()
-     */
     @Override
-    public Class<?> getType() {
+    public Class<Date> getType() {
         return Date.class;
     }
 
     @Override
-    protected String getPaintValue() {
-        Date internalValue = (Date) getValue();
-        if (internalValue == null) {
-            return super.getPaintValue();
-        }
-        DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT,
-                getLocale());
-
-        return df.format(internalValue);
+    public DateStepperState getState() {
+        return (DateStepperState) super.getState();
     }
 
     @Override
-    public void paintDetails(PaintTarget target) throws PaintException {
-        target.addAttribute("locale", getLocale().toString());
-
-        target.addAttribute("stepAmount", stepAmount);
-    }
-
-    /**
-     * Set the integer amount to change the value on one click.
-     */
-    @Override
-    public void setStepAmount(Object amount) {
-        if (!(amount instanceof Integer)) {
-            throw new IllegalArgumentException(
-                    "Step amount must be an instance of Integer");
-        }
-
-        stepAmount[VDateStepper.DATESTEPINDEX] = (Integer) amount;
-        requestRepaint();
-
+    public void setLocale(Locale locale) {
+        getState().setLocale(locale.toString());
+        super.setLocale(locale);
     }
 
     /**
      * Set the field that the stepper should step through. The field must be one
      * of the ones defined by
-     * {@link org.vaadin.risto.stepper.widgetset.client.ui.VDateStepper.DateStepField
-     * )}
+     * {@link org.vaadin.risto.stepper.widgetset.client.ui.DateStepField )}
      * 
      * @param field
-     * @see org.vaadin.risto.stepper.widgetset.client.ui.VDateStepper.DateStepField
+     * @see org.vaadin.risto.stepper.widgetset.client.ui.DateStepField
      */
-    public void setStepField(VDateStepper.DateStepField field) {
-        stepAmount[VDateStepper.DATEFIELDINDEX] = field.ordinal();
-        requestRepaint();
-
-    }
-
-    @Override
-    public void setMaxValue(Object maxValue) {
-        if (maxValue != null && !(maxValue instanceof Date)) {
-            throw new IllegalArgumentException(
-                    "Max value must be an instance of Date");
-        }
-        if (maxValue != null) {
-            this.maxValue = normalizeBoundaryDate((Date) maxValue);
-        } else {
-            this.maxValue = null;
-        }
-
+    public void setStepField(DateStepField field) {
+        getState().setDateStep(field.name());
         requestRepaint();
     }
 
     @Override
-    public void setMinValue(Object minValue) {
-        if (minValue != null && !(minValue instanceof Date)) {
-            throw new IllegalArgumentException(
-                    "Min value must be an instance of Date");
-        }
-
-        if (minValue != null) {
-            this.minValue = normalizeBoundaryDate((Date) minValue);
-        } else {
-            this.minValue = null;
-        }
-
-        requestRepaint();
+    public void setMaxValue(Date maxValue) {
+        super.setMaxValue(normalizeBoundaryDate(maxValue));
     }
 
     @Override
-    public Date getMaxValue() {
-        return maxValue;
+    public void setMinValue(Date minValue) {
+        super.setMinValue(normalizeBoundaryDate(minValue));
     }
 
     @Override
-    public Date getMinValue() {
-        return minValue;
-    }
-
-    @Override
-    protected String[] getValueRangeAsArray() {
-        String[] rangeArray = new String[2];
-        DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT,
-                getLocale());
-
-        if (getMinValue() != null) {
-            rangeArray[0] = df.format(getMinValue());
-        } else {
-            rangeArray[0] = "";
-        }
-
-        if (getMaxValue() != null) {
-            rangeArray[1] = df.format(getMaxValue());
-        } else {
-            rangeArray[1] = "";
-        }
-
-        return rangeArray;
-    }
-
-    @Override
-    protected boolean isValidForRange(Object value) {
+    protected boolean isValidForRange(Date value) {
         if (value == null) {
             return true;
         }
 
-        Date dateValue = (Date) value;
+        Date dateValue = value;
         Calendar valueCalendar = Calendar.getInstance(getLocale());
         valueCalendar.setTime(dateValue);
         Calendar compareCalendar = (Calendar) valueCalendar.clone();
@@ -211,8 +117,12 @@ public class DateStepper extends AbstractStepper {
      * @param boundaryDate
      * @return
      */
-    private Date normalizeBoundaryDate(Date boundaryDate) {
-        Calendar javaCalendar = Calendar.getInstance();
+    protected Date normalizeBoundaryDate(Date boundaryDate) {
+        if (boundaryDate == null) {
+            return null;
+        }
+
+        Calendar javaCalendar = Calendar.getInstance(getLocale());
         javaCalendar.setTime(boundaryDate);
 
         javaCalendar.set(Calendar.MILLISECOND, 0);
@@ -222,5 +132,16 @@ public class DateStepper extends AbstractStepper {
         javaCalendar.set(Calendar.HOUR_OF_DAY, 0);
 
         return javaCalendar.getTime();
+    }
+
+    @Override
+    protected String parseValueToString(Date value) {
+        if (value == null) {
+            return super.parseValueToString(value);
+        }
+        DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT,
+                getLocale());
+
+        return df.format(value);
     }
 }

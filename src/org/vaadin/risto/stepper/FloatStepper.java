@@ -5,9 +5,7 @@ package org.vaadin.risto.stepper;
 
 import java.text.ParseException;
 
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
-import com.vaadin.ui.ClientWidget;
+import org.vaadin.risto.stepper.widgetset.client.FloatStepperState;
 
 /**
  * <p>
@@ -23,21 +21,13 @@ import com.vaadin.ui.ClientWidget;
  * @author Risto Yrjänä / Vaadin Ltd.
  * 
  */
-@ClientWidget(org.vaadin.risto.stepper.widgetset.client.ui.VFloatStepper.class)
-public class FloatStepper extends AbstractStepper {
+public class FloatStepper extends AbstractStepper<Float, Float> {
 
     private static final long serialVersionUID = -5328027647865381265L;
 
-    private float stepAmount = 1.0f;
-
-    private int numberOfDecimals = 2;
-
-    private Float maxValue;
-
-    private Float minValue;
-
     public FloatStepper() {
-        setValue(0);
+        setValue(0f);
+        setStepAmount(1.0f);
     }
 
     public FloatStepper(String caption) {
@@ -46,27 +36,8 @@ public class FloatStepper extends AbstractStepper {
     }
 
     @Override
-    public void paintDetails(PaintTarget target) throws PaintException {
-        target.addAttribute("stepAmount", stepAmount);
-
-        target.addAttribute("numberOfDecimals", numberOfDecimals);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.vaadin.risto.stepper.AbstractStepper#setStepAmount(java.lang.Object)
-     */
-    @Override
-    public void setStepAmount(Object amount) {
-        if (!(amount instanceof Float)) {
-            throw new IllegalArgumentException(
-                    "Step amount must be an instance of Float");
-        }
-
-        stepAmount = (Float) amount;
-        requestRepaint();
+    public FloatStepperState getState() {
+        return (FloatStepperState) super.getState();
     }
 
     /**
@@ -75,7 +46,7 @@ public class FloatStepper extends AbstractStepper {
      * @param numberOfDecimals
      */
     public void setNumberOfDecimals(int numberOfDecimals) {
-        this.numberOfDecimals = numberOfDecimals;
+        getState().setNumberOfDecimals(numberOfDecimals);
         requestRepaint();
     }
 
@@ -85,68 +56,17 @@ public class FloatStepper extends AbstractStepper {
      * @see com.vaadin.ui.AbstractField#getType()
      */
     @Override
-    public Class<?> getType() {
+    public Class<Float> getType() {
         return Float.class;
     }
 
     @Override
-    public void setMaxValue(Object maxValue) {
-        if (maxValue != null && !(maxValue instanceof Float)) {
-            throw new IllegalArgumentException(
-                    "Max value must be an instance of Float");
-        }
-        this.maxValue = (Float) maxValue;
-        requestRepaint();
-
-    }
-
-    @Override
-    public void setMinValue(Object minValue) {
-        if (minValue != null && !(minValue instanceof Float)) {
-            throw new IllegalArgumentException(
-                    "Min value must be an instance of Float");
-        }
-        this.minValue = (Float) minValue;
-        requestRepaint();
-
-    }
-
-    @Override
-    public Float getMaxValue() {
-        return maxValue;
-    }
-
-    @Override
-    public Float getMinValue() {
-        return minValue;
-    }
-
-    @Override
-    protected String[] getValueRangeAsArray() {
-        String[] rangeArray = new String[2];
-        if (getMinValue() != null) {
-            rangeArray[0] = getMinValue().toString();
-        } else {
-            rangeArray[0] = "";
-        }
-
-        if (getMaxValue() != null) {
-            rangeArray[1] = getMaxValue().toString();
-        } else {
-            rangeArray[1] = "";
-        }
-
-        return rangeArray;
-    }
-
-    @Override
-    protected boolean isValidForRange(Object value) {
-        float floatValue = (Float) value;
-        if (getMaxValue() != null && floatValue > getMaxValue()) {
+    protected boolean isValidForRange(Float value) {
+        if (getMaxValue() != null && value > getMaxValue()) {
             return false;
         }
 
-        if (getMinValue() != null && floatValue < getMinValue()) {
+        if (getMinValue() != null && value < getMinValue()) {
             return false;
         }
 
@@ -161,4 +81,17 @@ public class FloatStepper extends AbstractStepper {
 
         return Float.parseFloat(value);
     }
+
+    @Override
+    protected String parseValueToString(Float value) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected String parseStepAmountToString(Float stepAmount) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

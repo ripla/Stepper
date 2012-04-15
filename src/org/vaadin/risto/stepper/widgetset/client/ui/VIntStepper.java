@@ -1,40 +1,11 @@
 package org.vaadin.risto.stepper.widgetset.client.ui;
 
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.UIDL;
-
 /**
  * @author Risto Yrjänä / Vaadin Ltd.
  * 
  */
-public class VIntStepper extends VAbstractStepper {
+public class VIntStepper extends VAbstractStepper<Integer, Integer> {
 
-    private int stepAmount;
-    private Integer maxValue;
-    private Integer minValue;
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.vaadin.risto.stepper.widgetset.client.ui.VAbstractStepper#updateFromUIDL
-     * (com.vaadin.terminal.gwt.client.UIDL,
-     * com.vaadin.terminal.gwt.client.ApplicationConnection)
-     */
-    @Override
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        super.updateFromUIDL(uidl, client);
-
-        stepAmount = uidl.getIntAttribute("stepAmount");
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.vaadin.risto.stepper.widgetset.client.ui.VAbstractStepper#isValidForType
-     * (java.lang.String)
-     */
     @Override
     protected boolean isValidForType(String value) {
         try {
@@ -45,44 +16,22 @@ public class VIntStepper extends VAbstractStepper {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.vaadin.risto.stepper.widgetset.client.ui.VAbstractStepper#
-     * getDecreasedValue(java.lang.String)
-     */
     @Override
     protected String getDecreasedValue(String startValue) throws Exception {
         int intValue = Integer.valueOf(startValue).intValue();
-        intValue -= stepAmount;
+        intValue -= getStepAmount();
         return Integer.toString(intValue);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.vaadin.risto.stepper.widgetset.client.ui.VAbstractStepper#
-     * getIncreasedValue(java.lang.String)
-     */
     @Override
     protected String getIncreasedValue(String startValue) throws Exception {
         int intValue = Integer.valueOf(startValue).intValue();
-        intValue += stepAmount;
+        intValue += getStepAmount();
         return Integer.toString(intValue);
     }
 
     @Override
-    protected void setMaxValue(Object value) {
-        maxValue = (Integer) value;
-    }
-
-    @Override
-    protected void setMinValue(Object value) {
-        minValue = (Integer) value;
-    }
-
-    @Override
-    protected Integer parseStringValue(String value) {
+    public Integer parseStringValue(String value) {
         if (value == null || "".equals(value)) {
             return null;
         } else {
@@ -93,7 +42,7 @@ public class VIntStepper extends VAbstractStepper {
     @Override
     protected boolean isSmallerThanMax(String stringValue) {
         int value = Integer.parseInt(stringValue);
-        if (maxValue != null && value > maxValue) {
+        if (getMaxValue() != null && value > getMaxValue()) {
             return false;
         }
 
@@ -104,10 +53,16 @@ public class VIntStepper extends VAbstractStepper {
     protected boolean isLargerThanMin(String stringValue) {
         int value = Integer.parseInt(stringValue);
 
-        if (minValue != null && value < minValue) {
+        if (getMinValue() != null && value < getMinValue()) {
             return false;
         } else {
             return true;
         }
     }
+
+    @Override
+    public Integer parseStepAmount(String value) {
+        return parseStringValue(value);
+    }
+
 }

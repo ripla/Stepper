@@ -3,44 +3,14 @@
  */
 package org.vaadin.risto.stepper.widgetset.client.ui;
 
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.UIDL;
-
 /**
  * @author Risto Yrjänä / Vaadin Ltd.
  * 
  */
-public class VFloatStepper extends VAbstractStepper {
+public class VFloatStepper extends VAbstractStepper<Float, Float> {
 
-    private float stepAmount;
     private int numberOfDecimals;
-    private Float maxValue;
-    private Float minValue;
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.vaadin.risto.stepper.widgetset.client.ui.VAbstractStepper#updateFromUIDL
-     * (com.vaadin.terminal.gwt.client.UIDL,
-     * com.vaadin.terminal.gwt.client.ApplicationConnection)
-     */
-    @Override
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        super.updateFromUIDL(uidl, client);
-
-        stepAmount = uidl.getFloatAttribute("stepAmount");
-
-        numberOfDecimals = uidl.getIntAttribute("numberOfDecimals");
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.vaadin.risto.stepper.widgetset.client.ui.VAbstractStepper#isValidForType
-     * (java.lang.String)
-     */
     @Override
     protected boolean isValidForType(String value) {
         try {
@@ -51,52 +21,30 @@ public class VFloatStepper extends VAbstractStepper {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.vaadin.risto.stepper.widgetset.client.ui.VAbstractStepper#
-     * getDecreasedValue(java.lang.String)
-     */
     @Override
     public String getDecreasedValue(String startValue) {
         float floatValue = Float.valueOf(startValue).floatValue();
-        floatValue -= stepAmount;
+        floatValue -= getStepAmount();
 
-        float accuracy = (float) Math.pow(10f, numberOfDecimals);
+        float accuracy = (float) Math.pow(10f, getNumberOfDecimals());
         floatValue = Math.round(floatValue * accuracy) / accuracy;
 
         return Float.toString(floatValue);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.vaadin.risto.stepper.widgetset.client.ui.VAbstractStepper#
-     * getIncreasedValue(java.lang.String)
-     */
     @Override
     public String getIncreasedValue(String startValue) {
         float floatValue = Float.valueOf(startValue).floatValue();
-        floatValue += stepAmount;
+        floatValue += getStepAmount();
 
-        float accuracy = (float) Math.pow(10f, numberOfDecimals);
+        float accuracy = (float) Math.pow(10f, getNumberOfDecimals());
         floatValue = Math.round(floatValue * accuracy) / accuracy;
 
         return Float.toString(floatValue);
     }
 
     @Override
-    protected void setMaxValue(Object value) {
-        maxValue = (Float) value;
-    }
-
-    @Override
-    protected void setMinValue(Object value) {
-        minValue = (Float) value;
-    }
-
-    @Override
-    protected Float parseStringValue(String value) {
+    public Float parseStringValue(String value) {
         if (value == null || "".equals(value)) {
             return null;
         } else {
@@ -108,7 +56,7 @@ public class VFloatStepper extends VAbstractStepper {
     protected boolean isSmallerThanMax(String stringValue) {
         float value = Float.parseFloat(stringValue);
 
-        if (maxValue != null && value > maxValue) {
+        if (getMaxValue() != null && value > getMaxValue()) {
             return false;
         } else {
             return true;
@@ -119,10 +67,24 @@ public class VFloatStepper extends VAbstractStepper {
     protected boolean isLargerThanMin(String stringValue) {
         float value = Float.parseFloat(stringValue);
 
-        if (minValue != null && value < minValue) {
+        if (getMinValue() != null && value < getMinValue()) {
             return false;
         } else {
             return true;
         }
     }
+
+    public int getNumberOfDecimals() {
+        return numberOfDecimals;
+    }
+
+    public void setNumberOfDecimals(int numberOfDecimals) {
+        this.numberOfDecimals = numberOfDecimals;
+    }
+
+    @Override
+    public Float parseStepAmount(String value) {
+        return parseStringValue(value);
+    }
+
 }
