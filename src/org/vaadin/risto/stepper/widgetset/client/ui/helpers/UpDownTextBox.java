@@ -26,9 +26,9 @@ public class UpDownTextBox extends TextBox implements KeyDownHandler,
     protected ButtonDownTimer keyDownTimerDown;
     private Integer extraHorizontalPixels;
     private Integer extraVerticalPixels;
-    private final VAbstractStepper stepper;
+    private final VAbstractStepper<?, ?> stepper;
 
-    public UpDownTextBox(VAbstractStepper stepper) {
+    public UpDownTextBox(VAbstractStepper<?, ?> stepper) {
         this.stepper = stepper;
         addKeyDownHandler(this);
         addKeyUpHandler(this);
@@ -57,6 +57,7 @@ public class UpDownTextBox extends TextBox implements KeyDownHandler,
      * @see com.google.gwt.event.dom.client.KeyUpHandler#onKeyUp(com.google.gwt
      * .event.dom.client.KeyUpEvent)
      */
+    @Override
     public void onKeyUp(KeyUpEvent event) {
         if (!stepper.isTimerHasChangedValue()) {
             cancelTimers();
@@ -76,12 +77,7 @@ public class UpDownTextBox extends TextBox implements KeyDownHandler,
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.google.gwt.event.dom.client.KeyDownHandler#onKeyDown(com.google
-     * .gwt.event.dom.client.KeyDownEvent)
-     */
+    @Override
     public void onKeyDown(KeyDownEvent event) {
         int keycode = event.getNativeEvent().getKeyCode();
         if (keycode == KeyCodes.KEY_UP && keyDownTimerUp == null) {
@@ -96,12 +92,7 @@ public class UpDownTextBox extends TextBox implements KeyDownHandler,
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.google.gwt.event.dom.client.MouseWheelHandler#onMouseWheel(com
-     * .google.gwt.event.dom.client.MouseWheelEvent)
-     */
+    @Override
     public void onMouseWheel(MouseWheelEvent event) {
 
         int mouseWheelDelta = event.getDeltaY();

@@ -13,18 +13,13 @@ import com.google.gwt.user.client.Timer;
 public class ButtonDownTimer extends Timer {
 
     protected final boolean increase;
-    private final VAbstractStepper stepper;
+    private final VAbstractStepper<?, ?> stepper;
 
-    public ButtonDownTimer(boolean increase, VAbstractStepper stepper) {
+    public ButtonDownTimer(boolean increase, VAbstractStepper<?, ?> stepper) {
         this.increase = increase;
         this.stepper = stepper;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.google.gwt.user.client.Timer#run()
-     */
     @Override
     public void run() {
         stepper.setTimerHasChangedValue(true);

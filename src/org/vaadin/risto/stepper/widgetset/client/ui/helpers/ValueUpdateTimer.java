@@ -13,17 +13,12 @@ import com.google.gwt.user.client.Timer;
 public class ValueUpdateTimer extends Timer {
 
     protected String value;
-    private final VAbstractStepper stepper;
+    private final VAbstractStepper<?, ?> stepper;
 
-    public ValueUpdateTimer(VAbstractStepper stepper) {
+    public ValueUpdateTimer(VAbstractStepper<?, ?> stepper) {
         this.stepper = stepper;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.google.gwt.user.client.Timer#run()
-     */
     @Override
     public void run() {
         stepper.updateValueToServer(value);

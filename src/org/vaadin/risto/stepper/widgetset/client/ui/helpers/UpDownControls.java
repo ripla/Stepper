@@ -31,9 +31,9 @@ public class UpDownControls extends FlowPanel implements ClickHandler,
     protected final Anchor buttonDown;
     protected final ButtonDownTimer mouseDownTimerUp;
     protected final ButtonDownTimer mouseDownTimerDown;
-    private final VAbstractStepper stepper;
+    private final VAbstractStepper<?, ?> stepper;
 
-    public UpDownControls(VAbstractStepper stepper) {
+    public UpDownControls(VAbstractStepper<?, ?> stepper) {
         this.stepper = stepper;
         setStyleName("v-stepper-updown");
 
@@ -69,12 +69,7 @@ public class UpDownControls extends FlowPanel implements ClickHandler,
         mouseDownTimerDown.cancel();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.google.gwt.event.dom.client.ClickHandler#onClick(com.google.gwt
-     * .event.dom.client.ClickEvent)
-     */
+    @Override
     public void onClick(ClickEvent event) {
         if (!stepper.isTimerHasChangedValue()) {
             cancelTimers();
@@ -88,12 +83,7 @@ public class UpDownControls extends FlowPanel implements ClickHandler,
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.google.gwt.event.dom.client.MouseDownHandler#onMouseDown(com.
-     * google.gwt.event.dom.client.MouseDownEvent)
-     */
+    @Override
     public void onMouseDown(MouseDownEvent event) {
         cancelTimers();
         if (event.getSource() == buttonUp) {
@@ -106,37 +96,22 @@ public class UpDownControls extends FlowPanel implements ClickHandler,
         event.preventDefault();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.google.gwt.event.dom.client.MouseUpHandler#onMouseUp(com.google
-     * .gwt.event.dom.client.MouseUpEvent)
-     */
+    @Override
     public void onMouseUp(MouseUpEvent event) {
         cancelTimers();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.google.gwt.event.dom.client.MouseOverHandler#onMouseOver(com.
-     * google.gwt.event.dom.client.MouseOverEvent)
-     */
+    @Override
     public void onMouseOver(MouseOverEvent event) {
         cancelTimers();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.google.gwt.event.dom.client.MouseOutHandler#onMouseOut(com.google
-     * .gwt.event.dom.client.MouseOutEvent)
-     */
+    @Override
     public void onMouseOut(MouseOutEvent event) {
         cancelTimers();
     }
 
+    @Override
     public void onMouseWheel(MouseWheelEvent event) {
         if (stepper.isMouseWheelEnabled()) {
             int mouseWheelDelta = event.getDeltaY();
