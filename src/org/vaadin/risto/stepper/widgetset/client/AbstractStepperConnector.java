@@ -2,6 +2,9 @@ package org.vaadin.risto.stepper.widgetset.client;
 
 import org.vaadin.risto.stepper.widgetset.client.ui.VAbstractStepper;
 
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.AbstractFieldConnector;
 
@@ -19,6 +22,21 @@ public abstract class AbstractStepperConnector<T, S> extends
     @Override
     public AbstractStepperState getState() {
         return (AbstractStepperState) super.getState();
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+
+        final StepperRpc stepperRpcProxy = RpcProxy.create(StepperRpc.class,
+                this);
+        getWidget().addValueChangeHandler(new ValueChangeHandler<String>() {
+
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                stepperRpcProxy.valueChange(event.getValue());
+            }
+        });
     }
 
     @Override

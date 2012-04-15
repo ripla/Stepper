@@ -3,6 +3,7 @@ package org.vaadin.risto.stepper;
 import java.text.ParseException;
 
 import org.vaadin.risto.stepper.widgetset.client.AbstractStepperState;
+import org.vaadin.risto.stepper.widgetset.client.StepperRpc;
 
 import com.vaadin.ui.AbstractField;
 
@@ -21,6 +22,28 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T> {
     private T minValue;
     private T maxValue;
     private S stepAmount;
+
+    public AbstractStepper() {
+        registerRpc(new StepperRpc() {
+
+            private static final long serialVersionUID = 6754152456843669358L;
+
+            @Override
+            public void valueChange(String value) {
+                if (isEnabled() && !isReadOnly()) {
+                    try {
+                        T parsedValue = parseStringValue(value);
+                        if (isInvalidValuesAllowed()
+                                || isValidForRange(parsedValue)) {
+                            setValue(parsedValue, true);
+                        }
+                    } catch (ParseException e) {
+                        handleParseException(e);
+                    }
+                }
+            }
+        });
+    }
 
     @Override
     public AbstractStepperState getState() {
@@ -87,25 +110,6 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T> {
         getState().setMaxValue(parseValueToString(getMaxValue()));
         getState().setStepAmount(parseStepAmountToString(getStepAmount()));
     }
-
-    // TODO
-    // @Override
-    // public void changeVariables(Object source, Map<String, Object> variables)
-    // {
-    // super.changeVariables(source, variables);
-    //
-    // if (isEnabled() && !isReadOnly() && variables.containsKey("value")) {
-    // try {
-    // Object parsedValue = parseStringValue((String) variables
-    // .get("value"));
-    // if (areInvalidValuesAllowed() || isValidForRange(parsedValue)) {
-    // setValue(parsedValue, true);
-    // }
-    // } catch (ParseException e) {
-    // handleParseException(e);
-    // }
-    // }
-    // }
 
     protected void handleParseException(ParseException e) {
         // NOOP

@@ -7,6 +7,7 @@ import org.vaadin.risto.stepper.widgetset.client.ui.helpers.ValueUpdateTimer;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.TextBox;
 
@@ -191,7 +192,7 @@ public abstract class VAbstractStepper<T, S> extends FlowPanel implements
     }
 
     public void updateValueToServer(String value) {
-        // client.updateVariable(uidlId, ATTR_VALUE, value, isImmediate());
+        fireEvent(new StepperValueChangeEvent(value));
     }
 
     @Override
@@ -211,6 +212,11 @@ public abstract class VAbstractStepper<T, S> extends FlowPanel implements
 
         textBox.setReadOnly(isDisabled() || isReadonly()
                 || !isManualInputAllowed());
+    }
+
+    public HandlerRegistration addValueChangeHandler(
+            ValueChangeHandler<String> handler) {
+        return addHandler(handler, StepperValueChangeEvent.getType());
     }
 
     public void setTimerHasChangedValue(boolean timerHasChangedValue) {
