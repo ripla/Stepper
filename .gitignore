@@ -3,3 +3,5 @@
 /.project
 /build
 /GWT development mode for Stepper.launch
+WebContent/VAADIN/widgetsets
+rebel.xml
