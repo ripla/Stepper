@@ -5,3 +5,5 @@
 /GWT development mode for Stepper.launch
 WebContent/VAADIN/widgetsets
 rebel.xml
+/src/main/webapp/VAADIN/widgetsets
+.gradle

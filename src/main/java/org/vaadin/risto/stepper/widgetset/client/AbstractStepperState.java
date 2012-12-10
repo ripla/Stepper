@@ -1,6 +1,6 @@
 package org.vaadin.risto.stepper.widgetset.client;
 
-import com.vaadin.terminal.gwt.client.AbstractFieldState;
+import com.vaadin.shared.AbstractFieldState;
 
 public class AbstractStepperState extends AbstractFieldState {
 

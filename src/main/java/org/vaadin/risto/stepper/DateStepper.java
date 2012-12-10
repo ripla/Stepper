@@ -39,8 +39,8 @@ public class DateStepper extends AbstractStepper<Date, Integer> {
     }
 
     @Override
-    public DateStepperState getState() {
-        return (DateStepperState) super.getState();
+    public DateStepperState getState(boolean markAsDirty) {
+        return (DateStepperState) super.getState(markAsDirty);
     }
 
     @Override
@@ -57,8 +57,7 @@ public class DateStepper extends AbstractStepper<Date, Integer> {
      * @see org.vaadin.risto.stepper.widgetset.client.ui.DateStepField
      */
     public void setStepField(DateStepField field) {
-        getState().setDateStep(field.name());
-        requestRepaint();
+        getState(true).setDateStep(field.name());
     }
 
     @Override
@@ -72,9 +71,9 @@ public class DateStepper extends AbstractStepper<Date, Integer> {
     }
 
     @Override
-    public void updateState() {
-        super.updateState();
-        getState().setLocale(getLocale().toString());
+    public void beforeClientResponse(boolean initial) {
+        super.beforeClientResponse(initial);
+        getState(false).setLocale(getLocale().toString());
     }
 
     @Override

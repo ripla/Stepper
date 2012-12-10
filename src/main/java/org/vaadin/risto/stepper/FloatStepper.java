@@ -36,8 +36,8 @@ public class FloatStepper extends AbstractStepper<Float, Float> {
     }
 
     @Override
-    public FloatStepperState getState() {
-        return (FloatStepperState) super.getState();
+    public FloatStepperState getState(boolean markAsDirty) {
+        return (FloatStepperState) super.getState(markAsDirty);
     }
 
     /**
@@ -46,15 +46,9 @@ public class FloatStepper extends AbstractStepper<Float, Float> {
      * @param numberOfDecimals
      */
     public void setNumberOfDecimals(int numberOfDecimals) {
-        getState().setNumberOfDecimals(numberOfDecimals);
-        requestRepaint();
+        getState(true).setNumberOfDecimals(numberOfDecimals);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.ui.AbstractField#getType()
-     */
     @Override
     public Class<Float> getType() {
         return Float.class;

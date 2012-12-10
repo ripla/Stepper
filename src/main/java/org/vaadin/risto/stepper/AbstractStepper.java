@@ -13,7 +13,10 @@ import com.vaadin.ui.AbstractField;
  * 
  * 
  * @author Risto Yrjänä / Vaadin Ltd.
- * 
+ * @param <T>
+ *            the type of the value in the field
+ * @param <S>
+ *            the type of the step amount values
  */
 public abstract class AbstractStepper<T, S> extends AbstractField<T> {
 
@@ -46,13 +49,13 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T> {
     }
 
     @Override
-    public AbstractStepperState getState() {
-        return (AbstractStepperState) super.getState();
+    protected AbstractStepperState getState(boolean markAsDirty) {
+        return (AbstractStepperState) super.getState(markAsDirty);
+
     }
 
     public void setManualInputAllowed(boolean isManualInputAllowed) {
-        getState().setManualInputAllowed(isManualInputAllowed);
-        requestRepaint();
+        getState(true).setManualInputAllowed(isManualInputAllowed);
     }
 
     /**
@@ -63,12 +66,11 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T> {
      * @return
      */
     public boolean isManualInputAllowed() {
-        return getState().isManualInputAllowed();
+        return getState(false).isManualInputAllowed();
     }
 
     public void setMouseWheelEnabled(boolean mouseWheelEnabled) {
-        getState().setMouseWheelEnabled(mouseWheelEnabled);
-        requestRepaint();
+        getState(true).setMouseWheelEnabled(mouseWheelEnabled);
     }
 
     /**
@@ -81,7 +83,7 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T> {
      * @author colinf
      */
     public boolean isMouseWheelEnabled() {
-        return getState().isMouseWheelEnabled();
+        return getState(false).isMouseWheelEnabled();
     }
 
     /**
@@ -94,21 +96,22 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T> {
      * @return
      */
     public boolean isInvalidValuesAllowed() {
-        return getState().isInvalidValuesAllowed();
+        return getState(false).isInvalidValuesAllowed();
     }
 
     public void setInvalidValuesAllowed(boolean invalidValuesAllowed) {
-        getState().setInvalidValuesAllowed(invalidValuesAllowed);
-        requestRepaint();
+        getState(true).setInvalidValuesAllowed(invalidValuesAllowed);
     }
 
     @Override
-    public void updateState() {
-        super.updateState();
-        getState().setFieldValue(parseValueToString(getValue()));
-        getState().setMinValue(parseValueToString(getMinValue()));
-        getState().setMaxValue(parseValueToString(getMaxValue()));
-        getState().setStepAmount(parseStepAmountToString(getStepAmount()));
+    public void beforeClientResponse(boolean initial) {
+        super.beforeClientResponse(initial);
+
+        // update values that are parsed for the client
+        getState(true).setFieldValue(parseValueToString(getValue()));
+        getState(true).setMinValue(parseValueToString(getMinValue()));
+        getState(true).setMaxValue(parseValueToString(getMaxValue()));
+        getState(true).setStepAmount(parseStepAmountToString(getStepAmount()));
     }
 
     protected void handleParseException(ParseException e) {
@@ -132,7 +135,7 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T> {
      */
     public void setStepAmount(S amount) {
         this.stepAmount = amount;
-        requestRepaint();
+        markAsDirty();
     }
 
     public S getStepAmount() {
@@ -146,7 +149,7 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T> {
      */
     public void setMaxValue(T maxValue) {
         this.maxValue = maxValue;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -156,7 +159,7 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T> {
      */
     public void setMinValue(T minValue) {
         this.minValue = minValue;
-        requestRepaint();
+        markAsDirty();
     }
 
     public T getMaxValue() {
