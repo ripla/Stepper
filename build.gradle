@@ -3,4 +3,4 @@ apply plugin: 'war'
 apply plugin: 'eclipse'
 
 vaadin.version = "7.0.0.beta10"
-vaadin.widgetset = "com.example.Widgetset"
+vaadin.widgetset = "org.vaadin.risto.stepper.widgetset.StepperWidgetset"

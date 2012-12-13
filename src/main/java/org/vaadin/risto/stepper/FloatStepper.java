@@ -5,7 +5,7 @@ package org.vaadin.risto.stepper;
 
 import java.text.ParseException;
 
-import org.vaadin.risto.stepper.widgetset.client.FloatStepperState;
+import org.vaadin.risto.stepper.widgetset.client.shared.FloatStepperState;
 
 /**
  * <p>
@@ -36,8 +36,8 @@ public class FloatStepper extends AbstractStepper<Float, Float> {
     }
 
     @Override
-    public FloatStepperState getState(boolean markAsDirty) {
-        return (FloatStepperState) super.getState(markAsDirty);
+    protected FloatStepperState getState() {
+        return (FloatStepperState) super.getState();
     }
 
     /**
@@ -46,7 +46,7 @@ public class FloatStepper extends AbstractStepper<Float, Float> {
      * @param numberOfDecimals
      */
     public void setNumberOfDecimals(int numberOfDecimals) {
-        getState(true).setNumberOfDecimals(numberOfDecimals);
+        getState().setNumberOfDecimals(numberOfDecimals);
     }
 
     @Override

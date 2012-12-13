@@ -6,7 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import org.vaadin.risto.stepper.widgetset.client.DateStepperState;
+import org.vaadin.risto.stepper.widgetset.client.shared.DateStepperState;
 import org.vaadin.risto.stepper.widgetset.client.ui.DateStepField;
 
 /**
@@ -39,8 +39,8 @@ public class DateStepper extends AbstractStepper<Date, Integer> {
     }
 
     @Override
-    public DateStepperState getState(boolean markAsDirty) {
-        return (DateStepperState) super.getState(markAsDirty);
+    protected DateStepperState getState() {
+        return (DateStepperState) super.getState();
     }
 
     @Override
@@ -57,7 +57,7 @@ public class DateStepper extends AbstractStepper<Date, Integer> {
      * @see org.vaadin.risto.stepper.widgetset.client.ui.DateStepField
      */
     public void setStepField(DateStepField field) {
-        getState(true).setDateStep(field.name());
+        getState().setDateStep(field.name());
     }
 
     @Override
@@ -73,7 +73,7 @@ public class DateStepper extends AbstractStepper<Date, Integer> {
     @Override
     public void beforeClientResponse(boolean initial) {
         super.beforeClientResponse(initial);
-        getState(false).setLocale(getLocale().toString());
+        getState().setLocale(getLocale().toString());
     }
 
     @Override

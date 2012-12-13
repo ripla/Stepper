@@ -10,6 +10,7 @@ import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
  * @author Risto Yrjänä / Vaadin Ltd.
  * 
  */
+
 public class VDateStepper extends VAbstractStepper<Date, Integer> {
 
     private DateStepField dateStepField;

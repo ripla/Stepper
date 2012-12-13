@@ -2,7 +2,9 @@ package org.vaadin.risto.stepper;
 
 import java.text.ParseException;
 
-import org.vaadin.risto.stepper.widgetset.client.IntStepperState;
+import org.vaadin.risto.stepper.widgetset.client.shared.IntStepperState;
+
+import com.vaadin.shared.communication.SharedState;
 
 /**
  * <p>
@@ -33,8 +35,13 @@ public class IntStepper extends AbstractStepper<Integer, Integer> {
     }
 
     @Override
-    public IntStepperState getState() {
+    protected IntStepperState getState() {
         return (IntStepperState) super.getState();
+    }
+
+    @Override
+    protected SharedState createState() {
+        return new IntStepperState();
     }
 
     @Override

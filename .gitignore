@@ -6,4 +6,5 @@
 WebContent/VAADIN/widgetsets
 rebel.xml
 /src/main/webapp/VAADIN/widgetsets
+/src/main/webapp/VAADIN/gwt-unitCache
 .gradle
