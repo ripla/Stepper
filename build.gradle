@@ -1,6 +1,10 @@
-apply from: 'http://plugins.jasoft.fi/vaadin.plugin'
+apply plugin: 'java'
+apply from: 'http://plugins.jasoft.fi/vaadin.plugin' //Vaadin Gradle plugin
 apply plugin: 'war'
 apply plugin: 'eclipse'
 
-vaadin.version = "7.0.0.beta10"
+sourceCompatibility = "1.6"
+targetCompatibility = "1.6"
+
+vaadin.version = "7.0.0.beta11"
 vaadin.widgetset = "org.vaadin.risto.stepper.widgetset.StepperWidgetset"
