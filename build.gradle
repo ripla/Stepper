@@ -1,10 +1,59 @@
-apply plugin: 'java'
-apply from: 'http://plugins.jasoft.fi/vaadin.plugin' //Vaadin Gradle plugin
-apply plugin: 'war'
-apply plugin: 'eclipse'
+//common for both projects
+subprojects {
+	apply plugin: "eclipse"
+	apply plugin: "java"
 
-sourceCompatibility = "1.6"
-targetCompatibility = "1.6"
+	apply from: "/Users/ripla/Documents/workspaces/community/gradle-vaadin-plugin/vaadin-development.plugin"
+	vaadin.version = "7.0.0.beta11"
 
-vaadin.version = "7.0.0.beta11"
-vaadin.widgetset = "org.vaadin.risto.stepper.widgetset.StepperWidgetset"
+	sourceCompatibility = "1.6"
+	targetCompatibility = "1.6"
+
+	ext.baseNameUpper = project.parent.name
+	ext.baseNameLower = project.parent.name.toLowerCase()
+	
+	group = "org.vaadin.risto.${baseNameLower}"
+
+	//creates archives named "name-version.jar" and "name.war" where name is the name of the main project
+	archivesBaseName = baseNameLower
+}
+
+//addon project, only creates the Directory-compatible JAR
+project(":addon") {
+	eclipse.project.name = "${project.parent.name}-addon"
+
+	version = "2.0.1"
+	vaadin.widgetset = "${group}.widgetset.${baseNameUpper}Widgetset"
+	
+	dependencies {
+		testCompile group: "junit", name: "junit", version: "4.+"
+	}
+
+	jar {
+		from sourceSets.main.allJava //include sources
+	   
+		manifest = project.manifest {
+			attributes 'Implementation-Title': "${baseNameUpper}"
+			attributes 'Implementation-Version': version
+			attributes 'Implementation-Vendor': 'Risto Yrjänä / Vaadin'
+			attributes 'Vaadin-Package-Version': '1'
+			attributes 'Vaadin-License-Title': 'Apache License 2.0'
+			attributes 'Vaadin-Widgetsets': vaadin.widgetset
+			}
+		}
+		
+	war.enabled = false //war plugin applied by the Vaadin plugin, not needed here
+}
+
+//demo project, builds addon and packages demo UI as WAR
+project(":demo") {
+	eclipse.project.name = "${project.parent.name}-demo"
+	
+	apply plugin: "war"
+	
+	dependencies {
+		compile project(":addon")
+	}
+
+	vaadin.widgetset = "${group}.widgetset.${baseNameUpper}DemoWidgetset"
+}
