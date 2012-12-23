@@ -1,10 +1,8 @@
-/.settings
-/.classpath
-/.project
-/build
-/GWT development mode for Stepper.launch
-WebContent/VAADIN/widgetsets
-rebel.xml
-/src/main/webapp/VAADIN/widgetsets
-/src/main/webapp/VAADIN/gwt-unitCache
+.settings
+.classpath
+.project
+/addon/build
+/demo/build
+/*/src/main/webapp/VAADIN/widgetsets
+/*/src/main/webapp/VAADIN/gwt-unitCache
 .gradle*
