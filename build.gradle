@@ -20,7 +20,7 @@ subprojects {
 
 //addon project, only creates the Directory-compatible JAR
 project(":addon") {
-	eclipse.project.name = "${project.parent.name}-addon"
+	eclipse.project.name = "${baseNameUpper}-addon"
 
 	version = "2.0.1"
 	vaadin.widgetset = "${group}.widgetset.${baseNameUpper}Widgetset"
@@ -47,7 +47,7 @@ project(":addon") {
 
 //demo project, builds addon and packages demo UI as WAR
 project(":demo") {
-	eclipse.project.name = "${project.parent.name}-demo"
+	eclipse.project.name = "${baseNameUpper}-demo"
 	
 	apply plugin: "war"
 	
