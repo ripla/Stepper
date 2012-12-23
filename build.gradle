@@ -1,6 +1,6 @@
 //common for both projects
 subprojects {
-	apply plugin: "eclipse"
+	apply plugin: "eclipse-wtp"
 	apply plugin: "java"
 
 	apply from: "/Users/ripla/Documents/workspaces/community/gradle-vaadin-plugin/vaadin-development.plugin"
@@ -56,4 +56,12 @@ project(":demo") {
 	}
 
 	vaadin.widgetset = "${group}.widgetset.${baseNameUpper}DemoWidgetset"
+}
+
+task(dist, type: Sync, dependsOn: [':addon:build', ':demo:build']) {
+	description = "Copies the addon JAR and the demo WAR to target/"
+	File targetDir = mkdir("target")
+	from project(":addon").jar.archivePath
+	from project(":demo").war.archivePath
+	into targetDir
 }
