@@ -3,6 +3,9 @@
 .project
 /addon/build
 /demo/build
+/addon/bin
+/demo/bin
+/build
 /*/src/main/webapp/VAADIN/widgetsets
 /*/src/main/webapp/VAADIN/gwt-unitCache
 .gradle*

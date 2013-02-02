@@ -1,15 +1,18 @@
 //common for both projects
 subprojects {
-	apply plugin: "eclipse-wtp"
+	repositories {
+    	mavenCentral()
+	}
+
 	apply plugin: "java"
 
 	apply from: "/Users/ripla/Documents/workspaces/community/gradle-vaadin-plugin/vaadin-development.plugin"
-	vaadin.version = "7.0.0.beta11"
+	vaadin.version = "7.0.0.rc2"
 
 	sourceCompatibility = "1.6"
 	targetCompatibility = "1.6"
 
-	ext.baseNameUpper = project.parent.name
+	ext.baseNameUpper = project.parent.name.capitalize()
 	ext.baseNameLower = project.parent.name.toLowerCase()
 	
 	group = "org.vaadin.risto.${baseNameLower}"
@@ -20,13 +23,15 @@ subprojects {
 
 //addon project, only creates the Directory-compatible JAR
 project(":addon") {
+	apply plugin: "eclipse"
 	eclipse.project.name = "${baseNameUpper}-addon"
 
-	version = "2.0.1"
+	version = "2.0.2"
 	vaadin.widgetset = "${group}.widgetset.${baseNameUpper}Widgetset"
-	
+	vaadin.manageWidgetset = false
+
 	dependencies {
-		testCompile group: "junit", name: "junit", version: "4.+"
+		testCompile "junit:junit:4.+"
 	}
 
 	jar {
@@ -47,15 +52,17 @@ project(":addon") {
 
 //demo project, builds addon and packages demo UI as WAR
 project(":demo") {
+	apply plugin: "eclipse-wtp"
+
 	eclipse.project.name = "${baseNameUpper}-demo"
-	
-	apply plugin: "war"
 	
 	dependencies {
 		compile project(":addon")
+		compile "com.google.guava:guava:14.0-rc2"
 	}
 
 	vaadin.widgetset = "${group}.widgetset.${baseNameUpper}DemoWidgetset"
+	vaadin.manageWidgetset = false
 }
 
 task(dist, type: Sync, dependsOn: [':addon:build', ':demo:build']) {
