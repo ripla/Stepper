@@ -6,7 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.vaadin.risto.stepper.widgetset.client.ui.DateStepField;
+import org.vaadin.risto.stepper.widgetset.client.shared.DateStepperField;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.data.Property;
@@ -135,7 +135,7 @@ public class StepperDemoUI extends UI {
 
         dateStepper = new DateStepper();
         dateStepper.setValue(new Date());
-        dateStepper.setStepField(DateStepField.DAY);
+        dateStepper.setStepField(DateStepperField.DAY);
         dateStepper.setStepAmount(1);
         dateStepper.setCaption("DateStepper, step 1 day");
 

@@ -2,24 +2,22 @@ package org.vaadin.risto.stepper.widgetset.client.ui;
 
 import java.util.Date;
 
+import org.vaadin.risto.stepper.widgetset.client.shared.DateStepperField;
+
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
+import com.google.gwt.i18n.shared.DateTimeFormat;
+import com.vaadin.client.VConsole;
 
 /**
- * @author Risto Yrjänä / Vaadin Ltd.
+ * @author Risto Yrjänä / Vaadin
  * 
  */
 
 public class VDateStepper extends VAbstractStepper<Date, Integer> {
 
-    private DateStepField dateStepField;
+    private DateStepperField dateStepField;
 
     private DateTimeFormat dateFormat;
-
-    public VDateStepper() {
-        setDateFormat(DateTimeFormat.getFormat(PredefinedFormat.DATE_SHORT));
-    }
 
     @Override
     protected boolean isValidForType(String value) {
@@ -27,6 +25,8 @@ public class VDateStepper extends VAbstractStepper<Date, Integer> {
             getDateFormat().parse(value);
             return true;
         } catch (IllegalArgumentException e) {
+            VConsole.error("Value " + value + " wasn't valid");
+            VConsole.error(e);
             return false;
         }
     }
@@ -131,15 +131,15 @@ public class VDateStepper extends VAbstractStepper<Date, Integer> {
         return dateFormat;
     }
 
-    public void setDateFormat(DateTimeFormat dateFormat) {
-        this.dateFormat = dateFormat;
+    public void setDateFormat(DateTimeFormat dateTimeFormat) {
+        this.dateFormat = dateTimeFormat;
     }
 
-    public DateStepField getDateStepField() {
+    public DateStepperField getDateStepField() {
         return dateStepField;
     }
 
-    public void setDateStepField(DateStepField dateStepField) {
+    public void setDateStepField(DateStepperField dateStepField) {
         this.dateStepField = dateStepField;
     }
 

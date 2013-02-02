@@ -17,8 +17,8 @@
 		<init-param>
 			<description>
   		Vaadin UI to start</description>
-			<param-name>UI</param-name>
-			<param-value>org.vaadin.risto.stepper.StepperDemoUI</param-value>
+			<param-name>UIProvider</param-name>
+            <param-value>org.vaadin.risto.stepper.DemoUIProvider</param-value>
 		</init-param>
 		<init-param>
 			<description>

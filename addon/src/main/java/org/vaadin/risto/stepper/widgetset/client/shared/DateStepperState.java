@@ -1,26 +1,25 @@
 package org.vaadin.risto.stepper.widgetset.client.shared;
 
-
 public class DateStepperState extends AbstractStepperState {
 
     private static final long serialVersionUID = 4107715154084103561L;
 
-    private String dateStep;
-    private String locale;
+    private DateStepperField dateStep;
+    private String dateFormat;
 
-    public String getDateStep() {
+    public DateStepperField getDateStep() {
         return dateStep;
     }
 
-    public void setDateStep(String dateStep) {
+    public void setDateStep(DateStepperField dateStep) {
         this.dateStep = dateStep;
     }
 
-    public String getLocale() {
-        return locale;
+    public String getDateFormat() {
+        return dateFormat;
     }
 
-    public void setLocale(String locale) {
-        this.locale = locale;
+    public void setDateFormat(String dateFormat) {
+        this.dateFormat = dateFormat;
     }
 }

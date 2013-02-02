@@ -2,12 +2,13 @@ package org.vaadin.risto.stepper;
 
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import org.vaadin.risto.stepper.widgetset.client.shared.DateStepperField;
 import org.vaadin.risto.stepper.widgetset.client.shared.DateStepperState;
-import org.vaadin.risto.stepper.widgetset.client.ui.DateStepField;
 
 /**
  * <p>
@@ -21,10 +22,11 @@ import org.vaadin.risto.stepper.widgetset.client.ui.DateStepField;
 public class DateStepper extends AbstractStepper<Date, Integer> {
 
     private static final long serialVersionUID = 5238300195216371890L;
+    private SimpleDateFormat dateFormat;
 
     public DateStepper() {
         setStepAmount(1);
-        setStepField(DateStepField.DAY);
+        setStepField(DateStepperField.DAY);
         setValue(new Date());
     }
 
@@ -51,13 +53,13 @@ public class DateStepper extends AbstractStepper<Date, Integer> {
     /**
      * Set the field that the stepper should step through. The field must be one
      * of the ones defined by
-     * {@link org.vaadin.risto.stepper.widgetset.client.ui.DateStepField )}
+     * {@link org.vaadin.risto.stepper.widgetset.client.ui.DateStepperField )}
      * 
      * @param field
-     * @see org.vaadin.risto.stepper.widgetset.client.ui.DateStepField
+     * @see org.vaadin.risto.stepper.widgetset.client.ui.DateStepperField
      */
-    public void setStepField(DateStepField field) {
-        getState().setDateStep(field.name());
+    public void setStepField(DateStepperField field) {
+        getState().setDateStep(field);
     }
 
     @Override
@@ -73,7 +75,8 @@ public class DateStepper extends AbstractStepper<Date, Integer> {
     @Override
     public void beforeClientResponse(boolean initial) {
         super.beforeClientResponse(initial);
-        getState().setLocale(getLocale().toString());
+
+        getState().setDateFormat(dateFormatToPattern(getDateFormat()));
     }
 
     @Override
@@ -110,8 +113,7 @@ public class DateStepper extends AbstractStepper<Date, Integer> {
             return null;
         }
 
-        DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT,
-                getLocale());
+        DateFormat df = getDateFormat();
         return df.parse(value);
     }
 
@@ -143,9 +145,40 @@ public class DateStepper extends AbstractStepper<Date, Integer> {
         if (value == null) {
             return super.parseValueToString(value);
         }
-        DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT,
-                getLocale());
+        DateFormat df = getDateFormat();
 
         return df.format(value);
+    }
+
+    public DateFormat getDateFormat() {
+        if (dateFormat != null) {
+            return dateFormat;
+        } else {
+            return DateFormat.getDateInstance(DateFormat.SHORT, getLocale());
+        }
+    }
+
+    /**
+     * Set the {@link SimpleDateFormat} used to format the value of this field.
+     * If set to null (as it is by default), DateStepper will generate a short
+     * date format based on the current locale.
+     * 
+     * Please note that this feature is experimental, and not all patterns are
+     * supported by the client-side implementation.
+     * 
+     * @param dateFormat
+     */
+    public void setDateFormat(SimpleDateFormat dateFormat) {
+        this.dateFormat = dateFormat;
+        markAsDirty();
+    }
+
+    protected static String dateFormatToPattern(DateFormat dateFormat) {
+        if (dateFormat instanceof SimpleDateFormat) {
+            return ((SimpleDateFormat) dateFormat).toPattern();
+        } else {
+            throw new IllegalArgumentException(
+                    "Unable to form date pattern from " + dateFormat);
+        }
     }
 }
