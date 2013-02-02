@@ -26,7 +26,7 @@ project(":addon") {
 	apply plugin: "eclipse"
 	eclipse.project.name = "${baseNameUpper}-addon"
 
-	version = "2.0.2"
+	version = "2.1"
 	vaadin.widgetset = "${group}.widgetset.${baseNameUpper}Widgetset"
 	vaadin.manageWidgetset = false
 
@@ -65,7 +65,7 @@ project(":demo") {
 	vaadin.manageWidgetset = false
 }
 
-task(dist, type: Sync, dependsOn: [':addon:build', ':demo:build']) {
+task(dist, type: Sync, dependsOn: [':addon:jar', ':demo:war']) {
 	description = "Copies the addon JAR and the demo WAR to target/"
 	File targetDir = mkdir("target")
 	from project(":addon").jar.archivePath
