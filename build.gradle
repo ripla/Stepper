@@ -1,3 +1,23 @@
+//jrebel config
+apply plugin: 'rebel'
+
+buildscript {
+  repositories {
+     mavenCentral()
+     // This repo is optional, as since version 1.1.2, we also always deploy to Maven central.
+     // Be aware that it could take a bit of time (couple of hours) before a published new
+     // version will appear in the central repository.
+     mavenRepo(
+       name: 'zt-public-snapshots',
+       url: 'http://repos.zeroturnaround.com/nexus/content/groups/zt-public/'
+     )
+  }
+
+  dependencies {
+     classpath group: 'org.zeroturnaround', name: 'gradle-jrebel-plugin', version: '1.1.2'
+  }
+}
+
 //common for both projects
 subprojects {
 	repositories {
@@ -6,8 +26,14 @@ subprojects {
 
 	apply plugin: "java"
 
-	apply from: "/Users/ripla/Documents/workspaces/community/gradle-vaadin-plugin/vaadin-development.plugin"
-	vaadin.version = "7.0.0.rc2"
+	apply from: "http://plugins.jasoft.fi/vaadin.plugin?version=0.6.3"
+	vaadin.version = "7.1.4"
+	vaadin.gwt.jvmArgs=["-Xmx1024m"]
+	vaadin.jvmArgs=["-Xmx1024m"]
+	vaadin.gwt.draftCompile = true
+	vaadin.manageWidgetset = false
+	vaadin.gwt.strict = true
+	vaadin.servletVersion= "3.0"
 
 	sourceCompatibility = "1.6"
 	targetCompatibility = "1.6"
@@ -26,9 +52,8 @@ project(":addon") {
 	apply plugin: "eclipse"
 	eclipse.project.name = "${baseNameUpper}-addon"
 
-	version = "2.1"
+	version = "2.1.2"
 	vaadin.widgetset = "${group}.widgetset.${baseNameUpper}Widgetset"
-	vaadin.manageWidgetset = false
 
 	dependencies {
 		testCompile "junit:junit:4.+"
@@ -58,11 +83,12 @@ project(":demo") {
 	
 	dependencies {
 		compile project(":addon")
-		compile "com.google.guava:guava:14.0-rc2"
+		compile "com.google.guava:guava:14.0.1"
 	}
 
+	war.dependsOn(generateRebel)
+
 	vaadin.widgetset = "${group}.widgetset.${baseNameUpper}DemoWidgetset"
-	vaadin.manageWidgetset = false
 }
 
 task(dist, type: Sync, dependsOn: [':addon:jar', ':demo:war']) {
