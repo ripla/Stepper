@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-Vaadin-License-Title: Apache 2.0
-Implementation-Vendor: Risto Yrjänä / Vaadin Ltd.
-Implementation-Title: Stepper
-Implementation-Version: 2.0
-Vaadin-Package-Version: 1
-Class-Path: 
-Vaadin-Widgetsets: org.vaadin.risto.stepper.widgetset.StepperWidgetset
-

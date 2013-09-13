@@ -1,12 +1,13 @@
 package org.vaadin.risto.stepper.widgetset.client.ui;
 
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.vaadin.risto.stepper.widgetset.client.shared.DateStepperField;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.shared.DateTimeFormat;
-import com.vaadin.client.VConsole;
 
 /**
  * @author Risto Yrjänä / Vaadin
@@ -19,14 +20,15 @@ public class VDateStepper extends VAbstractStepper<Date, Integer> {
 
     private DateTimeFormat dateFormat;
 
+    private final Logger logger = Logger.getLogger("VDateStepper");
+
     @Override
     protected boolean isValidForType(String value) {
         try {
             getDateFormat().parse(value);
             return true;
         } catch (IllegalArgumentException e) {
-            VConsole.error("Value " + value + " wasn't valid");
-            VConsole.error(e);
+            logger.log(Level.WARNING, "Value " + value + " wasn't valid", e);
             return false;
         }
     }
