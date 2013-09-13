@@ -2,6 +2,14 @@
 	position: relative;
 }
 
+.v-stepper.v-has-width .gwt-TextBox {
+	width: 100%;
+	
+	-moz-box-sizing: border-box;
+	-webkit-boz-sizing: border-box;
+	box-sizing: border-box;
+}
+
 .v-stepper .v-stepper-updown {
 	position: absolute;
 	top: 2px;
