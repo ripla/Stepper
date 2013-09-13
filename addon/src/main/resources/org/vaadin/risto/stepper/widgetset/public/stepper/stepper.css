@@ -41,3 +41,20 @@
 .v-ie8 .v-stepper .v-stepper-updown {
 	top: 1px;
 }
+
+.v-ie10 .v-stepper .v-stepper-up,
+.v-ie10 .v-stepper .v-stepper-down {
+	padding-right: 0;
+}
+
+.v-ie10 .v-stepper .v-stepper-up {
+	padding-top: 0;
+}
+
+.v-ie10 .v-stepper .v-stepper-updown {
+	top: 0;
+	right: 0;
+	margin-right: 0;
+}
+
+	
