@@ -5,11 +5,13 @@ import org.vaadin.risto.stepper.widgetset.client.ui.helpers.UpDownTextBox;
 import org.vaadin.risto.stepper.widgetset.client.ui.helpers.ValueUpdateTimer;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.TextBox;
+import com.vaadin.client.Util;
 
 /**
  * 
@@ -54,8 +56,6 @@ public abstract class VAbstractStepper<T, S> extends FlowPanel implements
      */
     public VAbstractStepper() {
 
-        // This method call of the Paintable interface sets the component
-        // style name in DOM tree
         setStyleName(CLASSNAME);
 
         textBox = new UpDownTextBox(this);
@@ -277,12 +277,36 @@ public abstract class VAbstractStepper<T, S> extends FlowPanel implements
     @Override
     public void setWidth(String width) {
         super.setWidth(width);
-        textBox.setWidth(width);
+
+        if (width != null && width.endsWith("%")) {
+            Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+
+                @Override
+                public void execute() {
+                    int realWidth = Util
+                            .getRequiredWidthBoundingClientRect(VAbstractStepper.this
+                                    .getElement());
+                    int textBoxBorder = Util.measureHorizontalPaddingAndBorder(
+                            textBox.getElement(), 2);
+
+                    textBox.setWidth(Integer
+                            .toString(realWidth - textBoxBorder) + "px");
+                }
+            });
+
+        } else {
+            int realWidth = Util.getRequiredWidthBoundingClientRect(this
+                    .getElement());
+            int textBoxBorder = Util.measureHorizontalPaddingAndBorder(
+                    textBox.getElement(), 2);
+            textBox.setWidth(Integer.toString(realWidth - textBoxBorder) + "px");
+        }
     }
 
     @Override
     public void setHeight(String height) {
         super.setHeight(height);
+
         textBox.setHeight(height);
     }
 

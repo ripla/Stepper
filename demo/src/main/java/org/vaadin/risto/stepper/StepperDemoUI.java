@@ -71,6 +71,7 @@ public class StepperDemoUI extends UI {
         panel.setWidth("700px");
 
         VerticalLayout layout = new VerticalLayout();
+        layout.setWidth("100%");
         layout.setSpacing(true);
         panel.setContent(layout);
         layout.setMargin(true);
