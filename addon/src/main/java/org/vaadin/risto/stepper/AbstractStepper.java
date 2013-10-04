@@ -2,6 +2,7 @@ package org.vaadin.risto.stepper;
 
 import java.text.ParseException;
 
+import org.json.JSONException;
 import org.vaadin.risto.stepper.widgetset.client.shared.AbstractStepperState;
 import org.vaadin.risto.stepper.widgetset.client.shared.StepperRpc;
 
@@ -34,6 +35,25 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T> {
             @Override
             public void valueChange(String value) {
                 if (isEnabled() && !isReadOnly()) {
+
+                    /*
+                     * Client side updates the state before sending the event so
+                     * we need to make sure the cached state is updated to match
+                     * the client. If we do not do this, a reverting setValue()
+                     * call in a listener will not cause the new state to be
+                     * sent to the client. This is a problem with Vaadin state
+                     * caching.
+                     * 
+                     * See e.g. http://dev.vaadin.com/ticket/12133
+                     */
+                    try {
+                        getUI().getConnectorTracker()
+                                .getDiffState(AbstractStepper.this)
+                                .put("value", value);
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+
                     try {
                         T parsedValue = parseStringValue(value);
                         if (isInvalidValuesAllowed()
@@ -54,7 +74,7 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T> {
     }
 
     public void setManualInputAllowed(boolean isManualInputAllowed) {
-        getState().setManualInputAllowed(isManualInputAllowed);
+        getState().isManualInputAllowed = isManualInputAllowed;
     }
 
     /**
@@ -65,11 +85,7 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T> {
      * @return
      */
     public boolean isManualInputAllowed() {
-        return getState().isManualInputAllowed();
-    }
-
-    public void setMouseWheelEnabled(boolean mouseWheelEnabled) {
-        getState().setMouseWheelEnabled(mouseWheelEnabled);
+        return getState().isManualInputAllowed;
     }
 
     /**
@@ -77,12 +93,16 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T> {
      * events, set this accordingly. Default is true, that is, mouse wheel
      * events will be handled.
      * 
-     * @param mouseWheelEnabled
+     * @param isMouseWheelEnabled
      *            true to handle the events (the default), false otherwise.
      * @author colinf
      */
+    public void setMouseWheelEnabled(boolean isMouseWheelEnabled) {
+        getState().isMouseWheelEnabled = isMouseWheelEnabled;
+    }
+
     public boolean isMouseWheelEnabled() {
-        return getState().isMouseWheelEnabled();
+        return getState().isMouseWheelEnabled;
     }
 
     /**
@@ -95,11 +115,11 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T> {
      * @return
      */
     public boolean isInvalidValuesAllowed() {
-        return getState().isInvalidValuesAllowed();
+        return getState().isInvalidValuesAllowed;
     }
 
     public void setInvalidValuesAllowed(boolean invalidValuesAllowed) {
-        getState().setInvalidValuesAllowed(invalidValuesAllowed);
+        getState().isInvalidValuesAllowed = invalidValuesAllowed;
     }
 
     @Override
@@ -107,10 +127,10 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T> {
         super.beforeClientResponse(initial);
 
         // update values that are parsed for the client
-        getState().setFieldValue(parseValueToString(getValue()));
-        getState().setMinValue(parseValueToString(getMinValue()));
-        getState().setMaxValue(parseValueToString(getMaxValue()));
-        getState().setStepAmount(parseStepAmountToString(getStepAmount()));
+        getState().value = parseValueToString(getValue());
+        getState().minValue = parseValueToString(getMinValue());
+        getState().maxValue = parseValueToString(getMaxValue());
+        getState().stepAmount = parseStepAmountToString(getStepAmount());
     }
 
     protected void handleParseException(ParseException e) {

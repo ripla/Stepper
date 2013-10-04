@@ -44,19 +44,18 @@ public abstract class AbstractStepperConnector<T, S> extends
 
         getWidget().setDisabled(!getState().enabled);
         getWidget().setReadonly(getState().readOnly);
-        getWidget().setManualInputAllowed(getState().isManualInputAllowed());
-        getWidget().setMouseWheelEnabled(getState().isMouseWheelEnabled());
-        getWidget()
-                .setInvalidValuesAllowed(getState().isInvalidValuesAllowed());
+        getWidget().setManualInputAllowed(getState().isManualInputAllowed);
+        getWidget().setMouseWheelEnabled(getState().isMouseWheelEnabled);
+        getWidget().setInvalidValuesAllowed(getState().isInvalidValuesAllowed);
 
         getWidget().setMinValue(
-                getWidget().parseStringValue(getState().getMinValue()));
+                getWidget().parseStringValue(getState().minValue));
         getWidget().setMaxValue(
-                getWidget().parseStringValue(getState().getMaxValue()));
+                getWidget().parseStringValue(getState().maxValue));
 
-        getWidget().setValue(getState().getFieldValue());
+        getWidget().setValue(getState().value);
         getWidget().setStepAmount(
-                getWidget().parseStepAmount(getState().getStepAmount()));
+                getWidget().parseStepAmount(getState().stepAmount));
 
         super.onStateChanged(stateChangeEvent);
     }
