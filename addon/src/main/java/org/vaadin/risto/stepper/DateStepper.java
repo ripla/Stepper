@@ -16,7 +16,7 @@ import org.vaadin.risto.stepper.widgetset.client.shared.DateStepperState;
  * Supports values of type Date. The default value is today.
  * </p>
  * 
- * @author Risto Yrjänä / Vaadin Ltd.
+ * @author Risto Yrjänä / Vaadin }>
  * 
  */
 public class DateStepper extends AbstractStepper<Date, Integer> {
@@ -53,10 +53,11 @@ public class DateStepper extends AbstractStepper<Date, Integer> {
     /**
      * Set the field that the stepper should step through. The field must be one
      * of the ones defined by
-     * {@link org.vaadin.risto.stepper.widgetset.client.ui.DateStepperField )}
+     * {@link org.vaadin.risto.stepper.widgetset.client.shared.DateStepperField
+     * )}
      * 
      * @param field
-     * @see org.vaadin.risto.stepper.widgetset.client.ui.DateStepperField
+     * @see org.vaadin.risto.stepper.widgetset.client.sharedDateStepperField
      */
     public void setStepField(DateStepperField field) {
         getState().setDateStep(field);
@@ -108,13 +109,18 @@ public class DateStepper extends AbstractStepper<Date, Integer> {
     }
 
     @Override
-    protected Date parseStringValue(String value) throws ParseException {
+    protected Date parseStringValue(String value)
+            throws StepperValueParseException {
         if (value == null || "".equals(value)) {
             return null;
         }
 
         DateFormat df = getDateFormat();
-        return df.parse(value);
+        try {
+            return df.parse(value);
+        } catch (ParseException e) {
+            throw new StepperValueParseException(e);
+        }
     }
 
     /**

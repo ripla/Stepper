@@ -10,7 +10,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.shared.DateTimeFormat;
 
 /**
- * @author Risto Yrjänä / Vaadin
+ * @author Risto Yrjänä / Vaadin }>
  * 
  */
 
@@ -23,7 +23,7 @@ public class VDateStepper extends VAbstractStepper<Date, Integer> {
     private final Logger logger = Logger.getLogger("VDateStepper");
 
     @Override
-    protected boolean isValidForType(String value) {
+    public boolean isValidForType(String value) {
         try {
             getDateFormat().parse(value);
             return true;
@@ -154,4 +154,9 @@ public class VDateStepper extends VAbstractStepper<Date, Integer> {
         }
     }
 
+    @Override
+    public void setValueFilteringEnabled(boolean isValueFilteringEnabled) {
+        throw new UnsupportedOperationException(
+                "DateStepper does not support value filtering");
+    }
 }

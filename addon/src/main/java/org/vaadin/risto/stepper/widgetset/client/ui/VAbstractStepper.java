@@ -8,23 +8,23 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.TextBox;
 
 /**
  * 
- * @author Risto Yrjänä / Vaadin Ltd.
+ * @author Risto Yrjänä / Vaadin }>
  * 
  */
 public abstract class VAbstractStepper<T, S> extends FlowPanel implements
         ValueChangeHandler<String> {
 
-    /** Set the CSS class name to allow styling. */
     public static final String CLASSNAME = "v-stepper";
 
     public static final int valueRepeatDelay = 150;
 
-    protected final TextBox textBox;
+    protected final UpDownTextBox textBox;
 
     protected final UpDownControls upDownControls;
 
@@ -48,15 +48,22 @@ public abstract class VAbstractStepper<T, S> extends FlowPanel implements
     private T maxValue;
     private T minValue;
 
-    /**
-     * The constructor should first call super() to initialize the component and
-     * then handle any initialization relevant to Vaadin.
-     */
+    private String value;
+
+    private RegExp valueRegexp;
+
+    private boolean isValueFilteringEnabled;
+
     public VAbstractStepper() {
+        this(".*"); // match all by default
+    }
+
+    public VAbstractStepper(String valueRegexp) {
 
         setStyleName(CLASSNAME);
 
         textBox = new UpDownTextBox(this);
+        this.valueRegexp = RegExp.compile(valueRegexp);
         upDownControls = new UpDownControls(this);
 
         add(textBox);
@@ -96,7 +103,9 @@ public abstract class VAbstractStepper<T, S> extends FlowPanel implements
      * @param value
      * @return
      */
-    protected abstract boolean isValidForType(String value);
+    public boolean isValidForType(String value) {
+        return valueRegexp.test(value);
+    }
 
     /**
      * Check if the given value is a valid, increased value. The given string is
@@ -186,20 +195,42 @@ public abstract class VAbstractStepper<T, S> extends FlowPanel implements
      * @param newValue
      */
     public void setValue(String newValue) {
-        textBox.setValue(newValue);
+        if (isValueValid(newValue)) {
+            textBox.setValue(newValue);
+            this.value = newValue;
+        }
     }
 
-    public void updateValueToServer(String value) {
-        fireEvent(new StepperValueChangeEvent(value));
+    protected boolean isValueValid(String newValue) {
+        return !safeEquals(newValue, value)
+                && (isInvalidValuesAllowed() || (newValue != null && isValidForType(newValue)));
+    }
+
+    /*
+     * From Guavas Object.equals
+     */
+    protected boolean safeEquals(Object a, Object b) {
+        return a == b || (a != null && a.equals(b));
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void updateValueToServer(String newValue) {
+        fireEvent(new StepperValueChangeEvent(newValue));
     }
 
     @Override
     public void onValueChange(ValueChangeEvent<String> event) {
-        String value = event.getValue();
-        if (isInvalidValuesAllowed()
-                || (value != null && isValidForType(value))) {
+        String newValue = event.getValue();
+        if (isValueValid(newValue)) {
+            value = newValue;
             valueUpdateTimer.cancel();
-            updateValueToServer(value);
+            updateValueToServer(newValue);
+
+        } else {
+            textBox.setValue(value);
         }
     }
 
@@ -310,5 +341,14 @@ public abstract class VAbstractStepper<T, S> extends FlowPanel implements
 
     public TextBox getTextBox() {
         return textBox;
+    }
+
+    public boolean isValueFilteringEnabled() {
+        return isValueFilteringEnabled;
+    }
+
+    public void setValueFilteringEnabled(boolean isValueFilteringEnabled) {
+        this.isValueFilteringEnabled = isValueFilteringEnabled;
+        textBox.setValueFilteringEnabled(isValueFilteringEnabled);
     }
 }

@@ -7,7 +7,7 @@ import com.google.gwt.user.client.Timer;
 /**
  * Timer that updates the given value to the server.
  * 
- * @author Risto Yrjänä / Vaadin Ltd.
+ * @author Risto Yrjänä / Vaadin }>
  * 
  */
 public class ValueUpdateTimer extends Timer {

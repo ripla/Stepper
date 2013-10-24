@@ -30,7 +30,8 @@ public class FloatStepperConnector extends
 
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
-        getWidget().setNumberOfDecimals(getState().getNumberOfDecimals());
+        getWidget().setNumberOfDecimals(getState().numberOfDecimals);
+        getWidget().setValueFilteringEnabled(getState().valueFiltering);
 
         super.onStateChanged(stateChangeEvent);
     }

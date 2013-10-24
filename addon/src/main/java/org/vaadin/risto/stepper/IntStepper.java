@@ -1,7 +1,5 @@
 package org.vaadin.risto.stepper;
 
-import java.text.ParseException;
-
 import org.vaadin.risto.stepper.widgetset.client.shared.IntStepperState;
 
 import com.vaadin.shared.communication.SharedState;
@@ -12,10 +10,11 @@ import com.vaadin.shared.communication.SharedState;
  * Supports values of type Integer. Default value is 0.
  * </p>
  * 
- * @author Risto Yrjänä / Vaadin Ltd.
+ * @author Risto Yrjänä / Vaadin }>
  * 
  */
-public class IntStepper extends AbstractStepper<Integer, Integer> {
+public class IntStepper extends AbstractStepper<Integer, Integer> implements
+        ValueFilteringStepper {
 
     private static final long serialVersionUID = 1365274510273965118L;
 
@@ -58,11 +57,26 @@ public class IntStepper extends AbstractStepper<Integer, Integer> {
     }
 
     @Override
-    protected Integer parseStringValue(String value) throws ParseException {
+    protected Integer parseStringValue(String value)
+            throws StepperValueParseException {
         if (value == null || "".equals(value)) {
             return null;
         }
 
-        return Integer.parseInt(value);
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            throw new StepperValueParseException(e);
+        }
+    }
+
+    @Override
+    public void setValueFiltering(boolean enableValueFiltering) {
+        getState().valueFiltering = enableValueFiltering;
+    }
+
+    @Override
+    public boolean isValueFiltering() {
+        return getState().valueFiltering;
     }
 }

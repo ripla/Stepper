@@ -1,17 +1,27 @@
 package org.vaadin.risto.stepper.widgetset.client.ui;
 
 /**
- * @author Risto Yrjänä / Vaadin Ltd.
+ * @author Risto Yrjänä / Vaadin }>
  * 
  */
 public class VIntStepper extends VAbstractStepper<Integer, Integer> {
 
+    private static final String INTEGER_REGEXP = "^\\-?\\d+$";
+
+    public VIntStepper() {
+        super(INTEGER_REGEXP);
+    }
+
     @Override
-    protected boolean isValidForType(String value) {
-        try {
-            Integer.valueOf(value);
-            return true;
-        } catch (NumberFormatException exception) {
+    public boolean isValidForType(String value) {
+        if (super.isValidForType(value)) {
+            try {
+                Integer.parseInt(value);
+                return true;
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        } else {
             return false;
         }
     }
@@ -64,5 +74,4 @@ public class VIntStepper extends VAbstractStepper<Integer, Integer> {
     public Integer parseStepAmount(String value) {
         return parseStringValue(value);
     }
-
 }

@@ -3,8 +3,6 @@
  */
 package org.vaadin.risto.stepper;
 
-import java.text.ParseException;
-
 import org.vaadin.risto.stepper.widgetset.client.shared.FloatStepperState;
 
 /**
@@ -18,10 +16,11 @@ import org.vaadin.risto.stepper.widgetset.client.shared.FloatStepperState;
  * always rounded. The accuracy should be enough for most use cases.
  * </p>
  * 
- * @author Risto Yrjänä / Vaadin Ltd.
+ * @author Risto Yrjänä / Vaadin }>
  * 
  */
-public class FloatStepper extends AbstractStepper<Float, Float> {
+public class FloatStepper extends AbstractStepper<Float, Float> implements
+        ValueFilteringStepper {
 
     private static final long serialVersionUID = -5328027647865381265L;
 
@@ -46,7 +45,7 @@ public class FloatStepper extends AbstractStepper<Float, Float> {
      * @param numberOfDecimals
      */
     public void setNumberOfDecimals(int numberOfDecimals) {
-        getState().setNumberOfDecimals(numberOfDecimals);
+        getState().numberOfDecimals = numberOfDecimals;
     }
 
     @Override
@@ -68,11 +67,35 @@ public class FloatStepper extends AbstractStepper<Float, Float> {
     }
 
     @Override
-    protected Float parseStringValue(String value) throws ParseException {
+    protected Float parseStringValue(String value)
+            throws StepperValueParseException {
         if (value == null || "".equals(value)) {
             return null;
         }
 
-        return Float.parseFloat(value);
+        try {
+            return Float.parseFloat(value);
+        } catch (NumberFormatException e) {
+            throw new StepperValueParseException(e);
+        }
+    }
+
+    /**
+     * Enable or disable client-side value filtering. Value filtering disallows
+     * the user from entering characters that would make the content invalid.
+     * 
+     * This feature is experimental and may change or be completely removed in
+     * future versions.
+     * 
+     * @param enableValueFiltering
+     */
+    @Override
+    public void setValueFiltering(boolean enableValueFiltering) {
+        getState().valueFiltering = enableValueFiltering;
+    }
+
+    @Override
+    public boolean isValueFiltering() {
+        return getState().valueFiltering;
     }
 }

@@ -1,19 +1,30 @@
 package org.vaadin.risto.stepper.widgetset.client.ui;
 
 /**
- * @author Risto Yrjänä / Vaadin Ltd.
+ * @author Risto Yrjänä / Vaadin }>
  * 
  */
 public class VFloatStepper extends VAbstractStepper<Float, Float> {
 
     private int numberOfDecimals;
 
+    // TODO localization of the decimal separator
+    private static final String FLOAT_CHARACTERS = "^\\-?\\d+\\.?\\d*$";
+
+    public VFloatStepper() {
+        super(FLOAT_CHARACTERS);
+    }
+
     @Override
-    protected boolean isValidForType(String value) {
-        try {
-            Float.valueOf(value);
-            return true;
-        } catch (NumberFormatException exception) {
+    public boolean isValidForType(String value) {
+        if (super.isValidForType(value)) {
+            try {
+                Float.parseFloat(value);
+                return true;
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        } else {
             return false;
         }
     }
@@ -83,5 +94,4 @@ public class VFloatStepper extends VAbstractStepper<Float, Float> {
     public Float parseStepAmount(String value) {
         return parseStringValue(value);
     }
-
 }

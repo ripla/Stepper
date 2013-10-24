@@ -28,7 +28,7 @@ import com.vaadin.ui.VerticalLayout;
 /**
  * Demo application for the Stepper add-on.
  * 
- * @author Risto Yrjänä / Vaadin Ltd.
+ * @author Risto Yrjänä / Vaadin }>
  * 
  */
 @Theme("reindeer")
@@ -241,11 +241,29 @@ public class StepperDemoUI extends UI {
             }
         });
 
+        final CheckBox valueFiltering = new CheckBox("Enable value filtering");
+        valueFiltering.setValue(false);
+        valueFiltering.setImmediate(true);
+        valueFiltering.addValueChangeListener(new ValueChangeListener() {
+
+            private static final long serialVersionUID = 1556003158228491207L;
+
+            @Override
+            public void valueChange(ValueChangeEvent event) {
+                for (AbstractStepper stepper : steppers) {
+                    if (stepper instanceof ValueFilteringStepper)
+                        ((ValueFilteringStepper) stepper)
+                                .setValueFiltering(valueFiltering.getValue());
+                }
+            }
+        });
+
         options.addComponent(minValue);
         options.addComponent(manualInput);
         options.addComponent(maxValue);
         options.addComponent(mousewheelEnabled);
         options.addComponent(invalidValuesAllowed);
+        options.addComponent(valueFiltering);
 
         panelLayout.addComponent(infoLabel);
         panelLayout.addComponent(options);

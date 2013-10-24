@@ -1,5 +1,7 @@
 package org.vaadin.risto.stepper.widgetset.client.ui.helpers;
 
+import java.util.logging.Logger;
+
 import org.vaadin.risto.stepper.widgetset.client.ui.VAbstractStepper;
 
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -14,7 +16,7 @@ import com.google.gwt.user.client.ui.TextBox;
 /**
  * UI-class for a TextBox that listens to keyboard-up and -down events.
  * 
- * @author Risto Yrjänä / Vaadin Ltd.
+ * @author Risto Yrjänä / Vaadin }>
  * 
  */
 public class UpDownTextBox extends TextBox implements KeyDownHandler,
@@ -22,12 +24,12 @@ public class UpDownTextBox extends TextBox implements KeyDownHandler,
     protected ButtonDownTimer keyDownTimerUp;
     protected ButtonDownTimer keyDownTimerDown;
     private final VAbstractStepper<?, ?> stepper;
+    private boolean isValueFilteringEnabled;
 
     public UpDownTextBox(VAbstractStepper<?, ?> stepper) {
         this.stepper = stepper;
         addKeyDownHandler(this);
         addKeyUpHandler(this);
-
         addMouseWheelHandler(this);
     }
 
@@ -46,23 +48,22 @@ public class UpDownTextBox extends TextBox implements KeyDownHandler,
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.google.gwt.event.dom.client.KeyUpHandler#onKeyUp(com.google.gwt
-     * .event.dom.client.KeyUpEvent)
-     */
     @Override
     public void onKeyUp(KeyUpEvent event) {
+        if (isValueFilteringEnabled && !isContentValid()) {
+            Logger.getLogger(UpDownTextBox.class.getSimpleName()).info(
+                    "Cancelling because of "
+                            + (char) event.getNativeEvent().getKeyCode());
+            makeContentValid();
+        }
+
         if (!stepper.isTimerHasChangedValue()) {
             cancelTimers();
-            int keycode = event.getNativeEvent().getKeyCode();
-
-            if (keycode == KeyCodes.KEY_UP) {
+            if (event.isUpArrow()) {
                 stepper.increaseValue();
                 event.preventDefault();
 
-            } else if (keycode == KeyCodes.KEY_DOWN) {
+            } else if (event.isDownArrow()) {
                 stepper.decreaseValue();
                 event.preventDefault();
             }
@@ -87,6 +88,16 @@ public class UpDownTextBox extends TextBox implements KeyDownHandler,
         }
     }
 
+    private void makeContentValid() {
+        while (!this.getValue().isEmpty() && !isContentValid()) {
+            this.setText(getText().substring(0, getText().length() - 1));
+        }
+    }
+
+    private boolean isContentValid() {
+        return stepper.isValidForType(this.getText());
+    }
+
     @Override
     public void onMouseWheel(MouseWheelEvent event) {
 
@@ -99,4 +110,9 @@ public class UpDownTextBox extends TextBox implements KeyDownHandler,
             }
         }
     }
+
+    public void setValueFilteringEnabled(boolean isValueFilteringEnabled) {
+        this.isValueFilteringEnabled = isValueFilteringEnabled;
+    }
+
 }

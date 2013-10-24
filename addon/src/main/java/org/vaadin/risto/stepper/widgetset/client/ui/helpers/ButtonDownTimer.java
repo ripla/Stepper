@@ -7,7 +7,7 @@ import com.google.gwt.user.client.Timer;
 /**
  * Timer that starts to increase/decrease values after a given time.
  * 
- * @author Risto Yrjänä / Vaadin Ltd.
+ * @author Risto Yrjänä / Vaadin }>
  * 
  */
 public class ButtonDownTimer extends Timer {

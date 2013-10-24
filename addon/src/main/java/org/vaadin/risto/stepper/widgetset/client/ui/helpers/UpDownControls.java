@@ -20,7 +20,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 /**
  * Class for the up/down buttons and their listeners.
  * 
- * @author Risto Yrjänä / Vaadin Ltd.
+ * @author Risto Yrjänä / Vaadin }>
  * 
  */
 public class UpDownControls extends FlowPanel implements ClickHandler,
