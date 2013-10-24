@@ -2,6 +2,16 @@
 apply plugin: 'rebel'
 
 buildscript {
+  repositories {
+     mavenCentral()
+     // This repo is optional, as since version 1.1.2, we also always deploy to Maven central.
+     // Be aware that it could take a bit of time (couple of hours) before a published new
+     // version will appear in the central repository.
+     mavenRepo(
+       name: 'zt-public-snapshots',
+       url: 'http://repos.zeroturnaround.com/nexus/content/groups/zt-public/'
+     )
+  }
   dependencies {
      classpath group: 'org.zeroturnaround', name: 'gradle-jrebel-plugin', version: '1.1.2'
   }
@@ -15,8 +25,7 @@ subprojects {
 
 	apply plugin: "java"
 
-	apply from: "http://plugins.jasoft.fi/vaadin.plugin?version=0.6.3"
-	vaadin.version = "7.1.4"
+	apply from: "http://plugins.jasoft.fi/vaadin.plugin"
 	vaadin.gwt.jvmArgs=["-Xmx1024m"]
 	vaadin.jvmArgs=["-Xmx1024m"]
 	vaadin.gwt.draftCompile = true
