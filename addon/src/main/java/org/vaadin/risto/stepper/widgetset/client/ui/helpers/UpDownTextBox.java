@@ -1,9 +1,9 @@
 package org.vaadin.risto.stepper.widgetset.client.ui.helpers;
 
-import java.util.logging.Logger;
-
 import org.vaadin.risto.stepper.widgetset.client.ui.VAbstractStepper;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
@@ -11,6 +11,7 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.dom.client.MouseWheelEvent;
 import com.google.gwt.event.dom.client.MouseWheelHandler;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.TextBox;
 
 /**
@@ -31,6 +32,8 @@ public class UpDownTextBox extends TextBox implements KeyDownHandler,
         addKeyDownHandler(this);
         addKeyUpHandler(this);
         addMouseWheelHandler(this);
+
+        sinkEvents(Event.ONPASTE);
     }
 
     /**
@@ -50,12 +53,7 @@ public class UpDownTextBox extends TextBox implements KeyDownHandler,
 
     @Override
     public void onKeyUp(KeyUpEvent event) {
-        if (isValueFilteringEnabled && !isContentValid()) {
-            Logger.getLogger(UpDownTextBox.class.getSimpleName()).info(
-                    "Cancelling because of "
-                            + (char) event.getNativeEvent().getKeyCode());
-            makeContentValid();
-        }
+        ensureContentValidity();
 
         if (!stepper.isTimerHasChangedValue()) {
             cancelTimers();
@@ -73,9 +71,16 @@ public class UpDownTextBox extends TextBox implements KeyDownHandler,
         }
     }
 
+    private void ensureContentValidity() {
+        if (isValueFilteringEnabled && !isContentValid(this.getText())) {
+            makeContentValid();
+        }
+    }
+
     @Override
     public void onKeyDown(KeyDownEvent event) {
         int keycode = event.getNativeEvent().getKeyCode();
+
         if (keycode == KeyCodes.KEY_UP && keyDownTimerUp == null) {
             keyDownTimerUp = new ButtonDownTimer(true, stepper);
             keyDownTimerUp.scheduleRepeating(VAbstractStepper.valueRepeatDelay);
@@ -88,19 +93,38 @@ public class UpDownTextBox extends TextBox implements KeyDownHandler,
         }
     }
 
-    private void makeContentValid() {
-        while (!this.getValue().isEmpty() && !isContentValid()) {
+    @Override
+    public void onBrowserEvent(Event event) {
+        super.onBrowserEvent(event);
+        switch (event.getTypeInt()) {
+        case Event.ONPASTE: {
+            Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+
+                @Override
+                public void execute() {
+                    ensureContentValidity();
+
+                }
+            });
+            break;
+        }
+        }
+    }
+
+    protected void makeContentValid() {
+        WarningAnimation.errorFlash(this);
+
+        while (!this.getValue().isEmpty() && !isContentValid(this.getText())) {
             this.setText(getText().substring(0, getText().length() - 1));
         }
     }
 
-    private boolean isContentValid() {
-        return stepper.isValidForType(this.getText());
+    protected boolean isContentValid(String content) {
+        return stepper.isValidForType(content);
     }
 
     @Override
     public void onMouseWheel(MouseWheelEvent event) {
-
         int mouseWheelDelta = event.getDeltaY();
         if (stepper.isMouseWheelEnabled() && stepper.canChangeFromTextBox()) {
             if (mouseWheelDelta < 0) {
