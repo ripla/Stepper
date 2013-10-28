@@ -1,43 +1,29 @@
-//jrebel config
-apply plugin: 'rebel'
-
-buildscript {
-  repositories {
-     mavenCentral()
-     // This repo is optional, as since version 1.1.2, we also always deploy to Maven central.
-     // Be aware that it could take a bit of time (couple of hours) before a published new
-     // version will appear in the central repository.
-     mavenRepo(
-       name: 'zt-public-snapshots',
-       url: 'http://repos.zeroturnaround.com/nexus/content/groups/zt-public/'
-     )
-  }
-  dependencies {
-     classpath group: 'org.zeroturnaround', name: 'gradle-jrebel-plugin', version: '1.1.2'
-  }
-}
-
 //common for both projects
 subprojects {
 	repositories {
     	mavenCentral()
 	}
-
+	
+	ext.baseNameUpper = project.parent.name.capitalize()
+	ext.baseNameLower = project.parent.name.toLowerCase()
+	
 	apply plugin: "java"
 
 	apply from: "http://plugins.jasoft.fi/vaadin.plugin"
-	vaadin.gwt.jvmArgs=["-Xmx1024m"]
+
 	vaadin.jvmArgs=["-Xmx1024m"]
+	vaadin.gwt.jvmArgs=["-Xmx1024m"]
 	vaadin.gwt.draftCompile = true
-	vaadin.manageWidgetset = false
 	vaadin.gwt.strict = true
+	vaadin.manageWidgetset = false
 	vaadin.servletVersion= "3.0"
+	vaadin.plugin.logToConsole = true
+	vaadin.addon.author = "Risto Yrjänä / Vaadin"
+	vaadin.addon.license = "Apache License 2.0"
+	vaadin.addon.title = baseNameUpper
 
 	sourceCompatibility = "1.6"
 	targetCompatibility = "1.6"
-
-	ext.baseNameUpper = project.parent.name.capitalize()
-	ext.baseNameLower = project.parent.name.toLowerCase()
 	
 	group = "org.vaadin.risto.${baseNameLower}"
 
@@ -59,16 +45,7 @@ project(":addon") {
 
 	jar {
 		from sourceSets.main.allJava //include sources
-	   
-		manifest = project.manifest {
-			attributes 'Implementation-Title': "${baseNameUpper}"
-			attributes 'Implementation-Version': version
-			attributes 'Implementation-Vendor': 'Risto Yrjänä / Vaadin'
-			attributes 'Vaadin-Package-Version': '1'
-			attributes 'Vaadin-License-Title': 'Apache License 2.0'
-			attributes 'Vaadin-Widgetsets': vaadin.widgetset
-			}
-		}
+	}
 		
 	war.enabled = false //war plugin applied by the Vaadin plugin, not needed here
 }
@@ -83,8 +60,6 @@ project(":demo") {
 		compile project(":addon")
 		compile "com.google.guava:guava:15.0"
 	}
-
-	war.dependsOn(generateRebel)
 
 	vaadin.widgetset = "${group}.widgetset.${baseNameUpper}DemoWidgetset"
 }
