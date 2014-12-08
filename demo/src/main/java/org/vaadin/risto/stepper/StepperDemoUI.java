@@ -240,6 +240,23 @@ public class StepperDemoUI extends UI {
                 }
             }
         });
+        
+        final CheckBox nullValueAllowed = new CheckBox(
+                "Null is valid");
+        nullValueAllowed.setValue(false);
+        nullValueAllowed.setImmediate(true);
+        nullValueAllowed.addValueChangeListener(new ValueChangeListener() {
+
+            private static final long serialVersionUID = 1556003158228491207L;
+
+            @Override
+            public void valueChange(ValueChangeEvent event) {
+                for (AbstractStepper stepper : steppers) {
+                    stepper.setNullValueAllowed(nullValueAllowed
+                            .getValue());
+                }
+            }
+        });
 
         final CheckBox valueFiltering = new CheckBox("Enable value filtering");
         valueFiltering.setValue(false);
@@ -263,6 +280,7 @@ public class StepperDemoUI extends UI {
         options.addComponent(maxValue);
         options.addComponent(mousewheelEnabled);
         options.addComponent(invalidValuesAllowed);
+        options.addComponent(nullValueAllowed);
         options.addComponent(valueFiltering);
 
         panelLayout.addComponent(infoLabel);
