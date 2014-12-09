@@ -156,7 +156,7 @@ public abstract class VAbstractStepper<T, S> extends FlowPanel implements
                 String newValue = getIncreasedValue(oldValue);
                 if (isSmallerThanMax(newValue)) {
                     textBox.setValue(newValue);
-
+                    value = newValue;
                     valueUpdateTimer.schedule(updateDelay);
                     valueUpdateTimer.setValue(newValue);
                 }
@@ -179,7 +179,7 @@ public abstract class VAbstractStepper<T, S> extends FlowPanel implements
                 String newValue = getDecreasedValue(oldValue);
                 if (isLargerThanMin(newValue)) {
                     textBox.setValue(newValue);
-
+                    value = newValue;
                     valueUpdateTimer.schedule(updateDelay);
                     valueUpdateTimer.setValue(newValue);
                 }
@@ -190,7 +190,7 @@ public abstract class VAbstractStepper<T, S> extends FlowPanel implements
         }
 
     }
-
+    
     /**
      * Set the value to the UI.
      * 

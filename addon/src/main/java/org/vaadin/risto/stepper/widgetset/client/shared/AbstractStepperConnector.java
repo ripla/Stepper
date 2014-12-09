@@ -34,6 +34,7 @@ public abstract class AbstractStepperConnector<T, S> extends
 
             @Override
             public void onValueChange(ValueChangeEvent<String> event) {
+            	getState().value = event.getValue();
                 stepperRpcProxy.valueChange(event.getValue());
             }
         });
