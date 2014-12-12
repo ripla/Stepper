@@ -44,10 +44,12 @@ public abstract class VAbstractStepper<T, S> extends FlowPanel implements
 
     private boolean invalidValuesAllowed;
 
+    private boolean nullValueAllowed;
+    
     private S stepAmount;
     private T maxValue;
     private T minValue;
-
+    
     private String value;
 
     private RegExp valueRegexp;
@@ -154,7 +156,7 @@ public abstract class VAbstractStepper<T, S> extends FlowPanel implements
                 String newValue = getIncreasedValue(oldValue);
                 if (isSmallerThanMax(newValue)) {
                     textBox.setValue(newValue);
-
+                    value = newValue;
                     valueUpdateTimer.schedule(updateDelay);
                     valueUpdateTimer.setValue(newValue);
                 }
@@ -177,7 +179,7 @@ public abstract class VAbstractStepper<T, S> extends FlowPanel implements
                 String newValue = getDecreasedValue(oldValue);
                 if (isLargerThanMin(newValue)) {
                     textBox.setValue(newValue);
-
+                    value = newValue;
                     valueUpdateTimer.schedule(updateDelay);
                     valueUpdateTimer.setValue(newValue);
                 }
@@ -188,7 +190,7 @@ public abstract class VAbstractStepper<T, S> extends FlowPanel implements
         }
 
     }
-
+    
     /**
      * Set the value to the UI.
      * 
@@ -203,7 +205,7 @@ public abstract class VAbstractStepper<T, S> extends FlowPanel implements
 
     protected boolean isValueValid(String newValue) {
         return !safeEquals(newValue, value)
-                && (isInvalidValuesAllowed() || (newValue != null && isValidForType(newValue)));
+                && (isInvalidValuesAllowed() || ((newValue==null || newValue.isEmpty()) && isNullValueAllowed()) || (newValue != null && isValidForType(newValue)));
     }
 
     /*
@@ -302,6 +304,15 @@ public abstract class VAbstractStepper<T, S> extends FlowPanel implements
         this.invalidValuesAllowed = invalidValuesAllowed;
         enabledStateChanged();
     }
+    
+    public void setNullValueAllowed( boolean nullValueAllowed ) {
+    	this.nullValueAllowed = nullValueAllowed;
+        enabledStateChanged();
+    }
+    
+    public boolean isNullValueAllowed() {
+    	return this.nullValueAllowed;
+    }
 
     /**
      * Set the maximum possible value for this stepper. For
@@ -338,7 +349,7 @@ public abstract class VAbstractStepper<T, S> extends FlowPanel implements
     public S getStepAmount() {
         return this.stepAmount;
     }
-
+    
     public TextBox getTextBox() {
         return textBox;
     }

@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 import org.vaadin.risto.stepper.widgetset.client.shared.DateStepperField;
 
@@ -16,6 +18,7 @@ import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -35,12 +38,13 @@ import com.vaadin.ui.VerticalLayout;
 public class StepperDemoUI extends UI {
 
     private static final long serialVersionUID = 3840548109739501675L;
+    private static final Date DEFAULT_DATE = new Date();
     private IntStepper intStepper;
     private FloatStepper floatStepper;
     private DateStepper dateStepper;
     @SuppressWarnings("rawtypes")
     private List<AbstractStepper> steppers;
-
+    
     @Override
     protected void init(VaadinRequest request) {
         Page.getCurrent().setTitle("Stepper demo");
@@ -112,6 +116,10 @@ public class StepperDemoUI extends UI {
         GridLayout options = new GridLayout(2, 3);
         options.setSpacing(true);
 
+        GridLayout actions = new GridLayout(2, 3);
+        options.setSpacing(true);
+        options.setMargin(true);
+
         String infoString = "<p>There are three different Stepper classes. Their step amount can be set from the server-side. The accuracy of the FloatStepper can be changed and the DateStepper can be set to increase days, months or years. The server-side values are added below the components as they are received from the client.</p>";
         infoString += "<p>Minimum and maximum values are: -25 to 25 for IntStepper, -25 to 25 for FloatStepper and 10 days to the past to 10 days to the future for DateStepper.</p>";
         infoString += "<p>You can change the values by using the controls, the arrow keys or the mouse wheel</p>";
@@ -135,7 +143,7 @@ public class StepperDemoUI extends UI {
         floatStepper.setCaption("FloatStepper, step 1.222");
 
         dateStepper = new DateStepper();
-        dateStepper.setValue(new Date());
+        dateStepper.setValue(DEFAULT_DATE);
         dateStepper.setStepField(DateStepperField.DAY);
         dateStepper.setStepAmount(1);
         dateStepper.setCaption("DateStepper, step 1 day");
@@ -240,6 +248,23 @@ public class StepperDemoUI extends UI {
                 }
             }
         });
+        
+        final CheckBox nullValueAllowed = new CheckBox(
+                "Null is valid");
+        nullValueAllowed.setValue(false);
+        nullValueAllowed.setImmediate(true);
+        nullValueAllowed.addValueChangeListener(new ValueChangeListener() {
+
+            private static final long serialVersionUID = 1556003158228491207L;
+
+            @Override
+            public void valueChange(ValueChangeEvent event) {
+                for (AbstractStepper stepper : steppers) {
+                    stepper.setNullValueAllowed(nullValueAllowed
+                            .getValue());
+                }
+            }
+        });
 
         final CheckBox valueFiltering = new CheckBox("Enable value filtering");
         valueFiltering.setValue(false);
@@ -257,18 +282,75 @@ public class StepperDemoUI extends UI {
                 }
             }
         });
+        
+        final CheckBox revertingValueChangeListenerEnabled = new CheckBox("Enable reverting ValueChangeListener (reverts to 1/today)");
+        revertingValueChangeListenerEnabled.setValue(false);
+        revertingValueChangeListenerEnabled.setImmediate(true);
+        final Map<Stepper,ValueChangeListener> revertingValueChangeListeners = new HashMap<Stepper,ValueChangeListener>() {{
+        	put(intStepper,new ValueChangeListener() {
+        		@Override
+        		public void valueChange(ValueChangeEvent event) {
+        			intStepper.setValue(1);
+        		}});
+        	put(floatStepper,new ValueChangeListener() {
+        		@Override
+        		public void valueChange(ValueChangeEvent event) {
+        			floatStepper.setValue(1.0F);
+        		}});
+        	put(dateStepper,new ValueChangeListener() {
+        		@Override
+        		public void valueChange(ValueChangeEvent event) {
+        			dateStepper.setValue(DEFAULT_DATE);
+        		}});
+        }};
+        revertingValueChangeListenerEnabled.addValueChangeListener(new ValueChangeListener() {
+            @Override
+            public void valueChange(ValueChangeEvent event) {
+                for (final AbstractStepper stepper : steppers) {
+                	if (revertingValueChangeListenerEnabled.getValue()) {
+                		stepper.addValueChangeListener(revertingValueChangeListeners.get(stepper));
+                	} else {
+                		stepper.removeValueChangeListener(revertingValueChangeListeners.get(stepper));
+                	}
+                }
+            }
+        });
 
         options.addComponent(minValue);
         options.addComponent(manualInput);
         options.addComponent(maxValue);
         options.addComponent(mousewheelEnabled);
         options.addComponent(invalidValuesAllowed);
+        options.addComponent(nullValueAllowed);
         options.addComponent(valueFiltering);
+        options.addComponent(revertingValueChangeListenerEnabled);
 
+        Button disable = new Button("Disable all");
+        disable.addClickListener(new Button.ClickListener() {
+        	@Override
+        	public void buttonClick(Button.ClickEvent event)  {
+        		for (AbstractStepper stepper : steppers) {
+                    stepper.setEnabled(false);
+                }
+        	}
+        });
+        Button enable = new Button("Enable all");
+        enable.addClickListener(new Button.ClickListener() {
+        	@Override
+        	public void buttonClick(Button.ClickEvent event)  {
+        		for (AbstractStepper stepper : steppers) {
+                    stepper.setEnabled(true);
+                }
+        	}
+        });
+        actions.addComponent(disable);
+        actions.addComponent(enable);
+        
         panelLayout.addComponent(infoLabel);
         panelLayout.addComponent(options);
+        panelLayout.addComponent(actions);
         panelLayout.addComponent(stepperLayout);
-
+        
         return panel;
     }
 

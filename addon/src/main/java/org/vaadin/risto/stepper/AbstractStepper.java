@@ -29,7 +29,7 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T> implements
                     try {
                         T parsedValue = parseStringValue(value);
                         if (isInvalidValuesAllowed()
-                                || isValidForRange(parsedValue)) {
+                                || (parsedValue==null && isNullValueAllowed()) || (parsedValue!=null && isValidForRange(parsedValue))) {
                             setValue(parsedValue, true);
                         }
 
@@ -93,6 +93,16 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T> implements
     public void setInvalidValuesAllowed(boolean invalidValuesAllowed) {
         getState().isInvalidValuesAllowed = invalidValuesAllowed;
     }
+    
+    @Override
+    public boolean isNullValueAllowed() {
+    	return getState().isNullValueAllowed;
+    }
+    
+    @Override
+    public void setNullValueAllowed(boolean nullValueAllowed) {
+    	getState().isNullValueAllowed = nullValueAllowed;
+    }
 
     @Override
     public void beforeClientResponse(boolean initial) {
@@ -145,7 +155,7 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T> implements
         this.minValue = minValue;
         markAsDirty();
     }
-
+    
     @Override
     public T getMaxValue() {
         return maxValue;

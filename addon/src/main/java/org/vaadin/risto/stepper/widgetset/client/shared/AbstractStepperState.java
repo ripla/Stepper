@@ -9,6 +9,7 @@ public class AbstractStepperState extends AbstractFieldState {
     public boolean isManualInputAllowed = true;
     public boolean isMouseWheelEnabled = true;
     public boolean isInvalidValuesAllowed = false;
+    public boolean isNullValueAllowed = false;
     public String value;
     public String minValue;
     public String maxValue;

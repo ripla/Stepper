@@ -34,6 +34,7 @@ public abstract class AbstractStepperConnector<T, S> extends
 
             @Override
             public void onValueChange(ValueChangeEvent<String> event) {
+            	getState().value = event.getValue();
                 stepperRpcProxy.valueChange(event.getValue());
             }
         });
@@ -47,6 +48,7 @@ public abstract class AbstractStepperConnector<T, S> extends
         getWidget().setManualInputAllowed(getState().isManualInputAllowed);
         getWidget().setMouseWheelEnabled(getState().isMouseWheelEnabled);
         getWidget().setInvalidValuesAllowed(getState().isInvalidValuesAllowed);
+        getWidget().setNullValueAllowed(getState().isNullValueAllowed);
 
         getWidget().setMinValue(
                 getWidget().parseStringValue(getState().minValue));
