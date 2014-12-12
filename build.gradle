@@ -1,73 +1,77 @@
+allprojects {
+    apply plugin: "eclipse-wtp"
+    apply plugin: "idea"
+
+}
+
 //common for both projects
 subprojects {
-	repositories {
-    	mavenCentral()
-	}
-	
-	ext.baseNameUpper = project.parent.name.capitalize()
-	ext.baseNameLower = project.parent.name.toLowerCase()
-	
-	apply plugin: "java"
+    repositories {
+        mavenCentral()
+    }
 
-	apply from: "http://plugins.jasoft.fi/vaadin.plugin"
+    ext.baseNameUpper = project.parent.name.capitalize()
+    ext.baseNameLower = project.parent.name.toLowerCase()
 
-	vaadin.jvmArgs=["-Xmx1024m"]
-	vaadin.gwt.jvmArgs=["-Xmx1024m"]
-	vaadin.gwt.draftCompile = true
-	vaadin.gwt.strict = true
-	vaadin.manageWidgetset = false
-	vaadin.servletVersion= "3.0"
-	vaadin.plugin.logToConsole = true
-	vaadin.addon.author = "Risto Yrjänä / Vaadin"
-	vaadin.addon.license = "Apache License 2.0"
-	vaadin.addon.title = baseNameUpper
+    apply plugin: "java"
 
-	sourceCompatibility = "1.6"
-	targetCompatibility = "1.6"
-	
-	group = "org.vaadin.risto.${baseNameLower}"
+    apply from: "http://plugins.jasoft.fi/vaadin.plugin"
 
-	//creates archives named "name-version.jar" and "name.war" where name is the name of the main project
-	archivesBaseName = baseNameLower
+    //vaadin.jvmArgs=["-Xmx1024m"]
+    //vaadin.gwt.jvmArgs=["-Xmx1024m"]
+    vaadin.gwt.draftCompile = true
+    vaadin.gwt.strict = true
+    vaadin.manageWidgetset = false
+
+    vaadin.plugin.logToConsole = true
+    vaadin.addon.author = "Risto Yrjänä / Vaadin"
+    vaadin.addon.license = "Apache License 2.0"
+    vaadin.addon.title = baseNameUpper
+
+    sourceCompatibility = "1.7"
+    targetCompatibility = "1.7"
+
+    group = "org.vaadin.risto.${baseNameLower}"
+
+    //creates archives named "name-version.jar" and "name.war" where name is the name of the main project
+    archivesBaseName = baseNameLower
 }
 
 //addon project, only creates the Directory-compatible JAR
 project(":addon") {
-	apply plugin: "eclipse"
-	eclipse.project.name = "${baseNameUpper}-addon"
+    eclipse.project.name = "${baseNameUpper}-addon"
 
-	version = "2.1.2"
-	vaadin.widgetset = "${group}.widgetset.${baseNameUpper}Widgetset"
+    version = "2.2.0"
+    vaadin.widgetset = "${group}.widgetset.${baseNameUpper}Widgetset"
 
-	dependencies {
-		testCompile "junit:junit:4.+"
-	}
+    dependencies {
+        testCompile "junit:junit:4.+"
+    }
 
-	jar {
-		from sourceSets.main.allJava //include sources
-	}
-		
-	war.enabled = false //war plugin applied by the Vaadin plugin, not needed here
+    jar {
+        from sourceSets.main.allJava //include sources
+    }
+
+    war.enabled = false //war plugin applied by the Vaadin plugin, not needed here
 }
 
 //demo project, builds addon and packages demo UI as WAR
 project(":demo") {
-	apply plugin: "eclipse-wtp"
 
-	eclipse.project.name = "${baseNameUpper}-demo"
-	
-	dependencies {
-		compile project(":addon")
-		compile "com.google.guava:guava:15.0"
-	}
+    eclipse.project.name = "${baseNameUpper}-demo"
 
-	vaadin.widgetset = "${group}.widgetset.${baseNameUpper}DemoWidgetset"
+    dependencies {
+        compile project(":addon")
+        compile "com.google.guava:guava:15.0"
+    }
+
+    vaadin.widgetset = "${group}.widgetset.${baseNameUpper}DemoWidgetset"
 }
 
 task(dist, type: Sync, dependsOn: [':addon:jar', ':demo:war']) {
-	description = "Copies the addon JAR and the demo WAR to target/"
-	File targetDir = mkdir("target")
-	from project(":addon").jar.archivePath
-	from project(":demo").war.archivePath
-	into targetDir
+    description = "Copies the addon JAR and the demo WAR to target/"
+    File targetDir = mkdir("target")
+    from project(":addon").jar.archivePath
+    from project(":demo").war.archivePath
+    into targetDir
 }
