@@ -32,8 +32,6 @@ public interface Stepper<T, S> extends Field<T> {
      * events, set this accordingly. Default is true, that is, mouse wheel
      * events will be handled.
      * 
-     * @param isMouseWheelEnabled
-     *            true to handle the events (the default), false otherwise.
      * @author colinf
      */
     boolean isMouseWheelEnabled();

@@ -1,6 +1,6 @@
 package org.vaadin.risto.stepper.widgetset.client.ui.helpers;
 
-import org.vaadin.risto.stepper.widgetset.client.ui.VAbstractStepper;
+import org.vaadin.risto.stepper.widgetset.client.ui.AbstractStepper;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -24,10 +24,10 @@ public class UpDownTextBox extends TextBox implements KeyDownHandler,
         KeyUpHandler, MouseWheelHandler {
     protected ButtonDownTimer keyDownTimerUp;
     protected ButtonDownTimer keyDownTimerDown;
-    private final VAbstractStepper<?, ?> stepper;
+    private final AbstractStepper<?, ?> stepper;
     private boolean isValueFilteringEnabled;
 
-    public UpDownTextBox(VAbstractStepper<?, ?> stepper) {
+    public UpDownTextBox(AbstractStepper<?, ?> stepper) {
         this.stepper = stepper;
         addKeyDownHandler(this);
         addKeyUpHandler(this);
@@ -83,12 +83,12 @@ public class UpDownTextBox extends TextBox implements KeyDownHandler,
 
         if (keycode == KeyCodes.KEY_UP && keyDownTimerUp == null) {
             keyDownTimerUp = new ButtonDownTimer(true, stepper);
-            keyDownTimerUp.scheduleRepeating(VAbstractStepper.valueRepeatDelay);
+            keyDownTimerUp.scheduleRepeating(AbstractStepper.valueRepeatDelay);
             event.preventDefault();
         } else if (keycode == KeyCodes.KEY_DOWN && keyDownTimerDown == null) {
             keyDownTimerDown = new ButtonDownTimer(false, stepper);
             keyDownTimerDown
-                    .scheduleRepeating(VAbstractStepper.valueRepeatDelay);
+                    .scheduleRepeating(AbstractStepper.valueRepeatDelay);
             event.preventDefault();
         }
     }

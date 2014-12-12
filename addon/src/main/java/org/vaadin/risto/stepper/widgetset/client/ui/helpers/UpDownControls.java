@@ -1,6 +1,6 @@
 package org.vaadin.risto.stepper.widgetset.client.ui.helpers;
 
-import org.vaadin.risto.stepper.widgetset.client.ui.VAbstractStepper;
+import org.vaadin.risto.stepper.widgetset.client.ui.AbstractStepper;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -31,17 +31,17 @@ public class UpDownControls extends FlowPanel implements ClickHandler,
     protected final Anchor buttonDown;
     protected final ButtonDownTimer mouseDownTimerUp;
     protected final ButtonDownTimer mouseDownTimerDown;
-    private final VAbstractStepper<?, ?> stepper;
+    private final AbstractStepper<?, ?> stepper;
 
-    public UpDownControls(VAbstractStepper<?, ?> stepper) {
+    public UpDownControls(AbstractStepper<?, ?> stepper) {
         this.stepper = stepper;
-        setStyleName("v-stepper-updown");
+        setStyleName("stepper-updown");
 
         buttonUp = new Anchor();
-        buttonUp.addStyleName("v-stepper-up");
+        buttonUp.addStyleName("stepper-up");
 
         buttonDown = new Anchor();
-        buttonDown.addStyleName("v-stepper-down");
+        buttonDown.addStyleName("stepper-down");
 
         buttonUp.addClickHandler(this);
         buttonUp.addMouseDownHandler(this);
@@ -88,10 +88,10 @@ public class UpDownControls extends FlowPanel implements ClickHandler,
         cancelTimers();
         if (event.getSource() == buttonUp) {
             mouseDownTimerUp
-                    .scheduleRepeating(VAbstractStepper.valueRepeatDelay);
+                    .scheduleRepeating(AbstractStepper.valueRepeatDelay);
         } else if (event.getSource() == buttonDown) {
             mouseDownTimerDown
-                    .scheduleRepeating(VAbstractStepper.valueRepeatDelay);
+                    .scheduleRepeating(AbstractStepper.valueRepeatDelay);
         }
         event.preventDefault();
     }

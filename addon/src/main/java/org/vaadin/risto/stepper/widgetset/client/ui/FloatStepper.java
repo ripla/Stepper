@@ -4,14 +4,14 @@ package org.vaadin.risto.stepper.widgetset.client.ui;
  * @author Risto Yrjänä / Vaadin }>
  * 
  */
-public class VFloatStepper extends VAbstractStepper<Float, Float> {
+public class FloatStepper extends AbstractStepper<Float, Float> {
 
     private int numberOfDecimals;
 
     // TODO localization of the decimal separator
     private static final String FLOAT_CHARACTERS = "^\\-?\\d+\\.?\\d*$";
 
-    public VFloatStepper() {
+    public FloatStepper() {
         super(FLOAT_CHARACTERS);
     }
 

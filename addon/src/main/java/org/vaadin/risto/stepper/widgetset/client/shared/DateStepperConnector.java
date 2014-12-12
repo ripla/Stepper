@@ -2,7 +2,7 @@ package org.vaadin.risto.stepper.widgetset.client.shared;
 
 import java.util.Date;
 
-import org.vaadin.risto.stepper.widgetset.client.ui.VDateStepper;
+import org.vaadin.risto.stepper.widgetset.client.ui.DateStepper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.DateTimeFormat;
@@ -16,8 +16,8 @@ public class DateStepperConnector extends
     private static final long serialVersionUID = -8728733216507405676L;
 
     @Override
-    protected VDateStepper createWidget() {
-        return GWT.create(VDateStepper.class);
+    protected DateStepper createWidget() {
+        return GWT.create(DateStepper.class);
     }
 
     @Override
@@ -26,8 +26,8 @@ public class DateStepperConnector extends
     }
 
     @Override
-    public VDateStepper getWidget() {
-        return (VDateStepper) super.getWidget();
+    public DateStepper getWidget() {
+        return (DateStepper) super.getWidget();
     }
 
     @Override

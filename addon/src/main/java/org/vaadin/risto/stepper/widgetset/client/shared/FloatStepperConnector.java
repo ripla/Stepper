@@ -1,6 +1,6 @@
 package org.vaadin.risto.stepper.widgetset.client.shared;
 
-import org.vaadin.risto.stepper.widgetset.client.ui.VFloatStepper;
+import org.vaadin.risto.stepper.widgetset.client.ui.FloatStepper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
@@ -15,7 +15,7 @@ public class FloatStepperConnector extends
 
     @Override
     protected Widget createWidget() {
-        return GWT.create(VFloatStepper.class);
+        return GWT.create(FloatStepper.class);
     }
 
     @Override
@@ -24,8 +24,8 @@ public class FloatStepperConnector extends
     }
 
     @Override
-    public VFloatStepper getWidget() {
-        return (VFloatStepper) super.getWidget();
+    public FloatStepper getWidget() {
+        return (FloatStepper) super.getWidget();
     }
 
     @Override

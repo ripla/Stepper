@@ -14,7 +14,7 @@ import com.google.gwt.i18n.shared.DateTimeFormat;
  * 
  */
 
-public class VDateStepper extends VAbstractStepper<Date, Integer> {
+public class DateStepper extends AbstractStepper<Date, Integer> {
 
     private DateStepperField dateStepField;
 

@@ -2,16 +2,14 @@ package org.vaadin.risto.stepper.widgetset.client.shared;
 
 import java.math.BigDecimal;
 
-import org.vaadin.risto.stepper.BigDecimalStepper;
-import org.vaadin.risto.stepper.widgetset.client.shared.AbstractStepperConnector;
-import org.vaadin.risto.stepper.widgetset.client.ui.VBigDecimalStepper;
+import org.vaadin.risto.stepper.widgetset.client.ui.BigDecimalStepper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.shared.ui.Connect;
 
-@Connect(BigDecimalStepper.class)
+@Connect(org.vaadin.risto.stepper.BigDecimalStepper.class)
 public class BigDecimalStepperConnector extends
         AbstractStepperConnector<BigDecimal, BigDecimal> {
 
@@ -19,7 +17,7 @@ public class BigDecimalStepperConnector extends
 
     @Override
     protected Widget createWidget() {
-        return GWT.create(VBigDecimalStepper.class);
+        return GWT.create(BigDecimalStepper.class);
     }
 
     @Override
@@ -28,8 +26,8 @@ public class BigDecimalStepperConnector extends
     }
 
     @Override
-    public VBigDecimalStepper getWidget() {
-        return (VBigDecimalStepper) super.getWidget();
+    public BigDecimalStepper getWidget() {
+        return (BigDecimalStepper) super.getWidget();
     }
 
     @Override

@@ -1,8 +1,8 @@
-.v-stepper {
+.stepper {
 	position: relative;
 }
 
-.v-stepper.v-has-width .gwt-TextBox {
+.stepper.v-has-width .gwt-TextBox {
 	width: 100%;
 	
 	-moz-box-sizing: border-box;
@@ -10,39 +10,39 @@
 	box-sizing: border-box;
 }
 
-.v-stepper .v-stepper-updown {
+.stepper .stepper-updown {
 	position: absolute;
 	top: 4px;
 	right: 3px;
 }
 
-.v-stepper.v-has-width .v-stepper-updown {
+.stepper.v-has-width .stepper-updown {
 	right: 1px;
 }
 
-.v-stepper .v-stepper-up,
-.v-stepper .v-stepper-down {
+.stepper .stepper-up,
+.stepper .stepper-down {
 	width: 16px;
 	height: 10px;
 	display: block;
 	outline: none;
 }
 
-.v-stepper .v-stepper-up {
+.stepper .stepper-up {
 	background: transparent url("bullet_arrow_up.png") no-repeat center center;
 }
 
-.v-stepper .v-stepper-down {
+.stepper .stepper-down {
 	background: transparent url("bullet_arrow_down.png") no-repeat center center;
 }
 
-.v-ie8 .v-stepper .v-stepper-updown {
+.v-ie8 .stepper .stepper-updown {
 	top: 2px;
 	right: 1px;
 }
 
-.v-ie9 .v-stepper .v-stepper-updown,
-.v-ie10 .v-stepper .v-stepper-updown {
+.v-ie9 .stepper .stepper-updown,
+.v-ie10 .stepper .stepper-updown {
 	top: 1px;
 	right: 1px;
 }

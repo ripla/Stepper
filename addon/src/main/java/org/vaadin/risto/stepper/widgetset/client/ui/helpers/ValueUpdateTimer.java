@@ -1,6 +1,6 @@
 package org.vaadin.risto.stepper.widgetset.client.ui.helpers;
 
-import org.vaadin.risto.stepper.widgetset.client.ui.VAbstractStepper;
+import org.vaadin.risto.stepper.widgetset.client.ui.AbstractStepper;
 
 import com.google.gwt.user.client.Timer;
 
@@ -13,9 +13,9 @@ import com.google.gwt.user.client.Timer;
 public class ValueUpdateTimer extends Timer {
 
     protected String value;
-    private final VAbstractStepper<?, ?> stepper;
+    private final AbstractStepper<?, ?> stepper;
 
-    public ValueUpdateTimer(VAbstractStepper<?, ?> stepper) {
+    public ValueUpdateTimer(AbstractStepper<?, ?> stepper) {
         this.stepper = stepper;
     }
 

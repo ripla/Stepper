@@ -1,6 +1,6 @@
 package org.vaadin.risto.stepper.widgetset.client.ui.helpers;
 
-import org.vaadin.risto.stepper.widgetset.client.ui.VAbstractStepper;
+import org.vaadin.risto.stepper.widgetset.client.ui.AbstractStepper;
 
 import com.google.gwt.user.client.Timer;
 
@@ -13,9 +13,9 @@ import com.google.gwt.user.client.Timer;
 public class ButtonDownTimer extends Timer {
 
     protected final boolean increase;
-    private final VAbstractStepper<?, ?> stepper;
+    private final AbstractStepper<?, ?> stepper;
 
-    public ButtonDownTimer(boolean increase, VAbstractStepper<?, ?> stepper) {
+    public ButtonDownTimer(boolean increase, AbstractStepper<?, ?> stepper) {
         this.increase = increase;
         this.stepper = stepper;
     }

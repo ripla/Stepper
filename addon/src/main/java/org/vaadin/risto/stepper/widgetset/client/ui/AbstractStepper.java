@@ -17,10 +17,10 @@ import com.google.gwt.user.client.ui.TextBox;
  * @author Risto Yrjänä / Vaadin }>
  * 
  */
-public abstract class VAbstractStepper<T, S> extends FlowPanel implements
+public abstract class AbstractStepper<T, S> extends FlowPanel implements
         ValueChangeHandler<String> {
 
-    public static final String CLASSNAME = "v-stepper";
+    public static final String CLASSNAME = "stepper";
 
     public static final int valueRepeatDelay = 150;
 
@@ -56,11 +56,11 @@ public abstract class VAbstractStepper<T, S> extends FlowPanel implements
 
     private boolean isValueFilteringEnabled;
 
-    public VAbstractStepper() {
+    public AbstractStepper() {
         this(".*"); // match all by default
     }
 
-    public VAbstractStepper(String valueRegexp) {
+    public AbstractStepper(String valueRegexp) {
 
         setStyleName(CLASSNAME);
 

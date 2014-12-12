@@ -4,11 +4,11 @@ package org.vaadin.risto.stepper.widgetset.client.ui;
  * @author Risto Yrjänä / Vaadin }>
  * 
  */
-public class VIntStepper extends VAbstractStepper<Integer, Integer> {
+public class IntStepper extends AbstractStepper<Integer, Integer> {
 
     private static final String INTEGER_REGEXP = "^\\-?\\d+$";
 
-    public VIntStepper() {
+    public IntStepper() {
         super(INTEGER_REGEXP);
     }
 

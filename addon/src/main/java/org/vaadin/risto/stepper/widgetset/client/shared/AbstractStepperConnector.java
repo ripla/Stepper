@@ -1,6 +1,6 @@
 package org.vaadin.risto.stepper.widgetset.client.shared;
 
-import org.vaadin.risto.stepper.widgetset.client.ui.VAbstractStepper;
+import org.vaadin.risto.stepper.widgetset.client.ui.AbstractStepper;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -15,8 +15,8 @@ public abstract class AbstractStepperConnector<T, S> extends
 
     @Override
     @SuppressWarnings("unchecked")
-    public VAbstractStepper<T, S> getWidget() {
-        return (VAbstractStepper<T, S>) super.getWidget();
+    public AbstractStepper<T, S> getWidget() {
+        return (AbstractStepper<T, S>) super.getWidget();
     }
 
     @Override

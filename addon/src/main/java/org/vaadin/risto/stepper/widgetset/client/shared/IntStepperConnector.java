@@ -1,6 +1,6 @@
 package org.vaadin.risto.stepper.widgetset.client.shared;
 
-import org.vaadin.risto.stepper.widgetset.client.ui.VIntStepper;
+import org.vaadin.risto.stepper.widgetset.client.ui.IntStepper;
 
 import com.google.gwt.core.client.GWT;
 import com.vaadin.client.communication.StateChangeEvent;
@@ -13,8 +13,8 @@ public class IntStepperConnector extends
     private static final long serialVersionUID = -5276807014107059716L;
 
     @Override
-    protected VIntStepper createWidget() {
-        return GWT.create(VIntStepper.class);
+    protected IntStepper createWidget() {
+        return GWT.create(IntStepper.class);
     }
 
     @Override

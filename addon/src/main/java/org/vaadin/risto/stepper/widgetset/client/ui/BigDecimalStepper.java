@@ -3,16 +3,14 @@ package org.vaadin.risto.stepper.widgetset.client.ui;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import org.vaadin.risto.stepper.widgetset.client.ui.VAbstractStepper;
-
-public class VBigDecimalStepper extends
-        VAbstractStepper<BigDecimal, BigDecimal> {
+public class BigDecimalStepper extends
+        AbstractStepper<BigDecimal, BigDecimal> {
 
     private static final String FLOAT_CHARACTERS = "^\\-?\\d+\\.?\\d*$";
 
     private int numberOfDecimals = Integer.MAX_VALUE;
 
-    public VBigDecimalStepper() {
+    public BigDecimalStepper() {
         super(FLOAT_CHARACTERS);
     }
 
