@@ -45,7 +45,7 @@ project(":addon") {
     vaadin.widgetset = "${group}.widgetset.${baseNameUpper}Widgetset"
 
     dependencies {
-        testCompile "junit:junit:4.+"
+        testCompile "junit:junit:latest.release"
     }
 
     jar {
@@ -62,7 +62,7 @@ project(":demo") {
 
     dependencies {
         compile project(":addon")
-        compile "com.google.guava:guava:15.0"
+        compile "com.google.guava:guava:latest.release"
     }
 
     vaadin.widgetset = "${group}.widgetset.${baseNameUpper}DemoWidgetset"
