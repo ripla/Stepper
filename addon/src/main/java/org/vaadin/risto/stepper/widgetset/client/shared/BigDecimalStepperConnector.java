@@ -21,8 +21,8 @@ public class BigDecimalStepperConnector extends
     }
 
     @Override
-    public BigDecimalStepperState getState() {
-        return (BigDecimalStepperState) super.getState();
+    public AbstractDecimalStepperState getState() {
+        return (AbstractDecimalStepperState) super.getState();
     }
 
     @Override
@@ -34,6 +34,7 @@ public class BigDecimalStepperConnector extends
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         getWidget().setNumberOfDecimals(getState().numberOfDecimals);
         getWidget().setValueFilteringEnabled(getState().valueFiltering);
+        getWidget().setDecimalSeparator(getState().decimalSeparator);
 
         super.onStateChanged(stateChangeEvent);
     }

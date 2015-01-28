@@ -1,10 +1,14 @@
 package org.vaadin.risto.stepper;
 
+import java.math.BigDecimal;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -41,15 +45,15 @@ public class StepperDemoUI extends UI {
     private static final Date DEFAULT_DATE = new Date();
     private IntStepper intStepper;
     private FloatStepper floatStepper;
+    private BigDecimalStepper bigDecimalStepper;
     private DateStepper dateStepper;
     @SuppressWarnings("rawtypes")
     private List<AbstractStepper> steppers;
-    
+
     @Override
     protected void init(VaadinRequest request) {
         Page.getCurrent().setTitle("Stepper demo");
-        // TODO disabled until client-side locales are fixed
-        // setLocale(new Locale("fi", "FI"));
+        setLocale(new Locale("fi", "FI"));
         initUI();
     }
 
@@ -126,7 +130,7 @@ public class StepperDemoUI extends UI {
         Label infoLabel = new Label(infoString);
         infoLabel.setContentMode(ContentMode.HTML);
 
-        HorizontalLayout stepperLayout = new HorizontalLayout();
+        GridLayout stepperLayout = new GridLayout(2, 2);
         stepperLayout.setWidth("100%");
         stepperLayout.setSpacing(true);
         stepperLayout.setMargin(true);
@@ -142,6 +146,14 @@ public class StepperDemoUI extends UI {
         floatStepper.setNumberOfDecimals(3);
         floatStepper.setCaption("FloatStepper, step 1.222");
 
+        bigDecimalStepper = new BigDecimalStepper();
+        bigDecimalStepper.setValue(BigDecimal.ZERO);
+        bigDecimalStepper.setStepAmount(new BigDecimal(
+                "0.111111111111111111111111"));
+        bigDecimalStepper
+                .setCaption("BigDecimalStepper, step 0.111111111111111111111111");
+        bigDecimalStepper.setWidth("200px");
+
         dateStepper = new DateStepper();
         dateStepper.setValue(DEFAULT_DATE);
         dateStepper.setStepField(DateStepperField.DAY);
@@ -149,15 +161,17 @@ public class StepperDemoUI extends UI {
         dateStepper.setCaption("DateStepper, step 1 day");
 
         steppers = Arrays.<AbstractStepper> asList(intStepper, floatStepper,
-                dateStepper);
+                bigDecimalStepper, dateStepper);
 
         Layout intStepperLayout = getStepperLayout(intStepper);
         Layout floatStepperLayout = getStepperLayout(floatStepper);
+        Layout bigDecimalStepperLayout = getStepperLayout(bigDecimalStepper);
         Layout dateStepperLayout = getStepperLayout(dateStepper);
 
         stepperLayout.addComponent(intStepperLayout);
-        stepperLayout.addComponent(floatStepperLayout);
         stepperLayout.addComponent(dateStepperLayout);
+        stepperLayout.addComponent(floatStepperLayout);
+        stepperLayout.addComponent(bigDecimalStepperLayout);
 
         final CheckBox minValue = new CheckBox("Enable minimum value limits");
         minValue.setImmediate(true);
@@ -248,9 +262,8 @@ public class StepperDemoUI extends UI {
                 }
             }
         });
-        
-        final CheckBox nullValueAllowed = new CheckBox(
-                "Null is valid");
+
+        final CheckBox nullValueAllowed = new CheckBox("Null is valid");
         nullValueAllowed.setValue(false);
         nullValueAllowed.setImmediate(true);
         nullValueAllowed.addValueChangeListener(new ValueChangeListener() {
@@ -260,8 +273,7 @@ public class StepperDemoUI extends UI {
             @Override
             public void valueChange(ValueChangeEvent event) {
                 for (AbstractStepper stepper : steppers) {
-                    stepper.setNullValueAllowed(nullValueAllowed
-                            .getValue());
+                    stepper.setNullValueAllowed(nullValueAllowed.getValue());
                 }
             }
         });
@@ -282,39 +294,48 @@ public class StepperDemoUI extends UI {
                 }
             }
         });
-        
-        final CheckBox revertingValueChangeListenerEnabled = new CheckBox("Enable reverting ValueChangeListener (reverts to 1/today)");
+
+        final CheckBox revertingValueChangeListenerEnabled = new CheckBox(
+                "Enable reverting ValueChangeListener (reverts to 1/today)");
         revertingValueChangeListenerEnabled.setValue(false);
         revertingValueChangeListenerEnabled.setImmediate(true);
-        final Map<Stepper,ValueChangeListener> revertingValueChangeListeners = new HashMap<Stepper,ValueChangeListener>() {{
-        	put(intStepper,new ValueChangeListener() {
-        		@Override
-        		public void valueChange(ValueChangeEvent event) {
-        			intStepper.setValue(1);
-        		}});
-        	put(floatStepper,new ValueChangeListener() {
-        		@Override
-        		public void valueChange(ValueChangeEvent event) {
-        			floatStepper.setValue(1.0F);
-        		}});
-        	put(dateStepper,new ValueChangeListener() {
-        		@Override
-        		public void valueChange(ValueChangeEvent event) {
-        			dateStepper.setValue(DEFAULT_DATE);
-        		}});
-        }};
-        revertingValueChangeListenerEnabled.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                for (final AbstractStepper stepper : steppers) {
-                	if (revertingValueChangeListenerEnabled.getValue()) {
-                		stepper.addValueChangeListener(revertingValueChangeListeners.get(stepper));
-                	} else {
-                		stepper.removeValueChangeListener(revertingValueChangeListeners.get(stepper));
-                	}
-                }
+        final Map<Stepper, ValueChangeListener> revertingValueChangeListeners = new HashMap<Stepper, ValueChangeListener>() {
+            {
+                put(intStepper, new ValueChangeListener() {
+                    @Override
+                    public void valueChange(ValueChangeEvent event) {
+                        intStepper.setValue(1);
+                    }
+                });
+                put(floatStepper, new ValueChangeListener() {
+                    @Override
+                    public void valueChange(ValueChangeEvent event) {
+                        floatStepper.setValue(1.0F);
+                    }
+                });
+                put(dateStepper, new ValueChangeListener() {
+                    @Override
+                    public void valueChange(ValueChangeEvent event) {
+                        dateStepper.setValue(DEFAULT_DATE);
+                    }
+                });
             }
-        });
+        };
+        revertingValueChangeListenerEnabled
+                .addValueChangeListener(new ValueChangeListener() {
+                    @Override
+                    public void valueChange(ValueChangeEvent event) {
+                        for (final AbstractStepper stepper : steppers) {
+                            if (revertingValueChangeListenerEnabled.getValue()) {
+                                stepper.addValueChangeListener(revertingValueChangeListeners
+                                        .get(stepper));
+                            } else {
+                                stepper.removeValueChangeListener(revertingValueChangeListeners
+                                        .get(stepper));
+                            }
+                        }
+                    }
+                });
 
         options.addComponent(minValue);
         options.addComponent(manualInput);
@@ -327,30 +348,30 @@ public class StepperDemoUI extends UI {
 
         Button disable = new Button("Disable all");
         disable.addClickListener(new Button.ClickListener() {
-        	@Override
-        	public void buttonClick(Button.ClickEvent event)  {
-        		for (AbstractStepper stepper : steppers) {
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                for (AbstractStepper stepper : steppers) {
                     stepper.setEnabled(false);
                 }
-        	}
+            }
         });
         Button enable = new Button("Enable all");
         enable.addClickListener(new Button.ClickListener() {
-        	@Override
-        	public void buttonClick(Button.ClickEvent event)  {
-        		for (AbstractStepper stepper : steppers) {
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                for (AbstractStepper stepper : steppers) {
                     stepper.setEnabled(true);
                 }
-        	}
+            }
         });
         actions.addComponent(disable);
         actions.addComponent(enable);
-        
+
         panelLayout.addComponent(infoLabel);
         panelLayout.addComponent(options);
         panelLayout.addComponent(actions);
         panelLayout.addComponent(stepperLayout);
-        
+
         return panel;
     }
 
