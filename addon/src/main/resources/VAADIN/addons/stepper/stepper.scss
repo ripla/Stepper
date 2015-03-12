@@ -7,38 +7,44 @@
 @mixin stepper {
   .stepper {
     position: relative;
+
+    input[type=text] {
+      line-height: $v-line-height;
+      font-size: $v-font-size;
+    }
+
+    .stepper-updown {
+      position: absolute;
+      top: 4px;
+      right: 3px;
+    }
+
+    .stepper-up, .stepper-down {
+      width: 16px;
+      height: 10px;
+      display: block;
+      outline: none;
+    }
+
+    .stepper-up {
+      background: transparent url("bullet_arrow_up.png") no-repeat center center;
+    }
+
+    .stepper-down {
+      background: transparent url("bullet_arrow_down.png") no-repeat center center;
+    }
   }
 
-  .stepper.v-has-width .gwt-TextBox {
-    width: 100%;
+  .stepper.v-has-width {
+    .input[type=text] {
+      width: 100%;
 
-    @include box-sizing(border-box)
-  }
+      @include box-sizing(border-box);
+    }
 
-  .stepper .stepper-updown {
-    position: absolute;
-    top: 4px;
-    right: 3px;
-  }
-
-  .stepper.v-has-width .stepper-updown {
-    right: 1px;
-  }
-
-  .stepper .stepper-up,
-  .stepper .stepper-down {
-    width: 16px;
-    height: 10px;
-    display: block;
-    outline: none;
-  }
-
-  .stepper .stepper-up {
-    background: transparent url("bullet_arrow_up.png") no-repeat center center;
-  }
-
-  .stepper .stepper-down {
-    background: transparent url("bullet_arrow_down.png") no-repeat center center;
+    .stepper-updown {
+      right: 1px;
+    }
   }
 
   .v-ie8 .stepper .stepper-updown {
