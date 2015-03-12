@@ -313,6 +313,12 @@ public class StepperDemoUI extends UI {
                         floatStepper.setValue(1.0F);
                     }
                 });
+                put(bigDecimalStepper, new ValueChangeListener() {
+                    @Override
+                    public void valueChange(ValueChangeEvent event) {
+                        bigDecimalStepper.setValue(new BigDecimal(1.0F));
+                    }
+                });
                 put(dateStepper, new ValueChangeListener() {
                     @Override
                     public void valueChange(ValueChangeEvent event) {
