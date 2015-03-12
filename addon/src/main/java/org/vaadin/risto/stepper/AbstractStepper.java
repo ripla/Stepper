@@ -2,6 +2,7 @@ package org.vaadin.risto.stepper;
 
 import java.text.ParseException;
 
+import com.vaadin.server.Resource;
 import org.vaadin.risto.stepper.widgetset.client.shared.AbstractStepperState;
 import org.vaadin.risto.stepper.widgetset.client.shared.StepperRpc;
 
@@ -161,6 +162,13 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T> implements
         return minValue;
     }
 
+    public void setDecreaseIcon(Resource icon) {
+        setResource("ICON_INCREASE", icon);
+    }
+
+    public void setIncreaseIcon(Resource icon) {
+        setResource("ICON_DECREASE", icon);
+    }
     /**
      * @param value
      * @return

@@ -1,5 +1,6 @@
 package org.vaadin.risto.stepper;
 
+import com.vaadin.server.Resource;
 import com.vaadin.ui.Field;
 
 /**
@@ -88,4 +89,18 @@ public interface Stepper<T, S> extends Field<T> {
     T getMaxValue();
 
     T getMinValue();
+
+    /**
+     * Set the icon for the value increase button
+     *
+     * @param icon
+     */
+    void setIncreaseIcon(Resource icon);
+
+    /**
+     * Set the icon for the value decrease button
+     *
+     * @param icon
+     */
+    void setDecreaseIcon(Resource icon);
 }
