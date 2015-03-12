@@ -1,0 +1,6 @@
+@import "../../../VAADIN/addons/stepper/stepper.scss";
+
+@mixin addons {
+	@include stepper;
+}
+

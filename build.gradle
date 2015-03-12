@@ -42,6 +42,7 @@ project(":addon") {
 
     version = "2.2.1"
     vaadin.widgetset = "${group}.widgetset.${baseNameUpper}Widgetset"
+    vaadin.addon.styles = ["/VAADIN/addons/stepper/stepper.scss"]
 
     dependencies {
         testCompile "junit:junit:latest.release"

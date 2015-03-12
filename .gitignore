@@ -1,7 +1,7 @@
 .settings
 .classpath
 .project
-/addon/build
+/**/build
 /demo/build
 /addon/bin
 /demo/bin
@@ -11,3 +11,5 @@
 .gradle*
 /target*
 /*/GWT development mode*
+*.css
+*.scss.cache

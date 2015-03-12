@@ -38,7 +38,7 @@ import com.vaadin.ui.VerticalLayout;
  * @author Risto Yrjänä / Vaadin }>
  * 
  */
-@Theme("reindeer")
+@Theme("demo")
 public class StepperDemoUI extends UI {
 
     private static final long serialVersionUID = 3840548109739501675L;

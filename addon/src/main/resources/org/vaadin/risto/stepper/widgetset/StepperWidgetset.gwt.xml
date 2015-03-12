@@ -5,5 +5,4 @@
 
 	<inherits name="com.vaadin.DefaultWidgetSet" />
 
-	<stylesheet src="stepper/stepper.css" />
 </module>
