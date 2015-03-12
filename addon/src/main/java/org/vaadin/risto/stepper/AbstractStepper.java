@@ -2,7 +2,6 @@ package org.vaadin.risto.stepper;
 
 import java.text.ParseException;
 
-import org.json.JSONException;
 import org.vaadin.risto.stepper.widgetset.client.shared.AbstractStepperState;
 import org.vaadin.risto.stepper.widgetset.client.shared.StepperRpc;
 
@@ -43,13 +42,9 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T> implements
                          * 
                          * See e.g. http://dev.vaadin.com/ticket/12133
                          */
-                        try {
                             getUI().getConnectorTracker()
                                     .getDiffState(AbstractStepper.this)
                                     .put("value", value);
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
 
                     } catch (StepperValueParseException e) {
                         handleParseException(e);

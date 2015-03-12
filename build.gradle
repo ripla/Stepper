@@ -17,8 +17,7 @@ subprojects {
 
     apply from: "http://plugins.jasoft.fi/vaadin.plugin"
 
-    //vaadin.jvmArgs=["-Xmx1024m"]
-    //vaadin.gwt.jvmArgs=["-Xmx1024m"]
+    vaadin.version="7.4.1"
     vaadin.gwt.draftCompile = true
     vaadin.gwt.strict = true
     vaadin.manageWidgetset = false
@@ -41,7 +40,7 @@ subprojects {
 project(":addon") {
     eclipse.project.name = "${baseNameUpper}-addon"
 
-    version = "2.2.0"
+    version = "2.2.1"
     vaadin.widgetset = "${group}.widgetset.${baseNameUpper}Widgetset"
 
     dependencies {
