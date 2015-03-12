@@ -40,7 +40,7 @@ subprojects {
 project(":addon") {
     eclipse.project.name = "${baseNameUpper}-addon"
 
-    version = "2.2.1"
+    version = "2.3.0"
     vaadin.widgetset = "${group}.widgetset.${baseNameUpper}Widgetset"
     vaadin.addon.styles = ["/VAADIN/addons/stepper/stepper.scss"]
 
