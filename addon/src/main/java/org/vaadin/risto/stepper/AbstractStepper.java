@@ -2,6 +2,7 @@ package org.vaadin.risto.stepper;
 
 import java.text.ParseException;
 
+import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Resource;
 import org.vaadin.risto.stepper.widgetset.client.shared.AbstractStepperState;
 import org.vaadin.risto.stepper.widgetset.client.shared.StepperRpc;
@@ -53,6 +54,9 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T> implements
                 }
             }
         });
+
+        setIncreaseIcon(FontAwesome.SORT_UP);
+        setDecreaseIcon(FontAwesome.SORT_DOWN);
     }
 
     @Override
@@ -163,11 +167,18 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T> implements
     }
 
     public void setDecreaseIcon(Resource icon) {
-        setResource("ICON_INCREASE", icon);
+        if(icon == null) {
+            throw new IllegalArgumentException("Icon cannot be null");
+        }
+
+        setResource(getState().DECREASE_ICON_KEY, icon);
     }
 
     public void setIncreaseIcon(Resource icon) {
-        setResource("ICON_DECREASE", icon);
+        if(icon == null) {
+            throw new IllegalArgumentException("Icon cannot be null");
+        }
+        setResource(getState().INCREASE_ICON_KEY, icon);
     }
     /**
      * @param value

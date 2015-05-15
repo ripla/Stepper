@@ -1,5 +1,6 @@
 package org.vaadin.risto.stepper.widgetset.client.ui.helpers;
 
+import com.google.gwt.dom.client.Element;
 import org.vaadin.risto.stepper.widgetset.client.ui.AbstractStepper;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -18,47 +19,48 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlowPanel;
 
 /**
- * Class for the up/down buttons and their listeners.
+ * Panel that contains the controls for the Stepper.
  * 
  * @author Risto Yrjänä / Vaadin }>
  * 
  */
-public class UpDownControls extends FlowPanel implements ClickHandler,
+public class StepperControls extends FlowPanel implements ClickHandler,
         MouseDownHandler, MouseUpHandler, MouseOverHandler, MouseOutHandler,
         MouseWheelHandler {
 
-    protected final Anchor buttonUp;
-    protected final Anchor buttonDown;
+    protected final Anchor increaseControl;
+    protected final Anchor decreaseControl;
     protected final ButtonDownTimer mouseDownTimerUp;
     protected final ButtonDownTimer mouseDownTimerDown;
     private final AbstractStepper<?, ?> stepper;
+    private String increaseIconUrl;
 
-    public UpDownControls(AbstractStepper<?, ?> stepper) {
+    public StepperControls(AbstractStepper<?, ?> stepper) {
         this.stepper = stepper;
         setStyleName("stepper-updown");
 
-        buttonUp = new Anchor();
-        buttonUp.addStyleName("stepper-up");
+        increaseControl = new Anchor();
+        increaseControl.addStyleName("stepper-up");
 
-        buttonDown = new Anchor();
-        buttonDown.addStyleName("stepper-down");
+        decreaseControl = new Anchor();
+        decreaseControl.addStyleName("stepper-down");
 
-        buttonUp.addClickHandler(this);
-        buttonUp.addMouseDownHandler(this);
-        buttonUp.addMouseUpHandler(this);
-        buttonUp.addMouseOverHandler(this);
-        buttonUp.addMouseWheelHandler(this);
+        increaseControl.addClickHandler(this);
+        increaseControl.addMouseDownHandler(this);
+        increaseControl.addMouseUpHandler(this);
+        increaseControl.addMouseOverHandler(this);
+        increaseControl.addMouseWheelHandler(this);
 
-        buttonDown.addClickHandler(this);
-        buttonDown.addMouseDownHandler(this);
-        buttonDown.addMouseUpHandler(this);
-        buttonDown.addMouseOverHandler(this);
-        buttonDown.addMouseWheelHandler(this);
+        decreaseControl.addClickHandler(this);
+        decreaseControl.addMouseDownHandler(this);
+        decreaseControl.addMouseUpHandler(this);
+        decreaseControl.addMouseOverHandler(this);
+        decreaseControl.addMouseWheelHandler(this);
 
         addDomHandler(this, MouseOutEvent.getType());
 
-        add(buttonUp);
-        add(buttonDown);
+        add(increaseControl);
+        add(decreaseControl);
 
         mouseDownTimerUp = new ButtonDownTimer(true, stepper);
         mouseDownTimerDown = new ButtonDownTimer(false, stepper);
@@ -73,9 +75,9 @@ public class UpDownControls extends FlowPanel implements ClickHandler,
     public void onClick(ClickEvent event) {
         if (!stepper.isTimerHasChangedValue()) {
             cancelTimers();
-            if (event.getSource() == buttonUp) {
+            if (event.getSource() == increaseControl) {
                 stepper.increaseValue();
-            } else if (event.getSource() == buttonDown) {
+            } else if (event.getSource() == decreaseControl) {
                 stepper.decreaseValue();
             }
         } else {
@@ -86,10 +88,10 @@ public class UpDownControls extends FlowPanel implements ClickHandler,
     @Override
     public void onMouseDown(MouseDownEvent event) {
         cancelTimers();
-        if (event.getSource() == buttonUp) {
+        if (event.getSource() == increaseControl) {
             mouseDownTimerUp
                     .scheduleRepeating(AbstractStepper.valueRepeatDelay);
-        } else if (event.getSource() == buttonDown) {
+        } else if (event.getSource() == decreaseControl) {
             mouseDownTimerDown
                     .scheduleRepeating(AbstractStepper.valueRepeatDelay);
         }
@@ -122,5 +124,15 @@ public class UpDownControls extends FlowPanel implements ClickHandler,
                 stepper.decreaseValue();
             }
         }
+    }
+
+    public void setIncreaseIconElement(Element increaseIconElement) {
+        increaseControl.getElement().removeAllChildren();
+        increaseControl.getElement().appendChild(increaseIconElement);
+    }
+
+    public void setDecreaseIconElement(Element decreaseIconElement) {
+        decreaseControl.getElement().removeAllChildren();
+        decreaseControl.getElement().appendChild(decreaseIconElement);
     }
 }

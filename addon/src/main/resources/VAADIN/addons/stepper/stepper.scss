@@ -11,50 +11,33 @@
     input[type=text] {
       line-height: $v-line-height;
       font-size: $v-font-size;
+      width: inherit;
+    }
+
+    &.v-has-width {
+      input[type=text] {
+        width: 100%;
+
+        @include box-sizing(border-box);
+      }
+    }
+
+    &.v-disabled {
+      opacity: 0.5;
     }
 
     .stepper-updown {
       position: absolute;
-      top: 4px;
-      right: 3px;
+      /* position correctly in relation to the textfield padding */
+      top: 2px;
+      right: 2px;
     }
 
     .stepper-up, .stepper-down {
-      width: 16px;
-      height: 10px;
       display: block;
       outline: none;
+      font-size: $v-font-size;
+      line-height: $v-line-height / 2;
     }
-
-    .stepper-up {
-      background: transparent url("bullet_arrow_up.png") no-repeat center center;
-    }
-
-    .stepper-down {
-      background: transparent url("bullet_arrow_down.png") no-repeat center center;
-    }
-  }
-
-  .stepper.v-has-width {
-    .input[type=text] {
-      width: 100%;
-
-      @include box-sizing(border-box);
-    }
-
-    .stepper-updown {
-      right: 1px;
-    }
-  }
-
-  .v-ie8 .stepper .stepper-updown {
-    top: 2px;
-    right: 1px;
-  }
-
-  .v-ie9 .stepper .stepper-updown,
-  .v-ie10 .stepper .stepper-updown {
-    top: 1px;
-    right: 1px;
   }
 }

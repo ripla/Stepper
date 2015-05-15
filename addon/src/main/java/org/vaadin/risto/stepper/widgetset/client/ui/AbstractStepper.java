@@ -1,6 +1,7 @@
 package org.vaadin.risto.stepper.widgetset.client.ui;
 
-import org.vaadin.risto.stepper.widgetset.client.ui.helpers.UpDownControls;
+import com.google.gwt.dom.client.Element;
+import org.vaadin.risto.stepper.widgetset.client.ui.helpers.StepperControls;
 import org.vaadin.risto.stepper.widgetset.client.ui.helpers.UpDownTextBox;
 import org.vaadin.risto.stepper.widgetset.client.ui.helpers.ValueUpdateTimer;
 
@@ -26,7 +27,7 @@ public abstract class AbstractStepper<T, S> extends FlowPanel implements
 
     protected final UpDownTextBox textBox;
 
-    protected final UpDownControls upDownControls;
+    protected final StepperControls upDownControls;
 
     protected final int updateDelay = 300;
 
@@ -66,7 +67,7 @@ public abstract class AbstractStepper<T, S> extends FlowPanel implements
 
         textBox = new UpDownTextBox(this);
         this.valueRegexp = RegExp.compile(valueRegexp);
-        upDownControls = new UpDownControls(this);
+        upDownControls = new StepperControls(this);
 
         add(textBox);
         add(upDownControls);
@@ -241,8 +242,9 @@ public abstract class AbstractStepper<T, S> extends FlowPanel implements
             valueUpdateTimer.cancel();
         }
 
-        textBox.setReadOnly(isDisabled() || isReadonly()
+        textBox.setReadOnly(isReadonly()
                 || !isManualInputAllowed());
+        textBox.setEnabled(!isDisabled());
     }
 
     public HandlerRegistration addValueChangeHandler(
@@ -315,10 +317,12 @@ public abstract class AbstractStepper<T, S> extends FlowPanel implements
     }
 
     /**
-     * Set the maximum possible value for this stepper. For
-     * {@link #isValidForRange(String)}
+     * Set the maximum possible value for this stepper.
      * 
      * @param value
+     *
+     * @see #isLargerThanMin(String)
+     * @see #isSmallerThanMax(String)
      */
     public void setMaxValue(T value) {
         this.maxValue = value;
@@ -329,10 +333,11 @@ public abstract class AbstractStepper<T, S> extends FlowPanel implements
     }
 
     /**
-     * Set the minimum possible value for this stepper. For
-     * {@link #isValidForRange(String)}
+     * Set the minimum possible value for this stepper.
      * 
      * @param value
+     * @see #isLargerThanMin(String)
+     * @see #isSmallerThanMax(String)
      */
     public void setMinValue(T value) {
         this.minValue = value;
@@ -361,5 +366,14 @@ public abstract class AbstractStepper<T, S> extends FlowPanel implements
     public void setValueFilteringEnabled(boolean isValueFilteringEnabled) {
         this.isValueFilteringEnabled = isValueFilteringEnabled;
         textBox.setValueFilteringEnabled(isValueFilteringEnabled);
+    }
+
+
+    public void setIncreaseIconElement(Element increaseIconElement) {
+        this.upDownControls.setIncreaseIconElement(increaseIconElement);
+    }
+
+    public void setDecreaseIconElement(Element decreaseIconElement) {
+        this.upDownControls.setDecreaseIconElement(decreaseIconElement);
     }
 }

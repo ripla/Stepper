@@ -1,7 +1,5 @@
 package org.vaadin.risto.stepper.widgetset.client.shared;
 
-import java.math.BigDecimal;
-
 import org.vaadin.risto.stepper.widgetset.client.ui.FloatStepper;
 
 import com.google.gwt.core.client.GWT;
