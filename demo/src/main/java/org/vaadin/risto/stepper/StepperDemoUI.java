@@ -1,19 +1,5 @@
 package org.vaadin.risto.stepper;
 
-import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.HashMap;
-
-import org.vaadin.risto.stepper.widgetset.client.shared.DateStepperField;
-
 import com.vaadin.annotations.Theme;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
@@ -21,22 +7,18 @@ import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.ui.Alignment;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.Layout;
-import com.vaadin.ui.Panel;
-import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.*;
+import org.vaadin.risto.stepper.widgetset.client.shared.DateStepperField;
+
+import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.util.*;
+import java.util.Calendar;
 
 /**
  * Demo application for the Stepper add-on.
- * 
+ *
  * @author Risto Yrjänä / Vaadin }>
- * 
  */
 @Theme("demo")
 public class StepperDemoUI extends UI {
@@ -47,8 +29,8 @@ public class StepperDemoUI extends UI {
     private FloatStepper floatStepper;
     private BigDecimalStepper bigDecimalStepper;
     private DateStepper dateStepper;
-    @SuppressWarnings("rawtypes")
-    private List<AbstractStepper> steppers;
+
+    private List<Stepper> steppers;
 
     @Override
     protected void init(VaadinRequest request) {
@@ -124,7 +106,7 @@ public class StepperDemoUI extends UI {
         options.setSpacing(true);
         options.setMargin(true);
 
-        String infoString = "<p>There are three different Stepper classes. Their step amount can be set from the server-side. The accuracy of the FloatStepper can be changed and the DateStepper can be set to increase days, months or years. The server-side values are added below the components as they are received from the client.</p>";
+        String infoString = "<p>There are four different Stepper classes. Their step amount can be set from the server-side. The accuracy of the FloatStepper can be changed and the DateStepper can be set to increase days, months or years. The server-side values are added below the components as they are received from the client.</p>";
         infoString += "<p>Minimum and maximum values are: -25 to 25 for IntStepper, -25 to 25 for FloatStepper and 10 days to the past to 10 days to the future for DateStepper.</p>";
         infoString += "<p>You can change the values by using the controls, the arrow keys or the mouse wheel</p>";
         Label infoLabel = new Label(infoString);
@@ -160,7 +142,7 @@ public class StepperDemoUI extends UI {
         dateStepper.setStepAmount(1);
         dateStepper.setCaption("DateStepper, step 1 day");
 
-        steppers = Arrays.<AbstractStepper> asList(intStepper, floatStepper,
+        steppers = Arrays.<Stepper>asList(intStepper, floatStepper,
                 bigDecimalStepper, dateStepper);
 
         Layout intStepperLayout = getStepperLayout(intStepper);
@@ -179,15 +161,15 @@ public class StepperDemoUI extends UI {
 
             private static final long serialVersionUID = -8342007719460917804L;
 
-            @SuppressWarnings({ "unchecked" })
+            @SuppressWarnings({"unchecked"})
             @Override
             public void valueChange(ValueChangeEvent event) {
                 if (minValue.getValue()) {
-                    for (AbstractStepper stepper : steppers) {
+                    for (Stepper stepper : steppers) {
                         setMinValue(stepper);
                     }
                 } else {
-                    for (AbstractStepper stepper : steppers) {
+                    for (Stepper stepper : steppers) {
                         stepper.setMinValue(null);
                     }
                 }
@@ -201,14 +183,14 @@ public class StepperDemoUI extends UI {
             private static final long serialVersionUID = 3201240348626812120L;
 
             @Override
-            @SuppressWarnings({ "unchecked" })
+            @SuppressWarnings({"unchecked"})
             public void valueChange(ValueChangeEvent event) {
                 if (maxValue.getValue()) {
-                    for (AbstractStepper stepper : steppers) {
+                    for (Stepper stepper : steppers) {
                         setMaxValue(stepper);
                     }
                 } else {
-                    for (AbstractStepper stepper : steppers) {
+                    for (Stepper stepper : steppers) {
                         stepper.setMaxValue(null);
                     }
                 }
@@ -225,7 +207,7 @@ public class StepperDemoUI extends UI {
 
             @Override
             public void valueChange(ValueChangeEvent event) {
-                for (AbstractStepper stepper : steppers) {
+                for (Stepper stepper : steppers) {
                     stepper.setManualInputAllowed(manualInput.getValue());
                 }
             }
@@ -241,7 +223,7 @@ public class StepperDemoUI extends UI {
 
             @Override
             public void valueChange(ValueChangeEvent event) {
-                for (AbstractStepper stepper : steppers) {
+                for (Stepper stepper : steppers) {
                     stepper.setMouseWheelEnabled(mousewheelEnabled.getValue());
                 }
             }
@@ -256,7 +238,7 @@ public class StepperDemoUI extends UI {
 
             @Override
             public void valueChange(ValueChangeEvent event) {
-                for (AbstractStepper stepper : steppers) {
+                for (Stepper stepper : steppers) {
                     stepper.setInvalidValuesAllowed(invalidValuesAllowed
                             .getValue());
                 }
@@ -272,7 +254,7 @@ public class StepperDemoUI extends UI {
 
             @Override
             public void valueChange(ValueChangeEvent event) {
-                for (AbstractStepper stepper : steppers) {
+                for (Stepper stepper : steppers) {
                     stepper.setNullValueAllowed(nullValueAllowed.getValue());
                 }
             }
@@ -287,7 +269,7 @@ public class StepperDemoUI extends UI {
 
             @Override
             public void valueChange(ValueChangeEvent event) {
-                for (AbstractStepper stepper : steppers) {
+                for (Stepper stepper : steppers) {
                     if (stepper instanceof ValueFilteringStepper)
                         ((ValueFilteringStepper) stepper)
                                 .setValueFiltering(valueFiltering.getValue());
@@ -296,7 +278,7 @@ public class StepperDemoUI extends UI {
         });
 
         final CheckBox revertingValueChangeListenerEnabled = new CheckBox(
-                "Enable reverting ValueChangeListener (reverts to 1/today)");
+                "Enable reverting ValueChangeListener");
         revertingValueChangeListenerEnabled.setValue(false);
         revertingValueChangeListenerEnabled.setImmediate(true);
         final Map<Stepper, ValueChangeListener> revertingValueChangeListeners = new HashMap<Stepper, ValueChangeListener>() {
@@ -331,7 +313,7 @@ public class StepperDemoUI extends UI {
                 .addValueChangeListener(new ValueChangeListener() {
                     @Override
                     public void valueChange(ValueChangeEvent event) {
-                        for (final AbstractStepper stepper : steppers) {
+                        for (final Stepper stepper : steppers) {
                             if (revertingValueChangeListenerEnabled.getValue()) {
                                 stepper.addValueChangeListener(revertingValueChangeListeners
                                         .get(stepper));
@@ -356,7 +338,7 @@ public class StepperDemoUI extends UI {
         disable.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                for (AbstractStepper stepper : steppers) {
+                for (Stepper stepper : steppers) {
                     stepper.setEnabled(false);
                 }
             }
@@ -365,7 +347,7 @@ public class StepperDemoUI extends UI {
         enable.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                for (AbstractStepper stepper : steppers) {
+                for (Stepper stepper : steppers) {
                     stepper.setEnabled(true);
                 }
             }
@@ -381,7 +363,7 @@ public class StepperDemoUI extends UI {
         return panel;
     }
 
-    protected void setMaxValue(AbstractStepper<?, ?> someStepper) {
+    protected void setMaxValue(Stepper someStepper) {
         if (someStepper instanceof DateStepper) {
             DateStepper stepper = (DateStepper) someStepper;
             Calendar calendar = Calendar.getInstance(getLocale());
@@ -398,7 +380,7 @@ public class StepperDemoUI extends UI {
         }
     }
 
-    protected void setMinValue(AbstractStepper<?, ?> someStepper) {
+    protected void setMinValue(Stepper someStepper) {
         if (someStepper instanceof DateStepper) {
             DateStepper stepper = (DateStepper) someStepper;
             Calendar calendar = Calendar.getInstance(getLocale());
@@ -415,13 +397,14 @@ public class StepperDemoUI extends UI {
         }
     }
 
-    protected Layout getStepperLayout(final AbstractStepper<?, ?> stepper) {
+    protected Layout getStepperLayout(final Stepper stepper) {
         VerticalLayout layout = new VerticalLayout();
 
         final Label valueLabel = new Label("");
         valueLabel.setContentMode(ContentMode.HTML);
 
-        stepper.setImmediate(true);
+        //it's weird that setImmediate is not in the interface level
+        ((AbstractComponent) stepper).setImmediate(true);
 
         stepper.addValueChangeListener(new Property.ValueChangeListener() {
 

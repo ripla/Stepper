@@ -1,7 +1,5 @@
 package org.vaadin.risto.stepper;
 
-import java.text.ParseException;
-
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Resource;
 import org.vaadin.risto.stepper.widgetset.client.shared.AbstractStepperState;
@@ -166,12 +164,14 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T> implements
         return minValue;
     }
 
+
     public void setDecreaseIcon(Resource icon) {
         if(icon == null) {
             throw new IllegalArgumentException("Icon cannot be null");
         }
 
         setResource(getState().DECREASE_ICON_KEY, icon);
+        markAsDirty();
     }
 
     public void setIncreaseIcon(Resource icon) {
@@ -179,6 +179,7 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T> implements
             throw new IllegalArgumentException("Icon cannot be null");
         }
         setResource(getState().INCREASE_ICON_KEY, icon);
+        markAsDirty();
     }
     /**
      * @param value
@@ -187,13 +188,13 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T> implements
     protected abstract boolean isValidForRange(T value);
 
     /**
-     * Parse a String value from the client to a type corresponding to
-     * {@link #getType()}
+     * Parse a String value from the client to an instance of
+     * T
      * 
      * @param value
      *            the value from client
      * @return value in the correct type
-     * @throws ParseException
+     * @throws StepperValueParseException
      */
     protected abstract T parseStringValue(String value)
             throws StepperValueParseException;

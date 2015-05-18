@@ -40,4 +40,23 @@
       line-height: $v-line-height / 2;
     }
   }
+
+  //browser specific fixes/hacks
+  .v-gecko & .stepper {
+    .stepper-updown {
+      top: 4px !important;
+    }
+  }
+
+  .v-trident & .stepper {
+    .stepper-updown {
+      top: 5px !important;
+    }
+
+    .stepper-up, .stepper-down {
+      font-size: 14px !important;
+      line-height: 0.5 !important;
+    }
+  }
 }
+

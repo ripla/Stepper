@@ -91,16 +91,20 @@ public interface Stepper<T, S> extends Field<T> {
     T getMinValue();
 
     /**
-     * Set the icon for the value increase button
+     * Set the {@link Resource} to use as the icon for increasing the value.
      *
      * @param icon
+     * @see {@link Resource}
+     * @see {@link com.vaadin.server.FontIcon}
      */
     void setIncreaseIcon(Resource icon);
 
     /**
-     * Set the icon for the value decrease button
+     * Set the {@link Resource} to use as the icon for decreasing the value.
      *
      * @param icon
+     * @see {@link Resource}
+     * @see {@link com.vaadin.server.FontIcon}
      */
     void setDecreaseIcon(Resource icon);
 }
