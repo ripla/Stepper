@@ -11,7 +11,8 @@ public class TestStringStepper extends AbstractStepper<String, String> {
     }
 
     @Override
-    protected String parseStringValue(String value) throws StepperValueParseException {
+    protected String parseStringValue(String value)
+            throws StepperValueParseException {
         return value;
     }
 
@@ -24,6 +25,5 @@ public class TestStringStepper extends AbstractStepper<String, String> {
     public Class<? extends String> getType() {
         return String.class;
     }
-
 
 }

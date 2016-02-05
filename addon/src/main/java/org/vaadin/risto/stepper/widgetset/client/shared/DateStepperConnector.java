@@ -10,8 +10,8 @@ import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.shared.ui.Connect;
 
 @Connect(org.vaadin.risto.stepper.DateStepper.class)
-public class DateStepperConnector extends
-        AbstractStepperConnector<Date, Integer> {
+public class DateStepperConnector
+        extends AbstractStepperConnector<Date, Integer> {
 
     private static final long serialVersionUID = -8728733216507405676L;
 

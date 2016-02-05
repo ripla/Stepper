@@ -1,20 +1,9 @@
 package org.vaadin.risto.stepper.widgetset.client.ui.helpers;
 
-import com.google.gwt.dom.client.Element;
 import org.vaadin.risto.stepper.widgetset.client.ui.AbstractStepper;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.MouseDownEvent;
-import com.google.gwt.event.dom.client.MouseDownHandler;
-import com.google.gwt.event.dom.client.MouseOutEvent;
-import com.google.gwt.event.dom.client.MouseOutHandler;
-import com.google.gwt.event.dom.client.MouseOverEvent;
-import com.google.gwt.event.dom.client.MouseOverHandler;
-import com.google.gwt.event.dom.client.MouseUpEvent;
-import com.google.gwt.event.dom.client.MouseUpHandler;
-import com.google.gwt.event.dom.client.MouseWheelEvent;
-import com.google.gwt.event.dom.client.MouseWheelHandler;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlowPanel;
 
@@ -24,9 +13,9 @@ import com.google.gwt.user.client.ui.FlowPanel;
  * @author Risto Yrjänä / Vaadin }>
  * 
  */
-public class StepperControls extends FlowPanel implements ClickHandler,
-        MouseDownHandler, MouseUpHandler, MouseOverHandler, MouseOutHandler,
-        MouseWheelHandler {
+public class StepperControls extends FlowPanel
+        implements ClickHandler, MouseDownHandler, MouseUpHandler,
+        MouseOverHandler, MouseOutHandler, MouseWheelHandler {
 
     protected final Anchor increaseControl;
     protected final Anchor decreaseControl;

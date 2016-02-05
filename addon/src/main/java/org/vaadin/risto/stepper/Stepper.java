@@ -49,19 +49,20 @@ public interface Stepper<T, S> extends Field<T> {
     boolean isInvalidValuesAllowed();
 
     void setInvalidValuesAllowed(boolean invalidValuesAllowed);
-    
+
     /**
-     * If null values are allowed, clearing the text box sets the field to null 
+     * If null values are allowed, clearing the text box sets the field to null
      * (manual input has to be enabled for this to work). Otherwise, it is
-     * reverted to the last valid value. In contract to {@link #isInvalidValuesAllowed()}, 
-     * still peforms range check on non-null values. The default is false.
+     * reverted to the last valid value. In contract to
+     * {@link #isInvalidValuesAllowed()}, still peforms range check on non-null
+     * values. The default is false.
      * 
      * @return
      */
     boolean isNullValueAllowed();
 
     void setNullValueAllowed(boolean nullValueAllowed);
-    
+
     /**
      * Set the amount for a single step when the the value is increased /
      * decreased

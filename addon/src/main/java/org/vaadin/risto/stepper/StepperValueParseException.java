@@ -1,6 +1,5 @@
 package org.vaadin.risto.stepper;
 
-
 /**
  * Exception used when the server-side cannot parse the value from the client.
  * 

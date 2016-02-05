@@ -7,8 +7,8 @@ import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.shared.ui.Connect;
 
 @Connect(org.vaadin.risto.stepper.IntStepper.class)
-public class IntStepperConnector extends
-        AbstractStepperConnector<Integer, Integer> {
+public class IntStepperConnector
+        extends AbstractStepperConnector<Integer, Integer> {
 
     private static final long serialVersionUID = -5276807014107059716L;
 

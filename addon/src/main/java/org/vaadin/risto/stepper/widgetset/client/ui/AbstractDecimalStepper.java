@@ -1,8 +1,5 @@
 package org.vaadin.risto.stepper.widgetset.client.ui;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-
 public abstract class AbstractDecimalStepper<T extends Number & Comparable<T>>
         extends AbstractStepper<T, T> {
 

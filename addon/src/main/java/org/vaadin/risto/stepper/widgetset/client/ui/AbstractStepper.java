@@ -1,11 +1,11 @@
 package org.vaadin.risto.stepper.widgetset.client.ui;
 
-import com.google.gwt.dom.client.Element;
 import org.vaadin.risto.stepper.widgetset.client.ui.helpers.StepperControls;
 import org.vaadin.risto.stepper.widgetset.client.ui.helpers.UpDownTextBox;
 import org.vaadin.risto.stepper.widgetset.client.ui.helpers.ValueUpdateTimer;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -18,8 +18,8 @@ import com.google.gwt.user.client.ui.TextBox;
  * @author Risto Yrjänä / Vaadin }>
  * 
  */
-public abstract class AbstractStepper<T, S> extends FlowPanel implements
-        ValueChangeHandler<String> {
+public abstract class AbstractStepper<T, S> extends FlowPanel
+        implements ValueChangeHandler<String> {
 
     public static final String CLASSNAME = "stepper";
 
@@ -46,11 +46,11 @@ public abstract class AbstractStepper<T, S> extends FlowPanel implements
     private boolean invalidValuesAllowed;
 
     private boolean nullValueAllowed;
-    
+
     private S stepAmount;
     private T maxValue;
     private T minValue;
-    
+
     private String value;
 
     private RegExp valueRegexp;
@@ -191,7 +191,7 @@ public abstract class AbstractStepper<T, S> extends FlowPanel implements
         }
 
     }
-    
+
     /**
      * Set the value to the UI.
      * 
@@ -205,8 +205,10 @@ public abstract class AbstractStepper<T, S> extends FlowPanel implements
     }
 
     protected boolean isValueValid(String newValue) {
-        return !safeEquals(newValue, value)
-                && (isInvalidValuesAllowed() || ((newValue==null || newValue.isEmpty()) && isNullValueAllowed()) || (newValue != null && isValidForType(newValue)));
+        return !safeEquals(newValue, value) && (isInvalidValuesAllowed()
+                || ((newValue == null || newValue.isEmpty())
+                        && isNullValueAllowed())
+                || (newValue != null && isValidForType(newValue)));
     }
 
     /*
@@ -242,8 +244,7 @@ public abstract class AbstractStepper<T, S> extends FlowPanel implements
             valueUpdateTimer.cancel();
         }
 
-        textBox.setReadOnly(isReadonly()
-                || !isManualInputAllowed());
+        textBox.setReadOnly(isReadonly() || !isManualInputAllowed());
         textBox.setEnabled(!isDisabled());
     }
 
@@ -306,14 +307,14 @@ public abstract class AbstractStepper<T, S> extends FlowPanel implements
         this.invalidValuesAllowed = invalidValuesAllowed;
         enabledStateChanged();
     }
-    
-    public void setNullValueAllowed( boolean nullValueAllowed ) {
-    	this.nullValueAllowed = nullValueAllowed;
+
+    public void setNullValueAllowed(boolean nullValueAllowed) {
+        this.nullValueAllowed = nullValueAllowed;
         enabledStateChanged();
     }
-    
+
     public boolean isNullValueAllowed() {
-    	return this.nullValueAllowed;
+        return this.nullValueAllowed;
     }
 
     /**
@@ -354,7 +355,7 @@ public abstract class AbstractStepper<T, S> extends FlowPanel implements
     public S getStepAmount() {
         return this.stepAmount;
     }
-    
+
     public TextBox getTextBox() {
         return textBox;
     }
@@ -367,7 +368,6 @@ public abstract class AbstractStepper<T, S> extends FlowPanel implements
         this.isValueFilteringEnabled = isValueFilteringEnabled;
         textBox.setValueFilteringEnabled(isValueFilteringEnabled);
     }
-
 
     public void setIncreaseIconElement(Element increaseIconElement) {
         this.upDownControls.setIncreaseIconElement(increaseIconElement);

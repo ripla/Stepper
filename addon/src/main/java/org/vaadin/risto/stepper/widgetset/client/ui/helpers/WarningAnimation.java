@@ -8,8 +8,8 @@ import com.google.gwt.user.client.ui.TextBox;
 
 public class WarningAnimation extends Animation {
 
-    private static final Logger log = Logger.getLogger(WarningAnimation.class
-            .toString());
+    private static final Logger log = Logger
+            .getLogger(WarningAnimation.class.toString());
 
     private static final int TARGET_COLOR_DEPTH = 255;
 

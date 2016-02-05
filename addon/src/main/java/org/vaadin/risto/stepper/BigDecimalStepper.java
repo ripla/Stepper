@@ -2,7 +2,6 @@ package org.vaadin.risto.stepper;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.util.Date;
 
 /**
  * <p>

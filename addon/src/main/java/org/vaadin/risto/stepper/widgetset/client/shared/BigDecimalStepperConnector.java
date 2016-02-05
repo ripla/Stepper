@@ -10,8 +10,8 @@ import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.shared.ui.Connect;
 
 @Connect(org.vaadin.risto.stepper.BigDecimalStepper.class)
-public class BigDecimalStepperConnector extends
-        AbstractStepperConnector<BigDecimal, BigDecimal> {
+public class BigDecimalStepperConnector
+        extends AbstractStepperConnector<BigDecimal, BigDecimal> {
 
     private static final long serialVersionUID = 7493920052633327240L;
 

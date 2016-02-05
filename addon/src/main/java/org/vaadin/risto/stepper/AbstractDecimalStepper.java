@@ -109,9 +109,9 @@ public abstract class AbstractDecimalStepper<T extends Number & Comparable<T>>
     protected DecimalFormat getDecimalFormat() {
         DecimalFormat format = decimalFormat;
         if (format == null) {
-            final DecimalFormatSymbols symbols = getLocale() != null ? DecimalFormatSymbols
-                    .getInstance(getLocale()) : DecimalFormatSymbols
-                    .getInstance();
+            final DecimalFormatSymbols symbols = getLocale() != null
+                    ? DecimalFormatSymbols.getInstance(getLocale())
+                    : DecimalFormatSymbols.getInstance();
             format = new DecimalFormat("#.#", symbols);
             format.setMinimumFractionDigits(0);
             format.setMaximumFractionDigits(getNumberOfDecimals());

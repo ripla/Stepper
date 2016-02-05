@@ -1,9 +1,5 @@
 package org.vaadin.risto.stepper;
 
-import com.vaadin.ui.declarative.DesignAttributeHandler;
-import com.vaadin.ui.declarative.DesignContext;
-import org.jsoup.nodes.Attributes;
-import org.jsoup.nodes.Element;
 import org.vaadin.risto.stepper.widgetset.client.shared.IntStepperState;
 
 import com.vaadin.shared.communication.SharedState;
@@ -17,8 +13,8 @@ import com.vaadin.shared.communication.SharedState;
  * @author Risto Yrjänä / Vaadin }>
  * 
  */
-public class IntStepper extends AbstractStepper<Integer, Integer> implements
-        ValueFilteringStepper {
+public class IntStepper extends AbstractStepper<Integer, Integer>
+        implements ValueFilteringStepper {
 
     private static final long serialVersionUID = 1365274510273965118L;
 

@@ -4,13 +4,7 @@ import org.vaadin.risto.stepper.widgetset.client.ui.AbstractStepper;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyDownEvent;
-import com.google.gwt.event.dom.client.KeyDownHandler;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
-import com.google.gwt.event.dom.client.MouseWheelEvent;
-import com.google.gwt.event.dom.client.MouseWheelHandler;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.TextBox;
 
@@ -20,8 +14,8 @@ import com.google.gwt.user.client.ui.TextBox;
  * @author Risto Yrjänä / Vaadin }>
  * 
  */
-public class UpDownTextBox extends TextBox implements KeyDownHandler,
-        KeyUpHandler, MouseWheelHandler {
+public class UpDownTextBox extends TextBox
+        implements KeyDownHandler, KeyUpHandler, MouseWheelHandler {
     protected ButtonDownTimer keyDownTimerUp;
     protected ButtonDownTimer keyDownTimerDown;
     private final AbstractStepper<?, ?> stepper;
