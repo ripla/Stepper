@@ -58,5 +58,12 @@
       line-height: 0.5 !important;
     }
   }
+
+  .v-sa & .stepper {
+    .stepper-updown {
+      top: 4px;
+      right: 4px;
+    }
+  }
 }
 
