@@ -5,9 +5,6 @@ allprojects {
 
 //common for both projects
 subprojects {
-    repositories {
-        mavenCentral()
-    }
 
     ext.baseNameUpper = project.parent.name.capitalize()
     ext.baseNameLower = project.parent.name.toLowerCase()
@@ -77,4 +74,9 @@ task(dist, type: Sync, dependsOn: [':addon:jar', ':demo:war']) {
     from project(":addon").jar.archivePath
     from project(":demo").war.archivePath
     into targetDir
+}
+
+task showRepos << {
+    println "All repos:"
+    println repositories.collect { it.name }
 }

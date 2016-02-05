@@ -1,23 +1,22 @@
 package org.vaadin.risto.stepper.widgetset.client.ui;
 
-import com.google.gwt.dom.client.Element;
-import org.vaadin.risto.stepper.widgetset.client.ui.helpers.StepperControls;
-import org.vaadin.risto.stepper.widgetset.client.ui.helpers.UpDownTextBox;
-import org.vaadin.risto.stepper.widgetset.client.ui.helpers.ValueUpdateTimer;
-
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.TextBox;
+import com.vaadin.annotations.JavaScript;
+import org.vaadin.risto.stepper.widgetset.client.ui.helpers.StepperControls;
+import org.vaadin.risto.stepper.widgetset.client.ui.helpers.UpDownTextBox;
+import org.vaadin.risto.stepper.widgetset.client.ui.helpers.ValueUpdateTimer;
 
 /**
- * 
  * @author Risto Yrjänä / Vaadin }>
- * 
  */
+@JavaScript("webcomponents-lite.min.js")
 public abstract class AbstractStepper<T, S> extends FlowPanel implements
         ValueChangeHandler<String> {
 
@@ -46,11 +45,11 @@ public abstract class AbstractStepper<T, S> extends FlowPanel implements
     private boolean invalidValuesAllowed;
 
     private boolean nullValueAllowed;
-    
+
     private S stepAmount;
     private T maxValue;
     private T minValue;
-    
+
     private String value;
 
     private RegExp valueRegexp;
@@ -79,7 +78,7 @@ public abstract class AbstractStepper<T, S> extends FlowPanel implements
 
     /**
      * Calculate the string value of <code>current value + 1</code>
-     * 
+     *
      * @param startValue
      * @return
      * @throws Exception
@@ -89,7 +88,7 @@ public abstract class AbstractStepper<T, S> extends FlowPanel implements
 
     /**
      * Calculate the string value of <code>current value - 1</code>
-     * 
+     *
      * @param startValue
      * @return
      * @throws Exception
@@ -102,7 +101,7 @@ public abstract class AbstractStepper<T, S> extends FlowPanel implements
      * true, {@link #getIncreasedValue(String)} and
      * {@link #getDecreasedValue(String)} must be able to compute a result from
      * this value.
-     * 
+     *
      * @param value
      * @return
      */
@@ -113,27 +112,27 @@ public abstract class AbstractStepper<T, S> extends FlowPanel implements
     /**
      * Check if the given value is a valid, increased value. The given string is
      * guaranteed to be valid for this type.
-     * 
+     *
      * @param value
      * @return true is the given value is a valid value in respect to the
-     *         maximum value.
+     * maximum value.
      */
     protected abstract boolean isSmallerThanMax(String value);
 
     /**
      * Check if the given value is a valid, decreased value. The given string is
      * guaranteed to be valid for this type.
-     * 
+     *
      * @param value
      * @return true is the given value is a valid value in respect to the
-     *         minumum value.
+     * minumum value.
      */
     protected abstract boolean isLargerThanMin(String value);
 
     /**
      * Parse the given String value. Used for setting the maximum and minimum .
      * values. Should return null on an empty string.
-     * 
+     *
      * @param value
      * @return
      */
@@ -191,10 +190,10 @@ public abstract class AbstractStepper<T, S> extends FlowPanel implements
         }
 
     }
-    
+
     /**
      * Set the value to the UI.
-     * 
+     *
      * @param newValue
      */
     public void setValue(String newValue) {
@@ -206,7 +205,7 @@ public abstract class AbstractStepper<T, S> extends FlowPanel implements
 
     protected boolean isValueValid(String newValue) {
         return !safeEquals(newValue, value)
-                && (isInvalidValuesAllowed() || ((newValue==null || newValue.isEmpty()) && isNullValueAllowed()) || (newValue != null && isValidForType(newValue)));
+                && (isInvalidValuesAllowed() || ((newValue == null || newValue.isEmpty()) && isNullValueAllowed()) || (newValue != null && isValidForType(newValue)));
     }
 
     /*
@@ -306,21 +305,20 @@ public abstract class AbstractStepper<T, S> extends FlowPanel implements
         this.invalidValuesAllowed = invalidValuesAllowed;
         enabledStateChanged();
     }
-    
-    public void setNullValueAllowed( boolean nullValueAllowed ) {
-    	this.nullValueAllowed = nullValueAllowed;
+
+    public void setNullValueAllowed(boolean nullValueAllowed) {
+        this.nullValueAllowed = nullValueAllowed;
         enabledStateChanged();
     }
-    
+
     public boolean isNullValueAllowed() {
-    	return this.nullValueAllowed;
+        return this.nullValueAllowed;
     }
 
     /**
      * Set the maximum possible value for this stepper.
-     * 
-     * @param value
      *
+     * @param value
      * @see #isLargerThanMin(String)
      * @see #isSmallerThanMax(String)
      */
@@ -334,7 +332,7 @@ public abstract class AbstractStepper<T, S> extends FlowPanel implements
 
     /**
      * Set the minimum possible value for this stepper.
-     * 
+     *
      * @param value
      * @see #isLargerThanMin(String)
      * @see #isSmallerThanMax(String)
@@ -354,7 +352,7 @@ public abstract class AbstractStepper<T, S> extends FlowPanel implements
     public S getStepAmount() {
         return this.stepAmount;
     }
-    
+
     public TextBox getTextBox() {
         return textBox;
     }
