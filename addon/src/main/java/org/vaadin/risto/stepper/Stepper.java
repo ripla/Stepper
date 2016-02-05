@@ -107,4 +107,8 @@ public interface Stepper<T, S> extends Field<T> {
      * @see {@link com.vaadin.server.FontIcon}
      */
     void setDecreaseIcon(Resource icon);
+
+    Resource getIncreaseIcon();
+
+    Resource getDecreaseIcon();
 }

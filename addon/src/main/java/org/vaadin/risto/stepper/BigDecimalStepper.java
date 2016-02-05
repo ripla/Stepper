@@ -2,6 +2,7 @@ package org.vaadin.risto.stepper;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.util.Date;
 
 /**
  * <p>
@@ -27,6 +28,11 @@ public class BigDecimalStepper extends AbstractDecimalStepper<BigDecimal> {
 
     @Override
     public Class<? extends BigDecimal> getType() {
+        return BigDecimal.class;
+    }
+
+    @Override
+    public Class<BigDecimal> getStepType() {
         return BigDecimal.class;
     }
 

@@ -1,14 +1,18 @@
 package org.vaadin.risto.stepper;
 
-import com.vaadin.server.FontAwesome;
-import com.vaadin.server.Resource;
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Element;
 import org.vaadin.risto.stepper.widgetset.client.shared.AbstractStepperState;
 import org.vaadin.risto.stepper.widgetset.client.shared.StepperRpc;
 
+import com.vaadin.server.FontAwesome;
+import com.vaadin.server.Resource;
 import com.vaadin.ui.AbstractField;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
 
-public abstract class AbstractStepper<T, S> extends AbstractField<T> implements
-        Stepper<T, S> {
+public abstract class AbstractStepper<T, S> extends AbstractField<T>
+        implements Stepper<T, S> {
 
     private static final long serialVersionUID = 4680365780881009306L;
 
@@ -28,7 +32,9 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T> implements
                     try {
                         T parsedValue = parseStringValue(value);
                         if (isInvalidValuesAllowed()
-                                || (parsedValue==null && isNullValueAllowed()) || (parsedValue!=null && isValidForRange(parsedValue))) {
+                                || (parsedValue == null && isNullValueAllowed())
+                                || (parsedValue != null
+                                        && isValidForRange(parsedValue))) {
                             setValue(parsedValue, true);
                         }
 
@@ -42,9 +48,9 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T> implements
                          * 
                          * See e.g. http://dev.vaadin.com/ticket/12133
                          */
-                            getUI().getConnectorTracker()
-                                    .getDiffState(AbstractStepper.this)
-                                    .put("value", value);
+                        getUI().getConnectorTracker()
+                                .getDiffState(AbstractStepper.this)
+                                .put("value", value);
 
                     } catch (StepperValueParseException e) {
                         handleParseException(e);
@@ -91,15 +97,15 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T> implements
     public void setInvalidValuesAllowed(boolean invalidValuesAllowed) {
         getState().isInvalidValuesAllowed = invalidValuesAllowed;
     }
-    
+
     @Override
     public boolean isNullValueAllowed() {
-    	return getState().isNullValueAllowed;
+        return getState().isNullValueAllowed;
     }
-    
+
     @Override
     public void setNullValueAllowed(boolean nullValueAllowed) {
-    	getState().isNullValueAllowed = nullValueAllowed;
+        getState().isNullValueAllowed = nullValueAllowed;
     }
 
     @Override
@@ -115,7 +121,7 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T> implements
 
     /**
      * Called whenever the parseStringValue throws an exception
-     * 
+     *
      * @param e
      */
     protected void handleParseException(StepperValueParseException e) {
@@ -153,7 +159,7 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T> implements
         this.minValue = minValue;
         markAsDirty();
     }
-    
+
     @Override
     public T getMaxValue() {
         return maxValue;
@@ -164,9 +170,8 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T> implements
         return minValue;
     }
 
-
     public void setDecreaseIcon(Resource icon) {
-        if(icon == null) {
+        if (icon == null) {
             throw new IllegalArgumentException("Icon cannot be null");
         }
 
@@ -175,12 +180,42 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T> implements
     }
 
     public void setIncreaseIcon(Resource icon) {
-        if(icon == null) {
+        if (icon == null) {
             throw new IllegalArgumentException("Icon cannot be null");
         }
         setResource(getState().INCREASE_ICON_KEY, icon);
         markAsDirty();
     }
+
+    public Resource getDecreaseIcon() {
+        return getResource(getState().DECREASE_ICON_KEY);
+    }
+
+    public Resource getIncreaseIcon() {
+        return getResource(getState().INCREASE_ICON_KEY);
+    }
+
+    @Override
+    public void readDesign(Element design, DesignContext designContext) {
+        super.readDesign(design, designContext);
+
+        Attributes attr = design.attributes();
+        if (design.hasAttr("max-value")) {
+            setMaxValue(DesignAttributeHandler.readAttribute("max-value", attr,
+                    getType()));
+        }
+
+        if (design.hasAttr("min-value")) {
+            setMinValue(DesignAttributeHandler.readAttribute("min-value", attr,
+                    getType()));
+        }
+
+        if (design.hasAttr("step-amount")) {
+            setStepAmount(DesignAttributeHandler.readAttribute("step-amount",
+                    attr, getStepType()));
+        }
+    }
+
     /**
      * @param value
      * @return
@@ -188,9 +223,8 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T> implements
     protected abstract boolean isValidForRange(T value);
 
     /**
-     * Parse a String value from the client to an instance of
-     * T
-     * 
+     * Parse a String value from the client to an instance of T
+     *
      * @param value
      *            the value from client
      * @return value in the correct type
@@ -199,4 +233,12 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T> implements
     protected abstract T parseStringValue(String value)
             throws StepperValueParseException;
 
+    /**
+     * Returns the step type of the Stepper. The methods
+     * {@link #getStepAmount()} and {@link #setStepAmount(Object)} must be
+     * compatible with this type.
+     *
+     * @return the step type of the Stepper
+     */
+    protected abstract Class<S> getStepType();
 }

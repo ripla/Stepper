@@ -1,5 +1,9 @@
 package org.vaadin.risto.stepper;
 
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Element;
 import org.vaadin.risto.stepper.widgetset.client.shared.IntStepperState;
 
 import com.vaadin.shared.communication.SharedState;
@@ -30,6 +34,11 @@ public class IntStepper extends AbstractStepper<Integer, Integer> implements
 
     @Override
     public Class<Integer> getType() {
+        return Integer.class;
+    }
+
+    @Override
+    public Class<Integer> getStepType() {
         return Integer.class;
     }
 

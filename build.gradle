@@ -5,10 +5,6 @@ allprojects {
 
 //common for both projects
 subprojects {
-    repositories {
-        mavenCentral()
-    }
-
     ext.baseNameUpper = project.parent.name.capitalize()
     ext.baseNameLower = project.parent.name.toLowerCase()
 
@@ -16,7 +12,7 @@ subprojects {
 
     apply from: "http://plugins.jasoft.fi/vaadin.plugin"
 
-    vaadin.version="7.4.6"
+    vaadin.version="7.6.2"
 
     vaadin.gwt.draftCompile = true
     vaadin.gwt.strict = true

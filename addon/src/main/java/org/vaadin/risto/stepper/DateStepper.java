@@ -7,8 +7,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import org.jsoup.nodes.Element;
 import org.vaadin.risto.stepper.widgetset.client.shared.DateStepperField;
 import org.vaadin.risto.stepper.widgetset.client.shared.DateStepperState;
+
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * <p>
@@ -38,6 +42,11 @@ public class DateStepper extends AbstractStepper<Date, Integer> {
     @Override
     public Class<Date> getType() {
         return Date.class;
+    }
+
+    @Override
+    public Class<Integer> getStepType() {
+        return Integer.class;
     }
 
     @Override
@@ -134,7 +143,8 @@ public class DateStepper extends AbstractStepper<Date, Integer> {
             return null;
         }
 
-        Calendar javaCalendar = Calendar.getInstance(getLocale());
+        Calendar javaCalendar = getLocale() != null
+                ? Calendar.getInstance(getLocale()) : Calendar.getInstance();
         javaCalendar.setTime(boundaryDate);
 
         javaCalendar.set(Calendar.MILLISECOND, 0);
@@ -177,6 +187,26 @@ public class DateStepper extends AbstractStepper<Date, Integer> {
     public void setDateFormat(SimpleDateFormat dateFormat) {
         this.dateFormat = dateFormat;
         markAsDirty();
+    }
+
+    @Override
+    public void writeDesign(Element design, DesignContext designContext) {
+        super.writeDesign(design, designContext);
+
+        if (getMaxValue() != null) {
+            design.attr("max-value", DesignAttributeHandler.getFormatter()
+                    .format(getMaxValue()));
+        }
+
+        if (getMinValue() != null) {
+            design.attr("min-value", DesignAttributeHandler.getFormatter()
+                    .format(getMinValue()));
+        }
+
+        if (getStepAmount() != null) {
+            design.attr("step-amount", DesignAttributeHandler.getFormatter()
+                    .format(getStepAmount()));
+        }
     }
 
     protected static String dateFormatToPattern(DateFormat dateFormat) {
