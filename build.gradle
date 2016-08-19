@@ -1,8 +1,3 @@
-allprojects {
-    apply plugin: "eclipse-wtp"
-    apply plugin: "idea"
-}
-
 //common for both projects
 subprojects {
     ext.baseNameUpper = project.parent.name.capitalize()
@@ -12,17 +7,12 @@ subprojects {
 
     apply from: "http://plugins.jasoft.fi/vaadin.plugin"
 
-    vaadin.version="7.6.2"
+    vaadin.version = "7.7.0.rc1"
 
-    vaadin.gwt.draftCompile = true
-    vaadin.gwt.strict = true
-    vaadin.manageWidgetset = false
-    vaadin.plugin.logToConsole = true
+    vaadinCompile.draftCompile = true
+    vaadinCompile.strict = true
 
-
-    vaadin.addon.author = "Risto Yrjänä / Vaadin"
-    vaadin.addon.license = "Apache License 2.0"
-    vaadin.addon.title = baseNameUpper
+    vaadin.logToConsole = true
 
     sourceCompatibility = "1.7"
     targetCompatibility = "1.7"
@@ -35,11 +25,14 @@ subprojects {
 
 //addon project, only creates the Directory-compatible JAR
 project(":addon") {
-    eclipse.project.name = "${baseNameUpper}-addon"
-
     version = "2.3.0"
-    vaadin.widgetset = "${group}.widgetset.${baseNameUpper}Widgetset"
+
+    //vaadin.widgetset = "${group}.widgetset.${baseNameUpper}Widgetset"
     vaadin.addon.styles = ["/VAADIN/addons/stepper/stepper.scss"]
+    vaadin.addon.author = "Risto Yrjänä / Vaadin"
+    vaadin.addon.license = "Apache License 2.0"
+    vaadin.addon.title = baseNameUpper
+    vaadinCompile.manageWidgetset = false
 
     dependencies {
         testCompile "junit:junit:latest.release"
@@ -49,22 +42,19 @@ project(":addon") {
         from sourceSets.main.allJava //include sources
     }
 
-    war.enabled = false //war plugin applied by the Vaadin plugin, not needed here
+    war.enabled = false
+    //war plugin applied by the Vaadin plugin, not needed here
 }
 
 //demo project, builds addon and packages demo UI as WAR
 project(":demo") {
 
-    eclipse.project.name = "${baseNameUpper}-demo"
+    vaadinCompile.manageWidgetset = true
 
     dependencies {
         compile project(":addon")
         compile "com.google.guava:guava:latest.release"
     }
-
-    vaadin.widgetset = "${group}.widgetset.${baseNameUpper}DemoWidgetset"
-
-    vaadin.devmode.superDevMode = true
 }
 
 task(dist, type: Sync, dependsOn: [':addon:jar', ':demo:war']) {

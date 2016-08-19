@@ -1,5 +1,11 @@
 package org.vaadin.risto.stepper;
 
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
+import org.jsoup.nodes.Element;
+import org.vaadin.risto.stepper.client.shared.DateStepperField;
+import org.vaadin.risto.stepper.client.shared.DateStepperState;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -7,20 +13,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import org.jsoup.nodes.Element;
-import org.vaadin.risto.stepper.widgetset.client.shared.DateStepperField;
-import org.vaadin.risto.stepper.widgetset.client.shared.DateStepperState;
-
-import com.vaadin.ui.declarative.DesignAttributeHandler;
-import com.vaadin.ui.declarative.DesignContext;
-
 /**
  * <p>
  * Field that allows stepping through values via given up/down controls.
  * Supports values of type Date. The default value is today.
  * </p>
  * 
- * @author Risto Yrjänä / Vaadin }>
+ * @author Risto Yrjänä / Vaadin
  * 
  */
 public class DateStepper extends AbstractStepper<Date, Integer> {
@@ -62,11 +61,11 @@ public class DateStepper extends AbstractStepper<Date, Integer> {
     /**
      * Set the field that the stepper should step through. The field must be one
      * of the ones defined by
-     * {@link org.vaadin.risto.stepper.widgetset.client.shared.DateStepperField
+     * {@link DateStepperField
      * )}
      * 
      * @param field
-     * @see org.vaadin.risto.stepper.widgetset.client.sharedDateStepperField
+     * @see DateStepperField
      */
     public void setStepField(DateStepperField field) {
         getState().setDateStep(field);

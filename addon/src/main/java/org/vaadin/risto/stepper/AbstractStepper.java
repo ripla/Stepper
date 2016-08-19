@@ -2,8 +2,8 @@ package org.vaadin.risto.stepper;
 
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
-import org.vaadin.risto.stepper.widgetset.client.shared.AbstractStepperState;
-import org.vaadin.risto.stepper.widgetset.client.shared.StepperRpc;
+import org.vaadin.risto.stepper.client.shared.AbstractStepperState;
+import org.vaadin.risto.stepper.client.shared.StepperRpc;
 
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Resource;
@@ -217,8 +217,12 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T>
     }
 
     /**
+     * Check if the given value is a valid value for the current range set by
+     * {@link #setMaxValue(Object)} and {@link #setMinValue(Object)}
+     *
      * @param value
-     * @return
+     *            the value to check. Null values are always valid.
+     * @return true if the value is valid
      */
     protected abstract boolean isValidForRange(T value);
 

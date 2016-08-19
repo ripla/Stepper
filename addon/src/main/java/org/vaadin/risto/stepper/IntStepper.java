@@ -1,6 +1,6 @@
 package org.vaadin.risto.stepper;
 
-import org.vaadin.risto.stepper.widgetset.client.shared.IntStepperState;
+import org.vaadin.risto.stepper.client.shared.IntStepperState;
 
 import com.vaadin.shared.communication.SharedState;
 
@@ -10,7 +10,7 @@ import com.vaadin.shared.communication.SharedState;
  * Supports values of type Integer. Default value is 0.
  * </p>
  * 
- * @author Risto Yrjänä / Vaadin }>
+ * @author Risto Yrjänä / Vaadin
  * 
  */
 public class IntStepper extends AbstractStepper<Integer, Integer>

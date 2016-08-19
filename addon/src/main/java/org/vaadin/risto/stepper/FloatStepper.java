@@ -8,13 +8,13 @@ package org.vaadin.risto.stepper;
  * Field that allows stepping through values via given up/down controls.
  * Supports values of type Float. Default value is 0.
  * </p>
- * <p/>
+ *
  * <p>
  * Note: float incrementation IS NOT completely accurate, as the values are
  * always rounded. The accuracy should be enough for most use cases.
  * </p>
  *
- * @author Risto Yrjänä / Vaadin }>
+ * @author Risto Yrjänä / Vaadin
  */
 public class FloatStepper extends AbstractDecimalStepper<Float> {
 

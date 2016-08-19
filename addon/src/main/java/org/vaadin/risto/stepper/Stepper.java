@@ -7,7 +7,7 @@ import com.vaadin.ui.Field;
  * Field that allows stepping through a discrete range values.
  * 
  * 
- * @author Risto Yrjänä / Vaadin }>
+ * @author Risto Yrjänä / Vaadin
  * @param <T>
  *            the type of the value in the field
  * @param <S>
@@ -95,8 +95,8 @@ public interface Stepper<T, S> extends Field<T> {
      * Set the {@link Resource} to use as the icon for increasing the value.
      *
      * @param icon
-     * @see {@link Resource}
-     * @see {@link com.vaadin.server.FontIcon}
+     * @see Resource
+     * @see com.vaadin.server.FontIcon
      */
     void setIncreaseIcon(Resource icon);
 
@@ -104,8 +104,8 @@ public interface Stepper<T, S> extends Field<T> {
      * Set the {@link Resource} to use as the icon for decreasing the value.
      *
      * @param icon
-     * @see {@link Resource}
-     * @see {@link com.vaadin.server.FontIcon}
+     * @see Resource
+     * @see com.vaadin.server.FontIcon
      */
     void setDecreaseIcon(Resource icon);
 
