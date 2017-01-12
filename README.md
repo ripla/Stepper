@@ -21,5 +21,4 @@ Example:
 	});
 
 ## License
-Code is licensed under Apache 2.0. Icons are under Creative Commons 3.0.
-Icons are from http://www.fatcow.com/free-icons
+Code is licensed under Apache 2.0.
