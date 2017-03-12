@@ -38,7 +38,7 @@ subprojects {
 
 //addon project, only creates the Directory-compatible JAR
 project(":addon") {
-    version = "2.3.0"
+    version = "2.4.0"
 
     vaadin {
         addon {
