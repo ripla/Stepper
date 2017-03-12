@@ -1,19 +1,20 @@
 package org.vaadin.risto.stepper;
 
+import com.vaadin.data.HasValue;
 import com.vaadin.server.Resource;
-import com.vaadin.ui.Field;
+import com.vaadin.ui.Component;
 
 /**
  * Field that allows stepping through a discrete range values.
- * 
- * 
+ *
+ *
  * @author Risto Yrjänä / Vaadin
  * @param <T>
  *            the type of the value in the field
  * @param <S>
  *            the type of the step amount values
  */
-public interface Stepper<T, S> extends Field<T> {
+public interface Stepper<T, S> extends HasValue<T>, Component {
 
     void setManualInputAllowed(boolean isManualInputAllowed);
 
@@ -21,7 +22,7 @@ public interface Stepper<T, S> extends Field<T> {
      * If manual input is allowed, the user can change the values with both the
      * controls and the textfield. If not allowed, only the controls change the
      * value.
-     * 
+     *
      * @return
      */
     boolean isManualInputAllowed();
@@ -32,7 +33,7 @@ public interface Stepper<T, S> extends Field<T> {
      * If you want (or don't want) the control to handle mouse wheel scroll
      * events, set this accordingly. Default is true, that is, mouse wheel
      * events will be handled.
-     * 
+     *
      * @author colinf
      */
     boolean isMouseWheelEnabled();
@@ -43,7 +44,7 @@ public interface Stepper<T, S> extends Field<T> {
      * is to allow the server to perform validation and show validation
      * messages. Note that the Stepper controls still enforces the limits even
      * if invalid values are otherwise allowed.
-     * 
+     *
      * @return
      */
     boolean isInvalidValuesAllowed();
@@ -56,7 +57,7 @@ public interface Stepper<T, S> extends Field<T> {
      * reverted to the last valid value. In contract to
      * {@link #isInvalidValuesAllowed()}, still peforms range check on non-null
      * values. The default is false.
-     * 
+     *
      * @return
      */
     boolean isNullValueAllowed();
@@ -66,7 +67,7 @@ public interface Stepper<T, S> extends Field<T> {
     /**
      * Set the amount for a single step when the the value is increased /
      * decreased
-     * 
+     *
      * @param amount
      */
     void setStepAmount(S amount);
@@ -75,14 +76,14 @@ public interface Stepper<T, S> extends Field<T> {
 
     /**
      * Set the maximum value for this field.
-     * 
+     *
      * @param maxValue
      */
     void setMaxValue(T maxValue);
 
     /**
      * Set the minumum value for this field.
-     * 
+     *
      * @param minValue
      */
     void setMinValue(T minValue);

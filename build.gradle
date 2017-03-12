@@ -18,7 +18,7 @@ subprojects {
     }
 
     vaadin {
-        version = "7.7.7"
+        version = "8.0.2"
         logToConsole = true
     }
 

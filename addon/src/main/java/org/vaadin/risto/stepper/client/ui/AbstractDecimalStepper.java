@@ -40,21 +40,13 @@ public abstract class AbstractDecimalStepper<T extends Number & Comparable<T>>
     @Override
     protected boolean isSmallerThanMax(String stringValue) {
         T value = parse(stringValue);
-        if (getMaxValue() != null && value.compareTo(getMaxValue()) > 0) {
-            return false;
-        }
-
-        return true;
+        return !(getMaxValue() != null && value.compareTo(getMaxValue()) > 0);
     }
 
     @Override
     protected boolean isLargerThanMin(String stringValue) {
         T value = parse(stringValue);
-        if (getMinValue() != null && value.compareTo(getMinValue()) < 0) {
-            return false;
-        }
-
-        return true;
+        return !(getMinValue() != null && value.compareTo(getMinValue()) < 0);
     }
 
     @Override

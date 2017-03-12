@@ -11,8 +11,6 @@ import com.vaadin.shared.ui.Connect;
 public class FloatStepperConnector
         extends AbstractStepperConnector<Float, Float> {
 
-    private static final long serialVersionUID = 7493920052633327240L;
-
     @Override
     protected Widget createWidget() {
         return GWT.create(org.vaadin.risto.stepper.client.ui.FloatStepper.class);

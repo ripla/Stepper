@@ -5,7 +5,7 @@ import org.jsoup.nodes.Element;
 import org.vaadin.risto.stepper.client.shared.AbstractStepperState;
 import org.vaadin.risto.stepper.client.shared.StepperRpc;
 
-import com.vaadin.server.FontAwesome;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
@@ -14,16 +14,13 @@ import com.vaadin.ui.declarative.DesignContext;
 public abstract class AbstractStepper<T, S> extends AbstractField<T>
         implements Stepper<T, S> {
 
-    private static final long serialVersionUID = 4680365780881009306L;
-
     private T minValue;
     private T maxValue;
     private S stepAmount;
+    private T value;
 
     public AbstractStepper() {
         registerRpc(new StepperRpc() {
-
-            private static final long serialVersionUID = 6754152456843669358L;
 
             @Override
             public void valueChange(String value) {
@@ -31,10 +28,10 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T>
 
                     try {
                         T parsedValue = parseStringValue(value);
-                        if (isInvalidValuesAllowed()
-                                || (parsedValue == null && isNullValueAllowed())
-                                || (parsedValue != null
-                                        && isValidForRange(parsedValue))) {
+                        if (isInvalidValuesAllowed() ||
+                                (parsedValue == null && isNullValueAllowed()) ||
+                                (parsedValue != null &&
+                                         isValidForRange(parsedValue))) {
                             setValue(parsedValue, true);
                         }
 
@@ -45,7 +42,7 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T>
                          * reverting setValue() call in a listener will not
                          * cause the new state to be sent to the client. This is
                          * a problem with Vaadin state caching.
-                         * 
+                         *
                          * See e.g. http://dev.vaadin.com/ticket/12133
                          */
                         getUI().getConnectorTracker()
@@ -59,8 +56,8 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T>
             }
         });
 
-        setIncreaseIcon(FontAwesome.SORT_UP);
-        setDecreaseIcon(FontAwesome.SORT_DOWN);
+        setIncreaseIcon(VaadinIcons.CHEVRON_UP);
+        setDecreaseIcon(VaadinIcons.CHEVRON_DOWN);
     }
 
     @Override
@@ -69,23 +66,23 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T>
     }
 
     @Override
-    public void setManualInputAllowed(boolean isManualInputAllowed) {
-        getState().isManualInputAllowed = isManualInputAllowed;
-    }
-
-    @Override
     public boolean isManualInputAllowed() {
         return getState().isManualInputAllowed;
     }
 
     @Override
-    public void setMouseWheelEnabled(boolean isMouseWheelEnabled) {
-        getState().isMouseWheelEnabled = isMouseWheelEnabled;
+    public void setManualInputAllowed(boolean isManualInputAllowed) {
+        getState().isManualInputAllowed = isManualInputAllowed;
     }
 
     @Override
     public boolean isMouseWheelEnabled() {
         return getState().isMouseWheelEnabled;
+    }
+
+    @Override
+    public void setMouseWheelEnabled(boolean isMouseWheelEnabled) {
+        getState().isMouseWheelEnabled = isMouseWheelEnabled;
     }
 
     @Override
@@ -138,25 +135,13 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T>
     }
 
     @Override
-    public void setStepAmount(S amount) {
-        this.stepAmount = amount;
-        markAsDirty();
-    }
-
-    @Override
     public S getStepAmount() {
         return stepAmount;
     }
 
     @Override
-    public void setMaxValue(T maxValue) {
-        this.maxValue = maxValue;
-        markAsDirty();
-    }
-
-    @Override
-    public void setMinValue(T minValue) {
-        this.minValue = minValue;
+    public void setStepAmount(S amount) {
+        this.stepAmount = amount;
         markAsDirty();
     }
 
@@ -166,8 +151,24 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T>
     }
 
     @Override
+    public void setMaxValue(T maxValue) {
+        this.maxValue = maxValue;
+        markAsDirty();
+    }
+
+    @Override
     public T getMinValue() {
         return minValue;
+    }
+
+    @Override
+    public void setMinValue(T minValue) {
+        this.minValue = minValue;
+        markAsDirty();
+    }
+
+    public Resource getDecreaseIcon() {
+        return getResource(getState().DECREASE_ICON_KEY);
     }
 
     public void setDecreaseIcon(Resource icon) {
@@ -179,6 +180,10 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T>
         markAsDirty();
     }
 
+    public Resource getIncreaseIcon() {
+        return getResource(getState().INCREASE_ICON_KEY);
+    }
+
     public void setIncreaseIcon(Resource icon) {
         if (icon == null) {
             throw new IllegalArgumentException("Icon cannot be null");
@@ -187,33 +192,35 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T>
         markAsDirty();
     }
 
-    public Resource getDecreaseIcon() {
-        return getResource(getState().DECREASE_ICON_KEY);
-    }
-
-    public Resource getIncreaseIcon() {
-        return getResource(getState().INCREASE_ICON_KEY);
-    }
-
     @Override
     public void readDesign(Element design, DesignContext designContext) {
         super.readDesign(design, designContext);
 
         Attributes attr = design.attributes();
         if (design.hasAttr("max-value")) {
-            setMaxValue(DesignAttributeHandler.readAttribute("max-value", attr,
-                    getType()));
+            setMaxValue(DesignAttributeHandler
+                    .readAttribute("max-value", attr, getValueType()));
         }
 
         if (design.hasAttr("min-value")) {
-            setMinValue(DesignAttributeHandler.readAttribute("min-value", attr,
-                    getType()));
+            setMinValue(DesignAttributeHandler
+                    .readAttribute("min-value", attr, getValueType()));
         }
 
         if (design.hasAttr("step-amount")) {
-            setStepAmount(DesignAttributeHandler.readAttribute("step-amount",
-                    attr, getStepType()));
+            setStepAmount(DesignAttributeHandler
+                    .readAttribute("step-amount", attr, getStepType()));
         }
+    }
+
+    @Override
+    public T getValue() {
+        return value;
+    }
+
+    @Override
+    protected void doSetValue(T value) {
+        this.value = value;
     }
 
     /**
@@ -221,7 +228,7 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T>
      * {@link #setMaxValue(Object)} and {@link #setMinValue(Object)}
      *
      * @param value
-     *            the value to check. Null values are always valid.
+     *         the value to check. Null values are always valid.
      * @return true if the value is valid
      */
     protected abstract boolean isValidForRange(T value);
@@ -230,7 +237,7 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T>
      * Parse a String value from the client to an instance of T
      *
      * @param value
-     *            the value from client
+     *         the value from client
      * @return value in the correct type
      * @throws StepperValueParseException
      */
@@ -245,4 +252,11 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T>
      * @return the step type of the Stepper
      */
     protected abstract Class<S> getStepType();
+
+    /**
+     * Returns the value type of the Stepper.
+     *
+     * @return the type of the value in this field
+     */
+    protected abstract Class<T> getValueType();
 }

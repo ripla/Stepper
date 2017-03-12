@@ -1,13 +1,25 @@
 package org.vaadin.risto.stepper.demo;
 
+import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
+import org.vaadin.risto.stepper.BigDecimalStepper;
+import org.vaadin.risto.stepper.DateStepper;
+import org.vaadin.risto.stepper.FloatStepper;
+import org.vaadin.risto.stepper.IntStepper;
+import org.vaadin.risto.stepper.Stepper;
+import org.vaadin.risto.stepper.ValueFilteringStepper;
+import org.vaadin.risto.stepper.client.shared.DateStepperField;
+
 import com.vaadin.annotations.Theme;
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.ui.AbstractComponent;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
@@ -17,23 +29,6 @@ import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
-import org.vaadin.risto.stepper.BigDecimalStepper;
-import org.vaadin.risto.stepper.DateStepper;
-import org.vaadin.risto.stepper.FloatStepper;
-import org.vaadin.risto.stepper.IntStepper;
-import org.vaadin.risto.stepper.Stepper;
-import org.vaadin.risto.stepper.ValueFilteringStepper;
-import org.vaadin.risto.stepper.client.shared.DateStepperField;
-
-import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 /**
  * Demo application for the Stepper add-on.
@@ -59,7 +54,7 @@ public class StepperDemoUI extends UI {
         initUI();
     }
 
-    protected void initUI() {
+    private void initUI() {
         VerticalLayout mainLayout = new VerticalLayout();
         mainLayout.setMargin(true);
         mainLayout.setSpacing(true);
@@ -150,10 +145,10 @@ public class StepperDemoUI extends UI {
 
         bigDecimalStepper = new BigDecimalStepper();
         bigDecimalStepper.setValue(BigDecimal.ZERO);
-        bigDecimalStepper.setStepAmount(new BigDecimal(
-                "0.111111111111111111111111"));
         bigDecimalStepper
-                .setCaption("BigDecimalStepper, step 0.111111111111111111111111");
+                .setStepAmount(new BigDecimal("0.111111111111111111111111"));
+        bigDecimalStepper.setCaption(
+                "BigDecimalStepper, step 0.111111111111111111111111");
         bigDecimalStepper.setWidth("200px");
 
         dateStepper = new DateStepper();
@@ -162,7 +157,7 @@ public class StepperDemoUI extends UI {
         dateStepper.setStepAmount(1);
         dateStepper.setCaption("DateStepper, step 1 day");
 
-        steppers = Arrays.<Stepper>asList(intStepper, floatStepper,
+        steppers = Arrays.<Stepper> asList(intStepper, floatStepper,
                 bigDecimalStepper, dateStepper);
 
         Layout intStepperLayout = getStepperLayout(intStepper);
@@ -176,202 +171,65 @@ public class StepperDemoUI extends UI {
         stepperLayout.addComponent(bigDecimalStepperLayout);
 
         final CheckBox minValue = new CheckBox("Enable minimum value limits");
-        minValue.setImmediate(true);
-        minValue.addValueChangeListener(new Property.ValueChangeListener() {
-
-            private static final long serialVersionUID = -8342007719460917804L;
-
-            @SuppressWarnings({"unchecked"})
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                if (minValue.getValue()) {
-                    for (Stepper stepper : steppers) {
-                        setMinValue(stepper);
-                    }
-                } else {
-                    for (Stepper stepper : steppers) {
-                        stepper.setMinValue(null);
-                    }
-                }
+        minValue.addValueChangeListener(event -> {
+            if (minValue.getValue()) {
+                steppers.forEach(this::setMinValue);
+            } else {
+                steppers.forEach(s -> s.setMinValue(null));
             }
         });
 
         final CheckBox maxValue = new CheckBox("Enable maximum value limits");
-        maxValue.setImmediate(true);
-        maxValue.addValueChangeListener(new Property.ValueChangeListener() {
-
-            private static final long serialVersionUID = 3201240348626812120L;
-
-            @Override
-            @SuppressWarnings({"unchecked"})
-            public void valueChange(ValueChangeEvent event) {
-                if (maxValue.getValue()) {
-                    for (Stepper stepper : steppers) {
-                        setMaxValue(stepper);
-                    }
-                } else {
-                    for (Stepper stepper : steppers) {
-                        stepper.setMaxValue(null);
-                    }
-                }
+        maxValue.addValueChangeListener(event -> {
+            if (maxValue.getValue()) {
+                steppers.forEach(this::setMaxValue);
+            } else {
+                steppers.forEach(s -> s.setMaxValue(null));
             }
-
         });
 
         final CheckBox manualInput = new CheckBox("Enable manual input");
         manualInput.setValue(true);
-        manualInput.setImmediate(true);
-        manualInput.addValueChangeListener(new ValueChangeListener() {
-
-            private static final long serialVersionUID = 1556003158228491207L;
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                for (Stepper stepper : steppers) {
-                    stepper.setManualInputAllowed(manualInput.getValue());
-                }
-            }
-        });
+        manualInput.addValueChangeListener(event -> steppers
+                .forEach(s -> s.setManualInputAllowed(manualInput.getValue())));
 
         final CheckBox mousewheelEnabled = new CheckBox(
                 "Enable mousewheel support");
         mousewheelEnabled.setValue(true);
-        mousewheelEnabled.setImmediate(true);
-        mousewheelEnabled.addValueChangeListener(new ValueChangeListener() {
+        mousewheelEnabled.addValueChangeListener(event -> steppers.forEach(
+                s -> s.setMouseWheelEnabled(mousewheelEnabled.getValue())));
 
-            private static final long serialVersionUID = 1556003158228491207L;
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                for (Stepper stepper : steppers) {
-                    stepper.setMouseWheelEnabled(mousewheelEnabled.getValue());
-                }
-            }
-        });
         final CheckBox invalidValuesAllowed = new CheckBox(
                 "Allow invalid values");
         invalidValuesAllowed.setValue(false);
-        invalidValuesAllowed.setImmediate(true);
-        invalidValuesAllowed.addValueChangeListener(new ValueChangeListener() {
-
-            private static final long serialVersionUID = 1556003158228491207L;
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                for (Stepper stepper : steppers) {
-                    stepper.setInvalidValuesAllowed(invalidValuesAllowed
-                            .getValue());
-                }
-            }
-        });
+        invalidValuesAllowed.addValueChangeListener(event -> steppers.forEach(
+                s -> s.setInvalidValuesAllowed(
+                        invalidValuesAllowed.getValue())));
 
         final CheckBox nullValueAllowed = new CheckBox("Null is valid");
         nullValueAllowed.setValue(false);
-        nullValueAllowed.setImmediate(true);
-        nullValueAllowed.addValueChangeListener(new ValueChangeListener() {
-
-            private static final long serialVersionUID = 1556003158228491207L;
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                for (Stepper stepper : steppers) {
-                    stepper.setNullValueAllowed(nullValueAllowed.getValue());
-                }
-            }
-        });
+        nullValueAllowed.addValueChangeListener(event -> steppers.forEach(
+                s -> s.setNullValueAllowed(nullValueAllowed.getValue())));
 
         final CheckBox valueFiltering = new CheckBox("Enable value filtering");
         valueFiltering.setValue(false);
-        valueFiltering.setImmediate(true);
-        valueFiltering.addValueChangeListener(new ValueChangeListener() {
+        valueFiltering.addValueChangeListener(event -> steppers.stream()
+                .filter(ValueFilteringStepper.class::isInstance)
+                .map(ValueFilteringStepper.class::cast)
+                .forEach(s -> s.setValueFiltering(valueFiltering.getValue())));
 
-            private static final long serialVersionUID = 1556003158228491207L;
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                for (Stepper stepper : steppers) {
-                    if (stepper instanceof ValueFilteringStepper)
-                        ((ValueFilteringStepper) stepper)
-                                .setValueFiltering(valueFiltering.getValue());
-                }
-            }
-        });
-
-        final CheckBox revertingValueChangeListenerEnabled = new CheckBox(
-                "Enable reverting ValueChangeListener");
-        revertingValueChangeListenerEnabled.setValue(false);
-        revertingValueChangeListenerEnabled.setImmediate(true);
-        final Map<Stepper, ValueChangeListener> revertingValueChangeListeners = new HashMap<Stepper, ValueChangeListener>() {
-            {
-                put(intStepper, new ValueChangeListener() {
-                    @Override
-                    public void valueChange(ValueChangeEvent event) {
-                        intStepper.setValue(1);
-                    }
-                });
-                put(floatStepper, new ValueChangeListener() {
-                    @Override
-                    public void valueChange(ValueChangeEvent event) {
-                        floatStepper.setValue(1.0F);
-                    }
-                });
-                put(bigDecimalStepper, new ValueChangeListener() {
-                    @Override
-                    public void valueChange(ValueChangeEvent event) {
-                        bigDecimalStepper.setValue(new BigDecimal(1.0F));
-                    }
-                });
-                put(dateStepper, new ValueChangeListener() {
-                    @Override
-                    public void valueChange(ValueChangeEvent event) {
-                        dateStepper.setValue(DEFAULT_DATE);
-                    }
-                });
-            }
-        };
-        revertingValueChangeListenerEnabled
-                .addValueChangeListener(new ValueChangeListener() {
-                    @Override
-                    public void valueChange(ValueChangeEvent event) {
-                        for (final Stepper stepper : steppers) {
-                            if (revertingValueChangeListenerEnabled.getValue()) {
-                                stepper.addValueChangeListener(revertingValueChangeListeners
-                                        .get(stepper));
-                            } else {
-                                stepper.removeValueChangeListener(revertingValueChangeListeners
-                                        .get(stepper));
-                            }
-                        }
-                    }
-                });
-
-        options.addComponent(minValue);
-        options.addComponent(manualInput);
-        options.addComponent(maxValue);
-        options.addComponent(mousewheelEnabled);
-        options.addComponent(invalidValuesAllowed);
-        options.addComponent(nullValueAllowed);
-        options.addComponent(valueFiltering);
-        options.addComponent(revertingValueChangeListenerEnabled);
+        options.addComponents(minValue, manualInput, maxValue,
+                mousewheelEnabled, invalidValuesAllowed, nullValueAllowed,
+                valueFiltering);
 
         Button disable = new Button("Disable all");
-        disable.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                for (Stepper stepper : steppers) {
-                    stepper.setEnabled(false);
-                }
-            }
-        });
+        disable.addClickListener(
+                event -> steppers.forEach(s -> s.setEnabled(false)));
+
         Button enable = new Button("Enable all");
-        enable.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                for (Stepper stepper : steppers) {
-                    stepper.setEnabled(true);
-                }
-            }
-        });
+        enable.addClickListener(
+                event -> steppers.forEach(s -> s.setEnabled(true)));
+
         actions.addComponent(disable);
         actions.addComponent(enable);
 
@@ -423,27 +281,20 @@ public class StepperDemoUI extends UI {
         final Label valueLabel = new Label("");
         valueLabel.setContentMode(ContentMode.HTML);
 
-        //it's weird that setImmediate is not in the interface level
-        ((AbstractComponent) stepper).setImmediate(true);
+        stepper.addValueChangeListener(event -> {
+            String valueLine =
+                    DateFormat.getTimeInstance(DateFormat.SHORT, getLocale())
+                            .format(new Date()) + " " +
+                            event.getSource().getValue();
+            String oldValue =
+                    valueLabel.getValue() != null ? valueLabel.getValue()
+                            .toString() : "";
 
-        stepper.addValueChangeListener(new Property.ValueChangeListener() {
-
-            private static final long serialVersionUID = 2041886044345910145L;
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                String valueLine = DateFormat.getTimeInstance(DateFormat.SHORT,
-                        getLocale()).format(new Date())
-                        + " " + event.getProperty().getValue();
-                String oldValue = valueLabel.getValue() != null ? valueLabel
-                        .getValue().toString() : "";
-
-                StringBuffer sb = new StringBuffer();
-                sb.append(valueLine);
-                sb.append("<br/>");
-                sb.append(oldValue);
-                valueLabel.setValue(sb.toString());
-            }
+            StringBuffer sb = new StringBuffer();
+            sb.append(valueLine);
+            sb.append("<br/>");
+            sb.append(oldValue);
+            valueLabel.setValue(sb.toString());
         });
 
         layout.addComponent(stepper);

@@ -14,9 +14,9 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.TextBox;
 
 /**
- * 
+ * Abstract base class for client-side steppers
+ *
  * @author Risto Yrjänä / Vaadin
- * 
  */
 public abstract class AbstractStepper<T, S> extends FlowPanel
         implements ValueChangeHandler<String> {
@@ -79,7 +79,7 @@ public abstract class AbstractStepper<T, S> extends FlowPanel
 
     /**
      * Calculate the string value of <code>current value + 1</code>
-     * 
+     *
      * @param startValue
      * @return
      * @throws Exception
@@ -89,7 +89,7 @@ public abstract class AbstractStepper<T, S> extends FlowPanel
 
     /**
      * Calculate the string value of <code>current value - 1</code>
-     * 
+     *
      * @param startValue
      * @return
      * @throws Exception
@@ -102,7 +102,7 @@ public abstract class AbstractStepper<T, S> extends FlowPanel
      * true, {@link #getIncreasedValue(String)} and
      * {@link #getDecreasedValue(String)} must be able to compute a result from
      * this value.
-     * 
+     *
      * @param value
      * @return
      */
@@ -113,27 +113,27 @@ public abstract class AbstractStepper<T, S> extends FlowPanel
     /**
      * Check if the given value is a valid, increased value. The given string is
      * guaranteed to be valid for this type.
-     * 
+     *
      * @param value
      * @return true is the given value is a valid value in respect to the
-     *         maximum value.
+     * maximum value.
      */
     protected abstract boolean isSmallerThanMax(String value);
 
     /**
      * Check if the given value is a valid, decreased value. The given string is
      * guaranteed to be valid for this type.
-     * 
+     *
      * @param value
      * @return true is the given value is a valid value in respect to the
-     *         minumum value.
+     * minumum value.
      */
     protected abstract boolean isLargerThanMin(String value);
 
     /**
      * Parse the given String value. Used for setting the maximum and minimum .
      * values. Should return null on an empty string.
-     * 
+     *
      * @param value
      * @return
      */
@@ -192,23 +192,14 @@ public abstract class AbstractStepper<T, S> extends FlowPanel
 
     }
 
-    /**
-     * Set the value to the UI.
-     * 
-     * @param newValue
-     */
-    public void setValue(String newValue) {
-        if (isValueValid(newValue)) {
-            textBox.setValue(newValue);
-            this.value = newValue;
-        }
-    }
-
     protected boolean isValueValid(String newValue) {
-        return !safeEquals(newValue, value) && (isInvalidValuesAllowed()
-                || ((newValue == null || newValue.isEmpty())
-                        && isNullValueAllowed())
-                || (newValue != null && isValidForType(newValue)));
+        return !safeEquals(newValue, value) && (isInvalidValuesAllowed() ||
+                                                        ((newValue == null ||
+                                                                  newValue.isEmpty()) &&
+                                                                 isNullValueAllowed()) ||
+                                                        (newValue != null &&
+                                                                 isValidForType(
+                                                                         newValue)));
     }
 
     /*
@@ -220,6 +211,18 @@ public abstract class AbstractStepper<T, S> extends FlowPanel
 
     public String getValue() {
         return value;
+    }
+
+    /**
+     * Set the value to the UI.
+     *
+     * @param newValue
+     */
+    public void setValue(String newValue) {
+        if (isValueValid(newValue)) {
+            textBox.setValue(newValue);
+            this.value = newValue;
+        }
     }
 
     public void updateValueToServer(String newValue) {
@@ -253,12 +256,12 @@ public abstract class AbstractStepper<T, S> extends FlowPanel
         return addHandler(handler, StepperValueChangeEvent.getType());
     }
 
-    public void setTimerHasChangedValue(boolean timerHasChangedValue) {
-        this.timerHasChangedValue = timerHasChangedValue;
-    }
-
     public boolean isTimerHasChangedValue() {
         return timerHasChangedValue;
+    }
+
+    public void setTimerHasChangedValue(boolean timerHasChangedValue) {
+        this.timerHasChangedValue = timerHasChangedValue;
     }
 
     public boolean isChangeable() {
@@ -267,6 +270,10 @@ public abstract class AbstractStepper<T, S> extends FlowPanel
 
     public boolean isMouseWheelEnabled() {
         return mouseWheelEnabled;
+    }
+
+    public void setMouseWheelEnabled(boolean mouseWheelEnabled) {
+        this.mouseWheelEnabled = mouseWheelEnabled;
     }
 
     public boolean isDisabled() {
@@ -295,10 +302,6 @@ public abstract class AbstractStepper<T, S> extends FlowPanel
         this.isManualInputAllowed = isManualInputAllowed;
     }
 
-    public void setMouseWheelEnabled(boolean mouseWheelEnabled) {
-        this.mouseWheelEnabled = mouseWheelEnabled;
-    }
-
     public boolean isInvalidValuesAllowed() {
         return invalidValuesAllowed;
     }
@@ -308,25 +311,13 @@ public abstract class AbstractStepper<T, S> extends FlowPanel
         enabledStateChanged();
     }
 
-    public void setNullValueAllowed(boolean nullValueAllowed) {
-        this.nullValueAllowed = nullValueAllowed;
-        enabledStateChanged();
-    }
-
     public boolean isNullValueAllowed() {
         return this.nullValueAllowed;
     }
 
-    /**
-     * Set the maximum possible value for this stepper.
-     * 
-     * @param value
-     *
-     * @see #isLargerThanMin(String)
-     * @see #isSmallerThanMax(String)
-     */
-    public void setMaxValue(T value) {
-        this.maxValue = value;
+    public void setNullValueAllowed(boolean nullValueAllowed) {
+        this.nullValueAllowed = nullValueAllowed;
+        enabledStateChanged();
     }
 
     public T getMaxValue() {
@@ -334,8 +325,23 @@ public abstract class AbstractStepper<T, S> extends FlowPanel
     }
 
     /**
+     * Set the maximum possible value for this stepper.
+     *
+     * @param value
+     * @see #isLargerThanMin(String)
+     * @see #isSmallerThanMax(String)
+     */
+    public void setMaxValue(T value) {
+        this.maxValue = value;
+    }
+
+    public T getMinValue() {
+        return minValue;
+    }
+
+    /**
      * Set the minimum possible value for this stepper.
-     * 
+     *
      * @param value
      * @see #isLargerThanMin(String)
      * @see #isSmallerThanMax(String)
@@ -344,16 +350,12 @@ public abstract class AbstractStepper<T, S> extends FlowPanel
         this.minValue = value;
     }
 
-    public T getMinValue() {
-        return minValue;
+    public S getStepAmount() {
+        return this.stepAmount;
     }
 
     public void setStepAmount(S stepAmount) {
         this.stepAmount = stepAmount;
-    }
-
-    public S getStepAmount() {
-        return this.stepAmount;
     }
 
     public TextBox getTextBox() {

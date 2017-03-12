@@ -13,8 +13,6 @@ import com.vaadin.shared.ui.Connect;
 public class DateStepperConnector
         extends AbstractStepperConnector<Date, Integer> {
 
-    private static final long serialVersionUID = -8728733216507405676L;
-
     @Override
     protected DateStepper createWidget() {
         return GWT.create(DateStepper.class);

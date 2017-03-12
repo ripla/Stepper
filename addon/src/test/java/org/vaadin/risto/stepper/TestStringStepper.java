@@ -1,8 +1,5 @@
 package org.vaadin.risto.stepper;
 
-import org.vaadin.risto.stepper.AbstractStepper;
-import org.vaadin.risto.stepper.StepperValueParseException;
-
 /**
  * Simple stepper implementation for testing purposes
  */
@@ -25,7 +22,7 @@ public class TestStringStepper extends AbstractStepper<String, String> {
     }
 
     @Override
-    public Class<? extends String> getType() {
+    public Class<String> getValueType() {
         return String.class;
     }
 

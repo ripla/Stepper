@@ -8,12 +8,10 @@ import java.text.DecimalFormat;
  * Field that allows stepping through values via given up/down controls.
  * Supports values of type BigDecimal. Default value is 0.
  * </p>
- * 
+ *
  * @author Marcin Wisnicki
  */
 public class BigDecimalStepper extends AbstractDecimalStepper<BigDecimal> {
-
-    private static final long serialVersionUID = 1L;
 
     public BigDecimalStepper() {
         super(BigDecimal.ZERO, BigDecimal.ONE);
@@ -26,7 +24,7 @@ public class BigDecimalStepper extends AbstractDecimalStepper<BigDecimal> {
     }
 
     @Override
-    public Class<? extends BigDecimal> getType() {
+    public Class<BigDecimal> getValueType() {
         return BigDecimal.class;
     }
 

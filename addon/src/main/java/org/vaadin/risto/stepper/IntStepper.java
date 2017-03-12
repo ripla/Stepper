@@ -9,9 +9,9 @@ import com.vaadin.shared.communication.SharedState;
  * Field that allows stepping through values via given up/down controls.
  * Supports values of type Integer. Default value is 0.
  * </p>
- * 
+ *
  * @author Risto Yrjänä / Vaadin
- * 
+ *
  */
 public class IntStepper extends AbstractStepper<Integer, Integer>
         implements ValueFilteringStepper {
@@ -29,7 +29,7 @@ public class IntStepper extends AbstractStepper<Integer, Integer>
     }
 
     @Override
-    public Class<Integer> getType() {
+    public Class<Integer> getValueType() {
         return Integer.class;
     }
 

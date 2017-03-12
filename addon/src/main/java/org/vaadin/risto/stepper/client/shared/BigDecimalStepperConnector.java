@@ -1,18 +1,17 @@
 package org.vaadin.risto.stepper.client.shared;
 
+import java.math.BigDecimal;
+
+import org.vaadin.risto.stepper.BigDecimalStepper;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.shared.ui.Connect;
-import org.vaadin.risto.stepper.BigDecimalStepper;
-
-import java.math.BigDecimal;
 
 @Connect(BigDecimalStepper.class)
 public class BigDecimalStepperConnector
         extends AbstractStepperConnector<BigDecimal, BigDecimal> {
-
-    private static final long serialVersionUID = 7493920052633327240L;
 
     @Override
     protected Widget createWidget() {

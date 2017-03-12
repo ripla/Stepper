@@ -3,16 +3,12 @@ package org.vaadin.risto.stepper.client.shared;
 import org.vaadin.risto.stepper.client.ui.AbstractStepper;
 
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;
 
 public abstract class AbstractStepperConnector<T, S>
         extends AbstractFieldConnector {
-
-    private static final long serialVersionUID = 6952509590080940264L;
 
     @Override
     @SuppressWarnings("unchecked")
@@ -31,19 +27,14 @@ public abstract class AbstractStepperConnector<T, S>
 
         final StepperRpc stepperRpcProxy = RpcProxy.create(StepperRpc.class,
                 this);
-        getWidget().addValueChangeHandler(new ValueChangeHandler<String>() {
-
-            @Override
-            public void onValueChange(ValueChangeEvent<String> event) {
-                getState().value = event.getValue();
-                stepperRpcProxy.valueChange(event.getValue());
-            }
+        getWidget().addValueChangeHandler(event -> {
+            getState().value = event.getValue();
+            stepperRpcProxy.valueChange(event.getValue());
         });
     }
 
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
-
         getWidget().setDisabled(!getState().enabled);
         getWidget().setReadonly(getState().readOnly);
         getWidget().setManualInputAllowed(getState().isManualInputAllowed);
@@ -77,10 +68,5 @@ public abstract class AbstractStepperConnector<T, S>
      */
     private Element getIconElement(String iconKey) {
         return getConnection().getIcon(getResourceUrl(iconKey)).getElement();
-    }
-
-    @Override
-    protected void updateWidgetSize(String newWidth, String newHeight) {
-        super.updateWidgetSize(newWidth, newHeight);
     }
 }

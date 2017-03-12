@@ -1,30 +1,29 @@
 package org.vaadin.risto.stepper;
 
-import com.vaadin.ui.declarative.DesignAttributeHandler;
-import com.vaadin.ui.declarative.DesignContext;
-import org.jsoup.nodes.Element;
-import org.vaadin.risto.stepper.client.shared.DateStepperField;
-import org.vaadin.risto.stepper.client.shared.DateStepperState;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
+
+import org.jsoup.nodes.Element;
+import org.vaadin.risto.stepper.client.shared.DateStepperField;
+import org.vaadin.risto.stepper.client.shared.DateStepperState;
+
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
 
 /**
  * <p>
  * Field that allows stepping through values via given up/down controls.
  * Supports values of type Date. The default value is today.
  * </p>
- * 
+ *
  * @author Risto Yrjänä / Vaadin
- * 
+ *
  */
 public class DateStepper extends AbstractStepper<Date, Integer> {
 
-    private static final long serialVersionUID = 5238300195216371890L;
     private SimpleDateFormat dateFormat;
 
     public DateStepper() {
@@ -39,7 +38,7 @@ public class DateStepper extends AbstractStepper<Date, Integer> {
     }
 
     @Override
-    public Class<Date> getType() {
+    public Class<Date> getValueType() {
         return Date.class;
     }
 
@@ -53,17 +52,12 @@ public class DateStepper extends AbstractStepper<Date, Integer> {
         return (DateStepperState) super.getState();
     }
 
-    @Override
-    public void setLocale(Locale locale) {
-        super.setLocale(locale);
-    }
-
     /**
      * Set the field that the stepper should step through. The field must be one
      * of the ones defined by
      * {@link DateStepperField
      * )}
-     * 
+     *
      * @param field
      * @see DateStepperField
      */
@@ -94,9 +88,8 @@ public class DateStepper extends AbstractStepper<Date, Integer> {
             return true;
         }
 
-        Date dateValue = value;
         Calendar valueCalendar = Calendar.getInstance(getLocale());
-        valueCalendar.setTime(dateValue);
+        valueCalendar.setTime(value);
         Calendar compareCalendar = (Calendar) valueCalendar.clone();
 
         if (getMaxValue() != null) {
@@ -133,7 +126,7 @@ public class DateStepper extends AbstractStepper<Date, Integer> {
 
     /**
      * Normalizes max and min dates by resetting hours, minutes etc.
-     * 
+     *
      * @param boundaryDate
      * @return
      */
@@ -177,10 +170,10 @@ public class DateStepper extends AbstractStepper<Date, Integer> {
      * Set the {@link SimpleDateFormat} used to format the value of this field.
      * If set to null (as it is by default), DateStepper will generate a short
      * date format based on the current locale.
-     * 
+     *
      * Please note that this feature is experimental, and not all patterns are
      * supported by the client-side implementation.
-     * 
+     *
      * @param dateFormat
      */
     public void setDateFormat(SimpleDateFormat dateFormat) {

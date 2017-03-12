@@ -18,8 +18,6 @@ package org.vaadin.risto.stepper;
  */
 public class FloatStepper extends AbstractDecimalStepper<Float> {
 
-    private static final long serialVersionUID = -5328027647865381265L;
-
     public FloatStepper() {
         super(0F, 1.0F);
     }
@@ -30,7 +28,7 @@ public class FloatStepper extends AbstractDecimalStepper<Float> {
     }
 
     @Override
-    public Class<Float> getType() {
+    public Class<Float> getValueType() {
         return Float.class;
     }
 

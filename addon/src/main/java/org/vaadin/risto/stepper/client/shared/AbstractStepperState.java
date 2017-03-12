@@ -4,8 +4,6 @@ import com.vaadin.shared.AbstractFieldState;
 
 public class AbstractStepperState extends AbstractFieldState {
 
-    private static final long serialVersionUID = -6837411523699098954L;
-
     public String INCREASE_ICON_KEY = "ICON_INCREASE";
     public String DECREASE_ICON_KEY = "ICON_DECREASE";
 

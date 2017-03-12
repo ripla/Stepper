@@ -10,8 +10,6 @@ import com.vaadin.shared.ui.Connect;
 public class IntStepperConnector
         extends AbstractStepperConnector<Integer, Integer> {
 
-    private static final long serialVersionUID = -5276807014107059716L;
-
     @Override
     protected org.vaadin.risto.stepper.client.ui.IntStepper createWidget() {
         return GWT.create(org.vaadin.risto.stepper.client.ui.IntStepper.class);

@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 import java.util.Calendar;
 import java.util.Date;
@@ -11,7 +12,7 @@ import java.util.Locale;
 
 import org.junit.Test;
 
-import com.vaadin.server.FontAwesome;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.ui.declarative.Design;
 
 import static org.junit.Assert.assertEquals;
@@ -60,8 +61,9 @@ public class DeclarativeTest {
     @Test
     public void bigDecimalStepper_setCommonPropertiesAndWriteDeclarative_declarativeCanBeReadBack()
             throws IOException {
-        testCommonProperties(new BigDecimalStepper(), new BigDecimal(1.1f),
-                new BigDecimal(-1.2f), new BigDecimal(2.3f));
+        testCommonProperties(new BigDecimalStepper(), new BigDecimal(1.1f)
+                        .setScale(1, RoundingMode.HALF_UP),
+                new BigDecimal(-1.2f).setScale(1, RoundingMode.HALF_UP), new BigDecimal(2.3f).setScale(1, RoundingMode.HALF_UP));
     }
 
     @Test
@@ -92,8 +94,8 @@ public class DeclarativeTest {
 
     private <T, S> void testCommonProperties(AbstractStepper<T, S> expected,
             T maxValue, T minValue, S stepAmount) throws IOException {
-        expected.setDecreaseIcon(FontAwesome.ANGLE_DOUBLE_DOWN);
-        expected.setIncreaseIcon(FontAwesome.ANGLE_DOUBLE_UP);
+        expected.setDecreaseIcon(VaadinIcons.ANGLE_DOUBLE_DOWN);
+        expected.setIncreaseIcon(VaadinIcons.ANGLE_DOUBLE_UP);
         expected.setInvalidValuesAllowed(true);
         expected.setManualInputAllowed(true);
         expected.setMaxValue(maxValue);

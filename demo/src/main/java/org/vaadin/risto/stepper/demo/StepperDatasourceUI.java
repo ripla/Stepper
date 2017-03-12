@@ -2,8 +2,7 @@ package org.vaadin.risto.stepper.demo;
 
 import org.vaadin.risto.stepper.IntStepper;
 
-import com.vaadin.data.fieldgroup.FieldGroup;
-import com.vaadin.data.util.BeanItem;
+import com.vaadin.data.Binder;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.UI;
 
@@ -12,16 +11,16 @@ public class StepperDatasourceUI extends UI {
 
     @Override
     protected void init(VaadinRequest request) {
-        TestItem dataSource = new TestItem();
-        FieldGroup fieldGroup = new FieldGroup();
-        fieldGroup.setItemDataSource(new BeanItem<Object>(dataSource));
+        TestBean dataSource = new TestBean();
+        Binder<TestBean> binder = new Binder<>();
+        binder.setBean(dataSource);
         IntStepper testStepper = new IntStepper();
-        fieldGroup.bind(testStepper, "testValue");
+        binder.bind(testStepper, "testValue");
         setContent(testStepper);
 
     }
 
-    public static class TestItem {
+    public static class TestBean {
         private Integer testValue = 10;
 
         public Integer getTestValue() {
