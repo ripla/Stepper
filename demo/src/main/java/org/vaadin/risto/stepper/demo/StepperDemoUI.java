@@ -17,6 +17,7 @@ import org.vaadin.risto.stepper.ValueFilteringStepper;
 import org.vaadin.risto.stepper.client.shared.DateStepperField;
 
 import com.vaadin.annotations.Theme;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.ContentMode;
@@ -96,11 +97,14 @@ public class StepperDemoUI extends UI {
         IntStepper readOnly = new IntStepper("Read-only");
         readOnly.setReadOnly(true);
 
-        layout.addComponent(undefined);
-        layout.addComponent(wide);
-        layout.addComponent(fiftyPixels);
-        layout.addComponent(disabled);
-        layout.addComponent(readOnly);
+        IntStepper otherIcons = new IntStepper("Other icons");
+        otherIcons.setWidth("65%");
+        otherIcons.setStyleName("other-icons");
+        otherIcons.setIncreaseIcon(VaadinIcons.PLUS_CIRCLE);
+        otherIcons.setDecreaseIcon(VaadinIcons.MINUS_CIRCLE);
+
+        layout.addComponents(undefined, wide, fiftyPixels, disabled, readOnly,
+                otherIcons);
 
         return panel;
     }
@@ -123,8 +127,10 @@ public class StepperDemoUI extends UI {
 
         String infoString = "<p>There are four different Stepper classes. Their step amount can be set from the server-side. The accuracy of the FloatStepper can be changed and the DateStepper can be set to increase days, months or years. The server-side values are added below the components as they are received from the client.</p>";
         infoString += "<p>Minimum and maximum values are: -25 to 25 for IntStepper, -25 to 25 for FloatStepper and 10 days to the past to 10 days to the future for DateStepper.</p>";
-        infoString += "<p>You can change the values by using the controls, the arrow keys or the mouse wheel</p>";
+        infoString += "<p>You can change the values by using the controls, " +
+                "the arrow keys or the mouse wheel.</p>";
         Label infoLabel = new Label(infoString);
+        infoLabel.setWidth("100%");
         infoLabel.setContentMode(ContentMode.HTML);
 
         GridLayout stepperLayout = new GridLayout(2, 2);
@@ -277,7 +283,8 @@ public class StepperDemoUI extends UI {
 
     protected Layout getStepperLayout(final Stepper stepper) {
         VerticalLayout layout = new VerticalLayout();
-
+        layout.setMargin(false);
+        
         final Label valueLabel = new Label("");
         valueLabel.setContentMode(ContentMode.HTML);
 
