@@ -1,11 +1,7 @@
 .settings
 .classpath
 .project
-/**/build
-/demo/build
-/addon/bin
-/demo/bin
-/build
+build
 /*/src/main/webapp/VAADIN/widgetsets
 /*/src/main/webapp/VAADIN/gwt-unitCache
 .gradle*
@@ -13,3 +9,7 @@
 /*/GWT development mode*
 *.css
 *.scss.cache
+.idea
+*.css.gz
+**/widgetset
+**/widgetsets

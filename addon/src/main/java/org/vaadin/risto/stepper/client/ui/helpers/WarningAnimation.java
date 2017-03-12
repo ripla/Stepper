@@ -5,16 +5,10 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  * Animation shown when invalid content is entered and filtering is enabled
  */
 public class WarningAnimation extends Animation {
-
-    private static final Logger log = Logger
-            .getLogger(WarningAnimation.class.toString());
 
     private static final int TARGET_COLOR_DEPTH = 255;
 
@@ -46,15 +40,12 @@ public class WarningAnimation extends Animation {
     @Override
     protected void onUpdate(double progress) {
         String color = getColorStringForProgress(progress);
-        log.log(Level.INFO, "progress: " + progress + " color: " + color);
         setColorEffect(color);
     }
 
     protected String getColorStringForProgress(double progress) {
         int green = getGreen(progress);
         int blue = getBlue(progress);
-
-        log.log(Level.INFO, "green: " + green + " blue: " + blue);
 
         String greenHex = getHexString(green);
         String blueHex = getHexString(blue);

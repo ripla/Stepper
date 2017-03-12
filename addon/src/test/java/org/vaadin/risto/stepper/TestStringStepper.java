@@ -1,4 +1,4 @@
-package org.vaadin.risto.stepper.demo;
+package org.vaadin.risto.stepper;
 
 import org.vaadin.risto.stepper.AbstractStepper;
 import org.vaadin.risto.stepper.StepperValueParseException;

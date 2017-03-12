@@ -1,13 +1,4 @@
-package org.vaadin.risto.stepper.demo;
-
-import com.vaadin.server.FontAwesome;
-import com.vaadin.ui.declarative.Design;
-import org.junit.Test;
-import org.vaadin.risto.stepper.AbstractStepper;
-import org.vaadin.risto.stepper.BigDecimalStepper;
-import org.vaadin.risto.stepper.DateStepper;
-import org.vaadin.risto.stepper.FloatStepper;
-import org.vaadin.risto.stepper.IntStepper;
+package org.vaadin.risto.stepper;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -17,6 +8,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+
+import org.junit.Test;
+
+import com.vaadin.server.FontAwesome;
+import com.vaadin.ui.declarative.Design;
 
 import static org.junit.Assert.assertEquals;
 
