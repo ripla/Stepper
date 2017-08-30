@@ -4,6 +4,12 @@ value types.
 
 Implementations for integer, float and date values are provided.
 
+## Getting started
+
+Build project: `./gradlew build` 
+ 
+Run demo application: `./gradlew demo:vaadinRun`
+
 ## Usage 
 
 Example:
