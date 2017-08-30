@@ -3,13 +3,21 @@ package org.vaadin.risto.stepper;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 import org.vaadin.risto.stepper.client.shared.AbstractStepperState;
+import org.vaadin.risto.stepper.client.shared.ClickRpc;
 import org.vaadin.risto.stepper.client.shared.StepperRpc;
 
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.Resource;
+import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.Registration;
 import com.vaadin.ui.AbstractField;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
+import com.vaadin.util.ReflectTools;
+
+import java.io.Serializable;
+import java.lang.reflect.Method;
 
 public abstract class AbstractStepper<T, S> extends AbstractField<T>
         implements Stepper<T, S> {
@@ -55,7 +63,13 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T>
                 }
             }
         });
+        registerRpc(new ClickRpc() {
 
+            @Override
+            public void onClick(MouseEventDetails mouseEventDetails) {
+                fireClick(mouseEventDetails);
+            }
+        });
         setIncreaseIcon(VaadinIcons.CHEVRON_UP);
         setDecreaseIcon(VaadinIcons.CHEVRON_DOWN);
     }
@@ -63,6 +77,10 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T>
     @Override
     protected AbstractStepperState getState() {
         return (AbstractStepperState) super.getState();
+    }
+
+    protected void fireClick(MouseEventDetails details) {
+        fireEvent(new Button.ClickEvent(this, details));
     }
 
     @Override
@@ -192,6 +210,10 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T>
         markAsDirty();
     }
 
+    public Registration addClickListener(ClickListener listener) {
+        return addListener(Button.ClickEvent.class, listener, ClickListener.BUTTON_CLICK_METHOD);
+    }
+
     @Override
     public void readDesign(Element design, DesignContext designContext) {
         super.readDesign(design, designContext);
@@ -259,4 +281,12 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T>
      * @return the type of the value in this field
      */
     protected abstract Class<T> getValueType();
+
+    @FunctionalInterface
+    public interface ClickListener extends Serializable {
+        Method BUTTON_CLICK_METHOD = ReflectTools.findMethod(ClickListener.class,
+            "buttonClick", Button.ClickEvent.class);
+
+        void buttonClick(Button.ClickEvent event);
+    }
 }

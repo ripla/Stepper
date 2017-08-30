@@ -6,12 +6,18 @@ import org.vaadin.risto.stepper.client.ui.helpers.ValueUpdateTimer;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.TextBox;
+
+import java.util.logging.Handler;
 
 /**
  * Abstract base class for client-side steppers
@@ -19,7 +25,7 @@ import com.google.gwt.user.client.ui.TextBox;
  * @author Risto Yrjänä / Vaadin
  */
 public abstract class AbstractStepper<T, S> extends FlowPanel
-        implements ValueChangeHandler<String> {
+        implements ValueChangeHandler<String>, HasClickHandlers, Focusable {
 
     public static final String CLASSNAME = "stepper";
 
@@ -377,5 +383,29 @@ public abstract class AbstractStepper<T, S> extends FlowPanel
 
     public void setDecreaseIconElement(Element decreaseIconElement) {
         this.upDownControls.setDecreaseIconElement(decreaseIconElement);
+    }
+
+    public HandlerRegistration addClickHandler(ClickHandler clickHandler) {
+        return this.addDomHandler(clickHandler, ClickEvent.getType());
+    }
+
+    @Override
+    public void setTabIndex(int index) {
+        textBox.setTabIndex(index);
+    }
+
+    @Override
+    public int getTabIndex() {
+        return textBox.getTabIndex();
+    }
+
+    @Override
+    public void setAccessKey(char key) {
+        textBox.setAccessKey(key);
+    }
+
+    @Override
+    public void setFocus(boolean focused) {
+        textBox.setFocus(focused);
     }
 }
