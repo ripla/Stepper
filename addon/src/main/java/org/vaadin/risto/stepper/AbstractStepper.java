@@ -28,38 +28,34 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T>
     private T value;
 
     public AbstractStepper() {
-        registerRpc(new StepperRpc() {
+        registerRpc((StepperRpc) clientValue -> {
+            if (isEnabled() && !isReadOnly()) {
 
-            @Override
-            public void valueChange(String value) {
-                if (isEnabled() && !isReadOnly()) {
-
-                    try {
-                        T parsedValue = parseStringValue(value);
-                        if (isInvalidValuesAllowed() ||
-                                (parsedValue == null && isNullValueAllowed()) ||
-                                (parsedValue != null &&
-                                         isValidForRange(parsedValue))) {
-                            setValue(parsedValue, true);
-                        }
-
-                        /*
-                         * Client side updates the state before sending the
-                         * event so we need to make sure the cached state is
-                         * updated to match the client. If we do not do this, a
-                         * reverting setValue() call in a listener will not
-                         * cause the new state to be sent to the client. This is
-                         * a problem with Vaadin state caching.
-                         *
-                         * See e.g. http://dev.vaadin.com/ticket/12133
-                         */
-                        getUI().getConnectorTracker()
-                                .getDiffState(AbstractStepper.this)
-                                .put("value", value);
-
-                    } catch (StepperValueParseException e) {
-                        handleParseException(e);
+                try {
+                    T parsedValue = parseStringValue(clientValue);
+                    if (isInvalidValuesAllowed() ||
+                            (parsedValue == null && isNullValueAllowed()) ||
+                            (parsedValue != null &&
+                                     isValidForRange(parsedValue))) {
+                        setValue(parsedValue, true);
                     }
+
+                    /*
+                     * Client side updates the state before sending the
+                     * event so we need to make sure the cached state is
+                     * updated to match the client. If we do not do this, a
+                     * reverting setValue() call in a listener will not
+                     * cause the new state to be sent to the client. This is
+                     * a problem with Vaadin state caching.
+                     *
+                     * See e.g. https://github.com/vaadin/framework/issues/4129
+                     */
+                    getUI().getConnectorTracker()
+                            .getDiffState(AbstractStepper.this)
+                            .put("value", clientValue);
+
+                } catch (StepperValueParseException e) {
+                    handleParseException(e);
                 }
             }
         });
@@ -266,7 +262,8 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T>
      * @param value
      *         the value from client
      * @return value in the correct type
-     * @throws StepperValueParseException
+     * @throws StepperValueParseException when parsing fails
+     *
      */
     protected abstract T parseStringValue(String value)
             throws StepperValueParseException;

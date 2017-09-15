@@ -300,13 +300,10 @@ public class StepperDemoUI extends UI {
                             event.getSource().getValue();
             String oldValue =
                     valueLabel.getValue() != null ? valueLabel.getValue()
-                            .toString() : "";
+                             : "";
 
-            StringBuffer sb = new StringBuffer();
-            sb.append(valueLine);
-            sb.append("<br/>");
-            sb.append(oldValue);
-            valueLabel.setValue(sb.toString());
+            String sb = valueLine + "<br/>" + oldValue;
+            valueLabel.setValue(sb);
         });
 
         layout.addComponent(stepper);

@@ -17,8 +17,6 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.TextBox;
 
-import java.util.logging.Handler;
-
 /**
  * Abstract base class for client-side steppers
  *
@@ -29,7 +27,7 @@ public abstract class AbstractStepper<T, S> extends FlowPanel
 
     public static final String CLASSNAME = "stepper";
 
-    public static final int valueRepeatDelay = 150;
+    public static final int VALUE_REPEAT_DELAY = 150;
 
     protected final UpDownTextBox textBox;
 

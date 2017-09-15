@@ -22,7 +22,6 @@ public class StepperControls extends FlowPanel
     protected final ButtonDownTimer mouseDownTimerUp;
     protected final ButtonDownTimer mouseDownTimerDown;
     private final AbstractStepper<?, ?> stepper;
-    private String increaseIconUrl;
 
     public StepperControls(AbstractStepper<?, ?> stepper) {
         this.stepper = stepper;
@@ -79,10 +78,10 @@ public class StepperControls extends FlowPanel
         cancelTimers();
         if (event.getSource() == increaseControl) {
             mouseDownTimerUp
-                    .scheduleRepeating(AbstractStepper.valueRepeatDelay);
+                    .scheduleRepeating(AbstractStepper.VALUE_REPEAT_DELAY);
         } else if (event.getSource() == decreaseControl) {
             mouseDownTimerDown
-                    .scheduleRepeating(AbstractStepper.valueRepeatDelay);
+                    .scheduleRepeating(AbstractStepper.VALUE_REPEAT_DELAY);
         }
         event.preventDefault();
     }
