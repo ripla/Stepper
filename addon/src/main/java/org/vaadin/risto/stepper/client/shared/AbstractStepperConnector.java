@@ -1,16 +1,19 @@
 package org.vaadin.risto.stepper.client.shared;
 
-import org.vaadin.risto.stepper.client.ui.AbstractStepper;
-
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;
+import com.vaadin.shared.MouseEventDetails;
+import org.vaadin.risto.stepper.client.ui.AbstractStepper;
 
 public abstract class AbstractStepperConnector<T, S>
-        extends AbstractFieldConnector {
+        extends AbstractFieldConnector implements ClickHandler {
 
     private static final long serialVersionUID = 6952509590080940264L;
 
@@ -28,7 +31,7 @@ public abstract class AbstractStepperConnector<T, S>
     @Override
     protected void init() {
         super.init();
-
+        getWidget().addClickHandler(this);
         final StepperRpc stepperRpcProxy = RpcProxy.create(StepperRpc.class,
                 this);
         getWidget().addValueChangeHandler(new ValueChangeHandler<String>() {
@@ -80,7 +83,14 @@ public abstract class AbstractStepperConnector<T, S>
     }
 
     @Override
+
     protected void updateWidgetSize(String newWidth, String newHeight) {
         super.updateWidgetSize(newWidth, newHeight);
+    }
+
+    public void onClick(ClickEvent event) {
+        MouseEventDetails details = MouseEventDetailsBuilder.buildMouseEventDetails(event.getNativeEvent(),
+            getWidget().getElement());
+        getRpcProxy(ClickRpc.class).onClick(details);
     }
 }

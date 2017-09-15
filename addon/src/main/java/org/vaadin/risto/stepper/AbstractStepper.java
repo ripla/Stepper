@@ -3,13 +3,20 @@ package org.vaadin.risto.stepper;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 import org.vaadin.risto.stepper.client.shared.AbstractStepperState;
+import org.vaadin.risto.stepper.client.shared.ClickRpc;
 import org.vaadin.risto.stepper.client.shared.StepperRpc;
 
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Resource;
+import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.ui.AbstractField;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
+import com.vaadin.util.ReflectTools;
+
+import java.io.Serializable;
+import java.lang.reflect.Method;
 
 public abstract class AbstractStepper<T, S> extends AbstractField<T>
         implements Stepper<T, S> {
@@ -58,14 +65,23 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T>
                 }
             }
         });
-
         setIncreaseIcon(FontAwesome.SORT_UP);
         setDecreaseIcon(FontAwesome.SORT_DOWN);
+        registerRpc(new ClickRpc() {
+            @Override
+            public void onClick(MouseEventDetails mouseEventDetails) {
+                fireClick(mouseEventDetails);
+            }
+        });
     }
 
     @Override
     protected AbstractStepperState getState() {
         return (AbstractStepperState) super.getState();
+    }
+
+    protected void fireClick(MouseEventDetails details) {
+        fireEvent(new StepperClickEvent(this, details));
     }
 
     @Override
@@ -195,6 +211,15 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T>
         return getResource(getState().INCREASE_ICON_KEY);
     }
 
+    /**
+     * Add a click listener on the Stepper text field.
+     * @param listener a click listener object to be executed on click
+     * @return a Registration object that allows you to remove the listener later on.
+     */
+    public void addClickListener(AbstractStepper.StepperClickListener listener) {
+        addListener(AbstractStepper.StepperClickEvent.class, listener, AbstractStepper.StepperClickListener.STEPPER_CLICK_METHOD);
+    }
+
     @Override
     public void readDesign(Element design, DesignContext designContext) {
         super.readDesign(design, designContext);
@@ -202,17 +227,17 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T>
         Attributes attr = design.attributes();
         if (design.hasAttr("max-value")) {
             setMaxValue(DesignAttributeHandler.readAttribute("max-value", attr,
-                    getType()));
+                getType()));
         }
 
         if (design.hasAttr("min-value")) {
             setMinValue(DesignAttributeHandler.readAttribute("min-value", attr,
-                    getType()));
+                getType()));
         }
 
         if (design.hasAttr("step-amount")) {
             setStepAmount(DesignAttributeHandler.readAttribute("step-amount",
-                    attr, getStepType()));
+                attr, getStepType()));
         }
     }
 
@@ -245,4 +270,46 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T>
      * @return the step type of the Stepper
      */
     protected abstract Class<S> getStepType();
+
+    /**
+     * Click event for Steppers. Fired when the text field of the Stepper is clicked.
+     */
+    public static class StepperClickEvent extends Event {
+        MouseEventDetails details = null;
+
+        /**
+         * Creates a new stepper click event
+         * @param source the source Stepper component
+         * @param details mouse event details from client side
+         */
+        public StepperClickEvent(Component source, MouseEventDetails details) {
+            super(source);
+            this.details = details;
+        }
+
+        /**
+         * Get the mouse details of the click, e.g. clicked button.
+         * @see MouseEventDetails
+         * @return details of the mouse event that triggered this click event
+         */
+        public MouseEventDetails getDetails() {
+            return details;
+        }
+    }
+
+
+    @FunctionalInterface
+    /**
+     * Implement this interface to create a click listener for a Stepper.
+     */
+    public interface StepperClickListener extends Serializable {
+        Method STEPPER_CLICK_METHOD = ReflectTools.findMethod(StepperClickListener.class,
+            "stepperClick", AbstractStepper.StepperClickEvent.class);
+
+        /**
+         * The implementation of this method is called after a click on the Stepper
+         * @param event
+         */
+        void stepperClick(StepperClickEvent event);
+    }
 }

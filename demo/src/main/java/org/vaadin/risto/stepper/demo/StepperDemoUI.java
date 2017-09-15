@@ -14,6 +14,7 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
@@ -140,21 +141,25 @@ public class StepperDemoUI extends UI {
         intStepper = new IntStepper();
         intStepper.setValue(1);
         intStepper.setStepAmount(1);
-        intStepper.setCaption("IntStepper, step 1");
+        intStepper.setCaption("IntStepper, step 1 (tabindex 3)");
+        intStepper.addClickListener(e -> Notification.show("clicked"));
+        intStepper.setTabIndex(3);
 
         floatStepper = new FloatStepper();
         floatStepper.setValue(1.0f);
         floatStepper.setStepAmount(1.222f);
         floatStepper.setNumberOfDecimals(3);
-        floatStepper.setCaption("FloatStepper, step 1.222");
+        floatStepper.setCaption("FloatStepper, step 1.222 (tabindex 2)");
+        floatStepper.setTabIndex(2);
 
         bigDecimalStepper = new BigDecimalStepper();
         bigDecimalStepper.setValue(BigDecimal.ZERO);
         bigDecimalStepper.setStepAmount(new BigDecimal(
-                "0.111111111111111111111111"));
+            "0.111111111111111111111111"));
         bigDecimalStepper
-                .setCaption("BigDecimalStepper, step 0.111111111111111111111111");
+            .setCaption("BigDecimalStepper, step 0.111... (tabindex 1)");
         bigDecimalStepper.setWidth("200px");
+        bigDecimalStepper.setTabIndex(1);
 
         dateStepper = new DateStepper();
         dateStepper.setValue(DEFAULT_DATE);
@@ -163,7 +168,7 @@ public class StepperDemoUI extends UI {
         dateStepper.setCaption("DateStepper, step 1 day");
 
         steppers = Arrays.<Stepper>asList(intStepper, floatStepper,
-                bigDecimalStepper, dateStepper);
+            bigDecimalStepper, dateStepper);
 
         Layout intStepperLayout = getStepperLayout(intStepper);
         Layout floatStepperLayout = getStepperLayout(floatStepper);
@@ -234,7 +239,7 @@ public class StepperDemoUI extends UI {
         });
 
         final CheckBox mousewheelEnabled = new CheckBox(
-                "Enable mousewheel support");
+            "Enable mousewheel support");
         mousewheelEnabled.setValue(true);
         mousewheelEnabled.setImmediate(true);
         mousewheelEnabled.addValueChangeListener(new ValueChangeListener() {
@@ -249,7 +254,7 @@ public class StepperDemoUI extends UI {
             }
         });
         final CheckBox invalidValuesAllowed = new CheckBox(
-                "Allow invalid values");
+            "Allow invalid values");
         invalidValuesAllowed.setValue(false);
         invalidValuesAllowed.setImmediate(true);
         invalidValuesAllowed.addValueChangeListener(new ValueChangeListener() {
@@ -260,7 +265,7 @@ public class StepperDemoUI extends UI {
             public void valueChange(ValueChangeEvent event) {
                 for (Stepper stepper : steppers) {
                     stepper.setInvalidValuesAllowed(invalidValuesAllowed
-                            .getValue());
+                        .getValue());
                 }
             }
         });
@@ -292,13 +297,13 @@ public class StepperDemoUI extends UI {
                 for (Stepper stepper : steppers) {
                     if (stepper instanceof ValueFilteringStepper)
                         ((ValueFilteringStepper) stepper)
-                                .setValueFiltering(valueFiltering.getValue());
+                            .setValueFiltering(valueFiltering.getValue());
                 }
             }
         });
 
         final CheckBox revertingValueChangeListenerEnabled = new CheckBox(
-                "Enable reverting ValueChangeListener");
+            "Enable reverting ValueChangeListener");
         revertingValueChangeListenerEnabled.setValue(false);
         revertingValueChangeListenerEnabled.setImmediate(true);
         final Map<Stepper, ValueChangeListener> revertingValueChangeListeners = new HashMap<Stepper, ValueChangeListener>() {
@@ -330,20 +335,20 @@ public class StepperDemoUI extends UI {
             }
         };
         revertingValueChangeListenerEnabled
-                .addValueChangeListener(new ValueChangeListener() {
-                    @Override
-                    public void valueChange(ValueChangeEvent event) {
-                        for (final Stepper stepper : steppers) {
-                            if (revertingValueChangeListenerEnabled.getValue()) {
-                                stepper.addValueChangeListener(revertingValueChangeListeners
-                                        .get(stepper));
-                            } else {
-                                stepper.removeValueChangeListener(revertingValueChangeListeners
-                                        .get(stepper));
-                            }
+            .addValueChangeListener(new ValueChangeListener() {
+                @Override
+                public void valueChange(ValueChangeEvent event) {
+                    for (final Stepper stepper : steppers) {
+                        if (revertingValueChangeListenerEnabled.getValue()) {
+                            stepper.addValueChangeListener(revertingValueChangeListeners
+                                .get(stepper));
+                        } else {
+                            stepper.removeValueChangeListener(revertingValueChangeListeners
+                                .get(stepper));
                         }
                     }
-                });
+                }
+            });
 
         options.addComponent(minValue);
         options.addComponent(manualInput);
@@ -433,10 +438,10 @@ public class StepperDemoUI extends UI {
             @Override
             public void valueChange(ValueChangeEvent event) {
                 String valueLine = DateFormat.getTimeInstance(DateFormat.SHORT,
-                        getLocale()).format(new Date())
-                        + " " + event.getProperty().getValue();
+                    getLocale()).format(new Date())
+                    + " " + event.getProperty().getValue();
                 String oldValue = valueLabel.getValue() != null ? valueLabel
-                        .getValue().toString() : "";
+                    .getValue().toString() : "";
 
                 StringBuffer sb = new StringBuffer();
                 sb.append(valueLine);
