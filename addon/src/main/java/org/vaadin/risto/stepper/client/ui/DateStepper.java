@@ -111,22 +111,14 @@ public class DateStepper extends AbstractStepper<Date, Integer> {
     protected boolean isSmallerThanMax(String stringValue) {
         Date value = getDateFormat().parse(stringValue);
 
-        if (getMaxValue() != null && value.after(getMaxValue())) {
-            return false;
-        } else {
-            return true;
-        }
+        return getMaxValue() == null || !value.after(getMaxValue());
     }
 
     @Override
     protected boolean isLargerThanMin(String stringValue) {
         Date value = getDateFormat().parse(stringValue);
 
-        if (getMinValue() != null && value.before(getMinValue())) {
-            return false;
-        } else {
-            return true;
-        }
+        return getMinValue() == null || !value.before(getMinValue());
     }
 
     public DateTimeFormat getDateFormat() {

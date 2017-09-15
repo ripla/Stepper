@@ -77,12 +77,12 @@ public class UpDownTextBox extends TextBox
 
         if (keycode == KeyCodes.KEY_UP && keyDownTimerUp == null) {
             keyDownTimerUp = new ButtonDownTimer(true, stepper);
-            keyDownTimerUp.scheduleRepeating(AbstractStepper.valueRepeatDelay);
+            keyDownTimerUp.scheduleRepeating(AbstractStepper.VALUE_REPEAT_DELAY);
             event.preventDefault();
         } else if (keycode == KeyCodes.KEY_DOWN && keyDownTimerDown == null) {
             keyDownTimerDown = new ButtonDownTimer(false, stepper);
             keyDownTimerDown
-                    .scheduleRepeating(AbstractStepper.valueRepeatDelay);
+                    .scheduleRepeating(AbstractStepper.VALUE_REPEAT_DELAY);
             event.preventDefault();
         }
     }

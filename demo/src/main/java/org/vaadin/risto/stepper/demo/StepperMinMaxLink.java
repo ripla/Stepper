@@ -10,11 +10,9 @@ import com.vaadin.ui.VerticalLayout;
 @SuppressWarnings("serial")
 public class StepperMinMaxLink extends UI {
 
-    private VerticalLayout layout;
-
     @Override
     protected void init(VaadinRequest request) {
-        layout = new VerticalLayout();
+        VerticalLayout layout = new VerticalLayout();
         layout.setMargin(true);
         setContent(layout);
 
