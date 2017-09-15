@@ -214,7 +214,6 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T>
     /**
      * Add a click listener on the Stepper text field.
      * @param listener a click listener object to be executed on click
-     * @return a Registration object that allows you to remove the listener later on.
      */
     public void addClickListener(AbstractStepper.StepperClickListener listener) {
         addListener(AbstractStepper.StepperClickEvent.class, listener, AbstractStepper.StepperClickListener.STEPPER_CLICK_METHOD);
