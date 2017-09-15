@@ -1,0 +1,26 @@
+language: java
+
+addons:
+  sonarcloud:
+    organization: "ripla-github"
+    token:
+      secure: "BLecMFMNCkliDPxQK+wIuIeqRGj7x+FpCKh+tfLmpx9D1Piw/P29rlnkJEF+7+nKBAXTL0LKbGsU+albTybRiKSiA84I/YSFrmzzj00EfSkRXz0BGIe/PUeBP8F3P84dMErtZHxAZqvDeIkV7QsTM0wQlRHs2mSy17uWFo7jyFI="
+    github_token:
+        secure: "C5d1mnyD4QtiNxIY1ow+H6l4hqZMXJryk1VuMxWXyuw6h2mWUKFQZx0LO7i0d+bJdvYSY5TI+9/DrqSFrUXpJwQvZHM7qukXvbwj0XEvG2YO8SR1whyfYGBXj0rALWX1Xc7NMuZt1bTGeGecnO8eqOUjSLLquJWpKcJtexBZ28c="
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+    - $HOME/.sonar/cache
+    - .gradle
+
+jdk:
+  - oraclejdk8
+
+script:
+  - ./gradlew sonarqube
