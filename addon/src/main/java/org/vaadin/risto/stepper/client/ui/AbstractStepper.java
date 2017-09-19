@@ -325,6 +325,10 @@ public abstract class AbstractStepper<T, S> extends FlowPanel
         enabledStateChanged();
     }
 
+    /**
+     * Enable / disable focus on value change
+     * @param focusOnValueChange if true, focus editor widget on value change
+     */
     public void setFocusOnValueChange(boolean focusOnValueChange) {
         this.focusOnValueChange = focusOnValueChange;
     }
