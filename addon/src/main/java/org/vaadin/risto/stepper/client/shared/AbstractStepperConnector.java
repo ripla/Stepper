@@ -53,7 +53,7 @@ public abstract class AbstractStepperConnector<T, S>
         getWidget().setMouseWheelEnabled(getState().isMouseWheelEnabled);
         getWidget().setInvalidValuesAllowed(getState().isInvalidValuesAllowed);
         getWidget().setNullValueAllowed(getState().isNullValueAllowed);
-
+        getWidget().setFocusOnValueChange(getState().isFocusOnValueChange);
         getWidget()
                 .setMinValue(getWidget().parseStringValue(getState().minValue));
         getWidget()

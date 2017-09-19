@@ -150,6 +150,7 @@ public class StepperDemoUI extends UI {
             }
         });
         intStepper.setTabIndex(3);
+        intStepper.setFocusOnValueChange(true);
 
         floatStepper = new FloatStepper();
         floatStepper.setValue(1.0f);
@@ -157,6 +158,7 @@ public class StepperDemoUI extends UI {
         floatStepper.setNumberOfDecimals(3);
         floatStepper.setCaption("FloatStepper, step 1.222 (tabindex 2)");
         floatStepper.setTabIndex(2);
+        floatStepper.setFocusOnValueChange(true);
 
         bigDecimalStepper = new BigDecimalStepper();
         bigDecimalStepper.setValue(BigDecimal.ZERO);

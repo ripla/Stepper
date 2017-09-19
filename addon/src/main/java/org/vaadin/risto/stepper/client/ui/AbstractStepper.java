@@ -17,8 +17,6 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.TextBox;
 
-import java.util.logging.Handler;
-
 /**
  * 
  * @author Risto Yrjänä / Vaadin
@@ -62,6 +60,8 @@ public abstract class AbstractStepper<T, S> extends FlowPanel
     private RegExp valueRegexp;
 
     private boolean isValueFilteringEnabled;
+
+    private boolean focusOnValueChange = false;
 
     public AbstractStepper() {
         this(".*"); // match all by default
@@ -166,6 +166,9 @@ public abstract class AbstractStepper<T, S> extends FlowPanel
                     value = newValue;
                     valueUpdateTimer.schedule(updateDelay);
                     valueUpdateTimer.setValue(newValue);
+                    if (focusOnValueChange) {
+                        this.setFocus(true);
+                    }
                 }
             } catch (Exception e) {
                 valueUpdateTimer.cancel();
@@ -189,6 +192,9 @@ public abstract class AbstractStepper<T, S> extends FlowPanel
                     value = newValue;
                     valueUpdateTimer.schedule(updateDelay);
                     valueUpdateTimer.setValue(newValue);
+                    if (focusOnValueChange) {
+                        this.setFocus(true);
+                    }
                 }
             } catch (Exception e) {
                 valueUpdateTimer.cancel();
@@ -317,6 +323,10 @@ public abstract class AbstractStepper<T, S> extends FlowPanel
     public void setNullValueAllowed(boolean nullValueAllowed) {
         this.nullValueAllowed = nullValueAllowed;
         enabledStateChanged();
+    }
+
+    public void setFocusOnValueChange(boolean focusOnValueChange) {
+        this.focusOnValueChange = focusOnValueChange;
     }
 
     public boolean isNullValueAllowed() {

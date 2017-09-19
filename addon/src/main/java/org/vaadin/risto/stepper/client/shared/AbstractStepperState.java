@@ -13,6 +13,7 @@ public class AbstractStepperState extends AbstractFieldState {
     public boolean isMouseWheelEnabled = true;
     public boolean isInvalidValuesAllowed = false;
     public boolean isNullValueAllowed = false;
+    public boolean isFocusOnValueChange = false;
     public String value;
     public String minValue;
     public String maxValue;

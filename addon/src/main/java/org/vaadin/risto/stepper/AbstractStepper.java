@@ -124,6 +124,10 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T>
         getState().isNullValueAllowed = nullValueAllowed;
     }
 
+    public void setFocusOnValueChange(boolean focusOnValueChange) {
+        getState().isFocusOnValueChange = focusOnValueChange;
+    }
+
     @Override
     public void beforeClientResponse(boolean initial) {
         super.beforeClientResponse(initial);
