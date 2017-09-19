@@ -124,6 +124,10 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T>
         getState().isNullValueAllowed = nullValueAllowed;
     }
 
+    /**
+     * Enable / disable focusing on value change
+     * @param focusOnValueChange if true, focus the editor field on value change
+     */
     public void setFocusOnValueChange(boolean focusOnValueChange) {
         getState().isFocusOnValueChange = focusOnValueChange;
     }
