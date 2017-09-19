@@ -3,7 +3,6 @@ package org.vaadin.risto.stepper.client.shared;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.communication.ServerRpc;
 
-@FunctionalInterface
 /**
  * Server RPC that is called when the stepper is clicked
  */

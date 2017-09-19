@@ -15,7 +15,7 @@ public class DemoUIProvider extends UIProvider {
         String test = event.getRequest().getParameter("test");
 
         if (!Strings.isNullOrEmpty(test)
-                && CharMatcher.JAVA_LETTER.matchesAllOf(test)) {
+                /* doesn't work in 1.7: && CharMatcher.JAVA_LETTER.matchesAllOf(test)*/) {
             try {
                 @SuppressWarnings("unchecked")
                 Class<? extends UI> uiClass = (Class<? extends UI>) getClass()

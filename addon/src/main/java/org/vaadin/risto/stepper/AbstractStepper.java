@@ -296,8 +296,6 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T>
         }
     }
 
-
-    @FunctionalInterface
     /**
      * Implement this interface to create a click listener for a Stepper.
      */
