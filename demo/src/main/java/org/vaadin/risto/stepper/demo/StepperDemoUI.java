@@ -18,6 +18,7 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import org.vaadin.risto.stepper.AbstractStepper;
 import org.vaadin.risto.stepper.BigDecimalStepper;
 import org.vaadin.risto.stepper.DateStepper;
 import org.vaadin.risto.stepper.FloatStepper;
@@ -142,8 +143,14 @@ public class StepperDemoUI extends UI {
         intStepper.setValue(1);
         intStepper.setStepAmount(1);
         intStepper.setCaption("IntStepper, step 1 (tabindex 3)");
-        intStepper.addClickListener(e -> Notification.show("clicked"));
+        intStepper.addClickListener(new AbstractStepper.StepperClickListener() {
+            @Override
+            public void stepperClick(AbstractStepper.StepperClickEvent event) {
+                Notification.show("clicked");
+            }
+        });
         intStepper.setTabIndex(3);
+        intStepper.setFocusOnValueChange(true);
 
         floatStepper = new FloatStepper();
         floatStepper.setValue(1.0f);
@@ -151,6 +158,7 @@ public class StepperDemoUI extends UI {
         floatStepper.setNumberOfDecimals(3);
         floatStepper.setCaption("FloatStepper, step 1.222 (tabindex 2)");
         floatStepper.setTabIndex(2);
+        floatStepper.setFocusOnValueChange(true);
 
         bigDecimalStepper = new BigDecimalStepper();
         bigDecimalStepper.setValue(BigDecimal.ZERO);
