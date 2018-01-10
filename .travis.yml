@@ -20,7 +20,7 @@ cache:
     - .gradle
 
 jdk:
-  - oraclejdk8
+  - openjdk7
 
 script:
   - ./gradlew sonarqube
