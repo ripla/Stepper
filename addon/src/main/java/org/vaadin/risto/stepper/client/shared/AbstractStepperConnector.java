@@ -1,8 +1,10 @@
 package org.vaadin.risto.stepper.client.shared;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.FocusEvent;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
@@ -34,6 +36,15 @@ public abstract class AbstractStepperConnector<T, S>
             getState().value = event.getValue();
             stepperRpcProxy.valueChange(event.getValue());
         });
+
+        final FocusRpc focusRpcProxy = RpcProxy.create(FocusRpc.class, this);
+        getWidget().getTextBox().addDomHandler(event -> focusRpcProxy.focus(),
+                FocusEvent.getType());
+
+        final BlurRpc blurRpcProxy = RpcProxy.create(BlurRpc.class, this);
+        getWidget().getTextBox().addDomHandler(event -> blurRpcProxy.blur()
+                , BlurEvent.getType());
+
     }
 
     @Override

@@ -3,7 +3,9 @@ package org.vaadin.risto.stepper;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 import org.vaadin.risto.stepper.client.shared.AbstractStepperState;
+import org.vaadin.risto.stepper.client.shared.BlurRpc;
 import org.vaadin.risto.stepper.client.shared.ClickRpc;
+import org.vaadin.risto.stepper.client.shared.FocusRpc;
 import org.vaadin.risto.stepper.client.shared.StepperRpc;
 
 import com.vaadin.icons.VaadinIcons;
@@ -59,6 +61,23 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T>
                 }
             }
         });
+
+        registerRpc(new FocusRpc() {
+
+            @Override
+            public void focus() {
+                fireFocus();
+            }
+        });
+
+        registerRpc(new BlurRpc() {
+
+            @Override
+            public void blur() {
+                fireBlur();
+            }
+        });
+
         registerRpc(new ClickRpc() {
 
             @Override
@@ -77,6 +96,14 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T>
 
     protected void fireClick(MouseEventDetails details) {
         fireEvent(new StepperClickEvent(this, details));
+    }
+
+    protected void fireFocus() {
+        fireEvent(new StepperFocusEvent(this));
+    }
+
+    protected void fireBlur() {
+        fireEvent(new StepperBlurEvent(this));
     }
 
     @Override
@@ -181,10 +208,12 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T>
         markAsDirty();
     }
 
+    @Override
     public Resource getDecreaseIcon() {
         return getResource(getState().DECREASE_ICON_KEY);
     }
 
+    @Override
     public void setDecreaseIcon(Resource icon) {
         if (icon == null) {
             throw new IllegalArgumentException("Icon cannot be null");
@@ -194,10 +223,12 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T>
         markAsDirty();
     }
 
+    @Override
     public Resource getIncreaseIcon() {
         return getResource(getState().INCREASE_ICON_KEY);
     }
 
+    @Override
     public void setIncreaseIcon(Resource icon) {
         if (icon == null) {
             throw new IllegalArgumentException("Icon cannot be null");
@@ -213,6 +244,24 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T>
      */
     public Registration addClickListener(AbstractStepper.StepperClickListener listener) {
         return addListener(AbstractStepper.StepperClickEvent.class, listener, AbstractStepper.StepperClickListener.STEPPER_CLICK_METHOD);
+    }
+
+    /**
+     * Add a focus listener on the Stepper text field.
+     * @param listener a focus listener object to be executed on focus
+     * @return a Registration object that allows you to remove the listener later on.
+     */
+    public Registration addFocusListener(AbstractStepper.StepperFocusListener listener) {
+        return addListener(AbstractStepper.StepperFocusEvent.class, listener, AbstractStepper.StepperFocusListener.STEPPER_FOCUS_METHOD);
+    }
+
+    /**
+     * Add a blur listener on the Stepper text field.
+     * @param listener a blur listener object to be executed on blur
+     * @return a Registration object that allows you to remove the listener later on.
+     */
+    public Registration addBlurListener(AbstractStepper.StepperBlurListener listener) {
+        return addListener(AbstractStepper.StepperBlurEvent.class, listener, AbstractStepper.StepperBlurListener.STEPPER_BLUR_METHOD);
     }
 
     @Override
@@ -310,6 +359,42 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T>
         }
     }
 
+    /**
+     * Focus event for Steppers. Fired when the text field of the Stepper is
+     * focused.
+     */
+    public static class StepperFocusEvent extends Event {
+
+        /**
+         * Creates a new stepper focus event
+         *
+         * @param source
+         *            the source Stepper component
+         */
+        public StepperFocusEvent(Component source) {
+            super(source);
+        }
+
+    }
+
+    /**
+     * Blur event for Steppers. Fired when the text field of the Stepper is
+     * blurred.
+     */
+    public static class StepperBlurEvent extends Event {
+
+        /**
+         * Creates a new stepper blur event
+         *
+         * @param source
+         *            the source Stepper component
+         */
+        public StepperBlurEvent(Component source) {
+            super(source);
+        }
+
+    }
+
 
     @FunctionalInterface
     /**
@@ -324,5 +409,35 @@ public abstract class AbstractStepper<T, S> extends AbstractField<T>
          * @param event
          */
         void stepperClick(StepperClickEvent event);
+    }
+
+    @FunctionalInterface
+    /**
+     * Implement this interface to create a focus listener for a Stepper.
+     */
+    public interface StepperFocusListener extends Serializable {
+        Method STEPPER_FOCUS_METHOD = ReflectTools.findMethod(StepperFocusListener.class,
+            "stepperFocus", AbstractStepper.StepperFocusEvent.class);
+
+        /**
+         * The implementation of this method is called after a focus on the Stepper
+         * @param event
+         */
+        void stepperFocus(StepperFocusEvent event);
+    }
+
+    @FunctionalInterface
+    /**
+     * Implement this interface to create a blur listener for a Stepper.
+     */
+    public interface StepperBlurListener extends Serializable {
+        Method STEPPER_BLUR_METHOD = ReflectTools.findMethod(StepperBlurListener.class,
+            "stepperBlur", AbstractStepper.StepperBlurEvent.class);
+
+        /**
+         * The implementation of this method is called after a blur on the Stepper
+         * @param event
+         */
+        void stepperBlur(StepperBlurEvent event);
     }
 }
